@@ -1,0 +1,26 @@
+title: WordPress Administrator Role Assigned During Public Registration
+id: 6eecd190-7ece-48bb-bec7-56693443bf7d
+status: experimental
+description: Detects a successful administrator role assignment attributed to public registration in normalized WordPress audit logs. This behavior warrants investigation for CVE-2026-125294 and other registration authorization flaws.
+references:
+  - https://www.wordfence.com/threat-intel/vulnerabilities/id/8670d9ac-e2b0-4c19-a9d7-00be23a139c4?source=cve
+logsource:
+  category: web_application
+  product: wordpress
+  definition: Requires normalized application audit events. Map successful initial or subsequent role assignments to event_action role_assigned and populate registration_source from trusted application telemetry. Access logs alone cannot provide these fields.
+detection:
+  selection:
+    event_action: role_assigned
+    event_outcome: success
+    registration_source: public_registration
+    user_role: administrator
+  condition: selection
+fields:
+  - site_id
+  - user_id
+  - actor_id
+  - request_id
+  - source_ip
+falsepositives:
+  - Authorized testing or a deliberately configured privileged registration workflow
+level: high

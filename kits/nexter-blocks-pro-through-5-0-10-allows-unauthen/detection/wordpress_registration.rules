@@ -1,0 +1,5 @@
+# Context for audit correlation only. This rule detects POST requests to the standard
+# WordPress registration form over visible HTTP. It does not identify Nexter's
+# custom registration routes or establish that an administrator was created.
+# Tune HOME_NET to protected web servers and monitor after TLS termination.
+alert http any any -> $HOME_NET any (msg:"LOCAL WordPress standard registration POST for audit correlation"; flow:established,to_server; http.method; content:"POST"; bsize:4; http.uri; content:"wp-login.php?"; pcre:"/(?:^|\/)wp-login\.php\?(?:[^&]*&)*action=register(?:&|$)/"; classtype:misc-activity; sid:9901252; rev:1;)
