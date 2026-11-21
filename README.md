@@ -18,8 +18,8 @@ Detection rules, exposure checks, hunting notes and mitigations for threats it i
 
 Attacks that use AI or target AI systems, and AI-assisted countermeasures.
 
-- [**AI LLM Jailbreak Detection**](kits/ai-llm-jailbreak): An **LLM jailbreak** occurs when an attacker manipulates a large language model (LLM) to bypass its safety measures, restrictions, or intended behavior.
-- [**AI voice impersonation triage**](kits/ai-voice-fraud): A familiar voice can make a fraudulent request sound legitimate.
+- [**AI LLM Jailbreak Detection**](kits/ai-llm-jailbreak): An LLM jailbreak occurs when an attacker crafts prompts that bypass safety measures and system constraints, allowing the model to ignore its instructions.
+- [**AI Voice Fraud Detection**](kits/ai-voice-fraud): AI voice cloning allows attackers to generate highly realistic synthetic voices that can impersonate individuals.
 
 ## 🔮 Foresight: bug classes
 

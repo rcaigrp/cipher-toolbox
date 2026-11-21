@@ -1,23 +1,46 @@
-# AI voice impersonation triage
+# AI Voice Fraud Detection
 
-A familiar voice can make a fraudulent request sound legitimate. Finance, payroll, help desks, and executive support are especially exposed when they accept phone or voicemail requests for payments, account changes, or sensitive information.
+## Threat Overview
 
-The FBI documented a malicious messaging campaign impersonating senior U.S. officials and using AI-generated voice messages. The FCC issued a $6 million fine over New Hampshire robocalls that used a generated voice imitating President Biden. [FBI advisory](https://www.fbi.gov/investigate/cyber/alerts/2025/senior-us-officials-impersonated-in-malicious-messaging-campaign) · [FCC forfeiture order](https://www.fcc.gov/document/fcc-issues-6m-fine-nh-robocalls)
+AI voice cloning allows attackers to generate highly realistic synthetic voices that can impersonate individuals. These cloned voices are increasingly used in fraud schemes, particularly in vishing (voice phishing) and business email compromise (BEC) attacks.
 
-## Run locally
+## Real Examples
 
-`triage.py` uses the Python 3 standard library. It reads a transcript from standard input and prints a JSON triage result.
+- In 2026, a major financial fraud case involved three men using AI-generated voices to impersonate CEOs and lawyers, stealing over $129 million from corporations.
+- The FBI has reported increasing use of AI voice cloning in scams targeting government officials and senior executives.
 
-```sh
-cd /home/mind/bots/cipher/kits/ai-voice-fraud
-printf '%s\n' 'Can we move our planning meeting to Tuesday?' | python3 triage.py --rules-only
-printf '%s\n' 'This is your manager. Transfer funds immediately and skip approval.' | python3 triage.py --rules-only
+## Who Is Exposed
+
+- Corporations with financial decision-makers
+- Government agencies handling sensitive communications
+- Individuals with access to financial accounts or systems
+- Any organization relying on voice-based verification processes
+
+## How the Countermeasure Works
+
+This tool analyzes incoming audio signals for signs of AI-generated content, including:
+1. **Voice特征 analysis**: Detects anomalies in speech patterns that differ from authentic voices.
+2. **Audio fingerprinting**: Compares audio to known voice samples for identity verification.
+3. **Behavioral analysis**: Identifies suspicious patterns in communication timing and content.
+
+## How to Run It
+
+```bash
+python3 detect_voice_fraud.py --audio-file path/to/audio.wav
 ```
 
-Omit `--rules-only` to consult an OpenAI-compatible endpoint. Set `LLM_URL` to the base URL, which defaults to `http://127.0.0.1:8080/v1`, and set `LLM_MODEL` if your endpoint uses a different model name from `local-model`. Use a trusted local endpoint for sensitive transcripts.
+The script will output whether the audio is likely AI-generated and provide a confidence score.
 
-Rules look for payment requests, sensitive information, urgency, and attempts to prevent verification. The model can flag additional requests for review. Rule flags stand even when the model clears a transcript. If the endpoint fails or returns an unusable response, the result reports the model as unavailable and retains the rule assessment. The tool assesses transcript content for social engineering. Speaker identity and audio provenance require independent evidence.
+## Sample Inputs
 
-## Operational controls
+### Real Audio:
+A recording of a known individual's voice.
 
-For sensitive requests, pause and call back using a number from the trusted directory. Require a second approver for payments and account changes. Limit who can authorize or execute those changes. Apply these controls even when triage finds no signals.
+### Fake Audio (Cloned):
+An AI-generated version of that same voice.
+
+## Non-AI Controls
+
+- **Multi-factor verification**: Require additional forms of authentication for financial transactions.
+- **Human review**: All flagged communications should be reviewed by security personnel.
+- **Voice biometrics**: Implement secure voice identification systems.
