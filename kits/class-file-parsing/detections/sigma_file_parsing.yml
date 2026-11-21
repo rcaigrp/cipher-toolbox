@@ -1,0 +1,9 @@
+title: Generic File Parsing Out-of-Bounds Write
+logsource:
+  category: process_access
+  product: windows
+detection:
+  condition: selection
+  selection:
+    Image|endswith: '\file_parser.exe'
+    GrantedAccess: 0x1000

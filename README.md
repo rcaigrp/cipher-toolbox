@@ -21,7 +21,7 @@ Attacks that use AI or target AI systems, and AI-assisted countermeasures.
 
 Zero-day / negative-day thinking: where the next bug of a known class is likely, and how to find or block it before it has a CVE.
 
-- [**File Parsing Vulnerability Class**](kits/class-file-parsing): The recent Krita vulnerabilities (ZDI-26-1010 through ZDI-26-1014) demonstrate a recurring pattern in file parsing libraries
+- [**File Parsing Vulnerability Class**](kits/class-file-parsing): This kit contains detection rules, check scripts, and analysis for the file parsing vulnerability class that affects image processing software.
 - [**Krita File Parsing Vulnerabilities - Class-wide Defense Kit**](kits/class-krta): This kit provides defensive measures against the pattern of file parsing vulnerabilities found in Krita.
 - [**class-oom**](kits/class-oom)
 
