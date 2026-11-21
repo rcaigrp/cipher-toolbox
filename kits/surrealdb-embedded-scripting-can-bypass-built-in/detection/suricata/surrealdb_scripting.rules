@@ -1,0 +1,1 @@
+alert http any any -> $HOME_NET any (msg:"LOCAL SurrealDB SQL request contains possible embedded scripting"; flow:established,to_server; http.method; content:"POST"; http.uri; content:"/sql"; startswith; http.request_body; content:"function"; nocase; pcre:"/\bfunction\s*\(/i"; sid:1001342; rev:1;)

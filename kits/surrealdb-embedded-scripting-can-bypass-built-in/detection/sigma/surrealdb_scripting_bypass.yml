@@ -1,0 +1,25 @@
+title: SurrealDB Embedded Scripting Policy Event
+id: 3dc64d65-abaf-4d2a-aa3e-6251f48d5db2
+status: experimental
+description: Flags SurrealDB log messages that mention scripting and a capability or permission decision for triage. The source material provides no confirmed exploitation indicators or log message formats.
+references:
+    - https://github.com/surrealdb/surrealdb/security/advisories/GHSA-5w6j-qm42-4rc2
+author: Cipher
+date: 2026-11-21
+logsource:
+    product: surrealdb
+    category: application
+    definition: Route SurrealDB application and audit events to this rule and map their text to message.
+detection:
+    scripting:
+        message|contains: 'scripting'
+    policy:
+        message|contains:
+            - 'capability'
+            - 'permission'
+            - 'denied'
+            - 'disabled'
+    condition: scripting and policy
+falsepositives:
+    - Expected startup configuration messages and legitimate scripting policy denials
+level: low
