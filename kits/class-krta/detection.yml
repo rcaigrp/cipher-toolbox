@@ -1,0 +1,25 @@
+# Sigma rules for Krita file parsing vulnerabilities
+title: Krita Out-of-Bounds Write in File Parsing
+id: 12345678-1234-1234-1234-123456789012
+status: experimental
+description: Detects potential Krita file parsing vulnerabilities through process access patterns
+author: Cipher
+date: 2026-11-20
+logsource:
+  category: process_access
+  product: windows
+detection:
+  condition: selection
+  selection:
+    Image|endswith: '\krita.exe'
+    GrantedAccess: 0x1000
+fields:
+  - Image
+  - ProcessId
+  - GrantedAccess
+tags:
+  - attack.execution
+  - detection.file_parsing
+falsepositives:
+  - Legitimate file processing operations
+level: high

@@ -1,0 +1,23 @@
+title: Pip Install With Explicit Trusted Host Override
+id: 71bca86f-4068-49c2-ad5a-9d6d7f8cd82f
+status: experimental
+description: Flags pip installs that explicitly relax transport verification for a host. Investigate as a trust-policy finding.
+logsource:
+  category: process_creation
+detection:
+  selection_install:
+    CommandLine|contains: ' install '
+  selection_invocation:
+    CommandLine|contains:
+      - 'pip install '
+      - 'pip3 install '
+      - '/pip install '
+      - '/pip3 install '
+  selection_override:
+    CommandLine|contains:
+      - ' --trusted-host '
+      - ' --trusted-host='
+  condition: selection_install and selection_invocation and selection_override
+falsepositives:
+  - Approved internal repository exceptions
+level: medium

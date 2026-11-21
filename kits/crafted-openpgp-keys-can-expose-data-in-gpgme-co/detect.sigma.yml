@@ -1,0 +1,19 @@
+title: Allocator Double-Free Diagnostic in an OpenPGP Receiver
+id: 8d8b3c5f-9e4a-4f9b-a1c2-1d8e3f4a5b6c
+status: experimental
+description: Flags an allocator diagnostic in logs scoped to unattended applications that use GPGME to process external OpenPGP input. Correlate with recent receiver activity and loaded library version.
+references:
+  - https://lists.gnupg.org/pipermail/gnupg-announce/2026q4/000517.html
+logsource:
+  category: application
+  definition: Scope the backend to verified OpenPGP receiver services and map message to their collected log text, including stderr.
+detection:
+  allocator_error:
+    message|contains:
+      - 'double free'
+      - 'double-free'
+  condition: allocator_error
+falsepositives:
+  - Unrelated allocator errors in the same receiver
+  - Diagnostic or test messages that quote an allocator error
+level: medium

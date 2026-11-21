@@ -1,0 +1,3 @@
+# Suricata. Scope HOME_NET to verified OpenPGP receivers or their cleartext inspection point.
+# Visibility only. An armored key header occurs in legitimate transfers too.
+alert http any any -> $HOME_NET any (msg:"LOCAL OpenPGP public key armor in inbound HTTP request body"; flow:established,to_server; http.request_body; content:"-----BEGIN PGP PUBLIC KEY BLOCK-----"; classtype:protocol-command-decode; sid:1008557; rev:1;)
