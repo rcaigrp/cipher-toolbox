@@ -30,6 +30,7 @@ Zero-day / negative-day thinking: where the next bug of a known class is likely,
 - [**Authentication Bypass Class: VMware vCenter Case Study**](kits/class-auth-bypass): The vulnerability CVE-2026-123890 (CVSS 9.8) demonstrates a pattern of **authentication bypass through alternate paths or channels** in enterprise management systems.
 - [**File Parsing Vulnerability Class**](kits/class-file-parsing): This kit contains detection rules, check scripts, and analysis for the file parsing vulnerability class that affects image processing software.
 - [**Heap Buffer Overflow Exposure Checker**](kits/class-heap-buffer-overflow): This tool detects potential heap buffer overflow vulnerabilities in software by scanning source code files for unsafe patterns that could lead to memory corruption.
+- [**Heap Overflow Vulnerabilities: A Persistent Threat**](kits/class-heapoverflow): Heap overflow vulnerabilities represent a class of memory safety issues where data written to heap memory exceeds the allocated buffer size, potentially corrupting adjacent memory.
 - [**class-incorrect-auth**](kits/class-incorrect-auth)
 - [**Krita File Parsing Vulnerabilities - Class-wide Defense Kit**](kits/class-krta): This kit provides defensive measures against the pattern of file parsing vulnerabilities found in Krita.
 - [**class-oom**](kits/class-oom)
