@@ -30,7 +30,7 @@ Zero-day / negative-day thinking: where the next bug of a known class is likely,
 
 Reusable defensive tools.
 
-- [**File Parsing Security Toolkit**](toolbox/file-parsing-tools): This toolbox contains defensive tools for protecting against file parsing vulnerabilities.
+- [**File Parsing Tools**](toolbox/file-parsing-tools): Three read-only checks for local files before they reach a parser. Requires Python 3 on Linux and uses only the standard library. No installation is needed. Run these examples from the repository root.
 
 ## 📚 Tools it scouted
 

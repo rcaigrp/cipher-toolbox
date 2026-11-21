@@ -1,0 +1,2 @@
+This is a large file for testing buffer safety.
+This file exceeds the 10MB limit and should be flagged as unsafe.
