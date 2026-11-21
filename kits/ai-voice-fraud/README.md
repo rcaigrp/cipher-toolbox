@@ -1,41 +1,23 @@
-# AI Voice Fraud Detection
+# AI voice impersonation triage
 
-## Threat Overview
+A familiar voice can make a fraudulent request sound legitimate. Finance, payroll, help desks, and executive support are especially exposed when they accept phone or voicemail requests for payments, account changes, or sensitive information.
 
-AI-generated voice cloning is increasingly being used for fraud, particularly in robocall campaigns. Attackers use deepfake technology to mimic trusted voices (like politicians, family members, or authority figures) to deceive victims into providing sensitive information or making payments.
+The FBI documented a malicious messaging campaign impersonating senior U.S. officials and using AI-generated voice messages. The FCC issued a $6 million fine over New Hampshire robocalls that used a generated voice imitating President Biden. [FBI advisory](https://www.fbi.gov/investigate/cyber/alerts/2025/senior-us-officials-impersonated-in-malicious-messaging-campaign) · [FCC forfeiture order](https://www.fcc.gov/document/fcc-issues-6m-fine-nh-robocalls)
 
-The Federal Communications Commission (FCC) recently fined a perpetrator $6 million for using AI voice cloning in election interference robocalls in New Hampshire. This demonstrates the real-world impact and regulatory response to this threat.
+## Run locally
 
-## Real Examples
+`triage.py` uses the Python 3 standard library. It reads a transcript from standard input and prints a JSON triage result.
 
-- **FCC Enforcement Action**: The FCC fined a defendant $6 million for sending illegal robocalls that used deepfake generative AI technology to impersonate political figures.
-- **New Hampshire Election Interference**: The case involved robocalls designed to influence the 2024 New Hampshire election, using cloned voices to create false urgency and credibility.
+```sh
+cd /home/mind/bots/cipher/kits/ai-voice-fraud
+printf '%s\n' 'Can we move our planning meeting to Tuesday?' | python3 triage.py --rules-only
+printf '%s\n' 'This is your manager. Transfer funds immediately and skip approval.' | python3 triage.py --rules-only
+```
 
-## Who Is Exposed
+Omit `--rules-only` to consult an OpenAI-compatible endpoint. Set `LLM_URL` to the base URL, which defaults to `http://127.0.0.1:8080/v1`, and set `LLM_MODEL` if your endpoint uses a different model name from `local-model`. Use a trusted local endpoint for sensitive transcripts.
 
-Organizations and individuals who:
-- Receive frequent calls from unknown numbers
-- Have systems that rely on voice authentication or caller ID verification
-- Are in sectors vulnerable to social engineering (financial services, government, healthcare)
+Rules look for payment requests, sensitive information, urgency, and attempts to prevent verification. The model can flag additional requests for review. Rule flags stand even when the model clears a transcript. If the endpoint fails or returns an unusable response, the result reports the model as unavailable and retains the rule assessment. The tool assesses transcript content for social engineering. Speaker identity and audio provenance require independent evidence.
 
-## How the Countermeasure Works
+## Operational controls
 
-This countermeasure focuses on detecting suspicious voice patterns and call characteristics:
-
-1. **Caller ID Verification**: Cross-reference incoming numbers with known legitimate sources
-2. **Spoofing Detection**: Identify calls that attempt to disguise their origin
-3. **Behavioral Analysis**: Detect unusual calling patterns or high-volume calls
-4. **AI-Based Voice Anomaly Detection**: Flag calls that deviate from normal voice characteristics
-
-## How to Run
-
-1. Install dependencies: `pip install -r requirements.txt`
-2. Configure the system with your phone number database and known good sources
-3. Integrate with your existing telephony infrastructure or call monitoring tools
-
-## Test Cases
-
-The implementation includes test scenarios for:
-- Legitimate calls from known numbers
-- Suspicious calls from spoofed numbers
-- High-volume calling patterns
+For sensitive requests, pause and call back using a number from the trusted directory. Require a second approver for payments and account changes. Limit who can authorize or execute those changes. Apply these controls even when triage finds no signals.
