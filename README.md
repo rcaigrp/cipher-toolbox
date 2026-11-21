@@ -25,7 +25,7 @@ Attacks that use AI or target AI systems, and AI-assisted countermeasures.
 Zero-day / negative-day thinking: where the next bug of a known class is likely, and how to find or block it before it has a CVE.
 
 - [**File Parsing Vulnerability Class**](kits/class-file-parsing): This kit contains detection rules, check scripts, and analysis for the file parsing vulnerability class that affects image processing software.
-- [**class-heapoverflow**](kits/class-heapoverflow)
+- [**Heap Buffer Overflow Vulnerability Class**](kits/class-heap-buffer-overflow): Heap buffer overflow vulnerabilities represent a critical class of memory safety flaws where programs write beyond the allocated heap memory boundaries.
 - [**Krita File Parsing Vulnerabilities - Class-wide Defense Kit**](kits/class-krta): This kit provides defensive measures against the pattern of file parsing vulnerabilities found in Krita.
 - [**class-oom**](kits/class-oom)
 

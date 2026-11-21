@@ -1,0 +1,27 @@
+title: Native Parser Reports Heap Corruption
+id: 42566ef2-3a54-493c-90c9-dd85473753b5
+status: experimental
+description: Flags explicit heap corruption reports from AddressSanitizer or the GNU C Library allocator. Correlate with parser worker identity and recent ingestion of untrusted input.
+author: Cipher
+logsource:
+    product: linux
+    service: journald
+    definition: Collect parser stderr from systemd services or normalize equivalent container stderr into the MESSAGE field. Confirm field mapping in the Sigma backend.
+detection:
+    selection:
+        MESSAGE|contains:
+            - 'ERROR: AddressSanitizer: heap-buffer-overflow'
+            - 'malloc(): corrupted top size'
+            - 'malloc(): corrupted unsorted chunks'
+            - 'corrupted size vs. prev_size'
+            - 'free(): invalid next size'
+    condition: selection
+fields:
+    - MESSAGE
+    - _HOSTNAME
+    - _SYSTEMD_UNIT
+    - _EXE
+    - _PID
+falsepositives:
+    - Sanitizer findings from internal tests or corruption caused by ordinary software defects
+level: medium
