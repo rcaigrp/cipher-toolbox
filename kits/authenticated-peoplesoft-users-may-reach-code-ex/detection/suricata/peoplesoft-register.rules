@@ -1,0 +1,4 @@
+# Load on a sensor scoped to PeopleSoft management traffic with HTTP visibility.
+# Replace /register with the locally verified route. The supplied advisory names an operation only.
+# This rule records route access, including legitimate traffic.
+alert http any any -> $HOME_NET any (msg:"PeopleSoft candidate registration route access"; flow:established,to_server; http.uri; content:"/register"; startswith; pcre:"/^\/register(?:[\/?]|$)/"; sid:1003527; rev:1;)
