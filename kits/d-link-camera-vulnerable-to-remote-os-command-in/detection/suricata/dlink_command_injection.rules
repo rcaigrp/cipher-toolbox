@@ -1,0 +1,2 @@
+# Scope HOME_NET to inventoried DCS-935L destinations in the camera sensor configuration before enabling this rule.
+alert http any any -> $HOME_NET any (msg:"D-Link DCS-935L recording configuration endpoint access"; flow:established,to_server; http.uri; content:"/cgi-bin/localrecording/setconf.cgi"; startswith; pcre:"/^\/cgi-bin\/localrecording\/setconf\.cgi(?:\?|$)/"; sid:1009351; rev:1;)

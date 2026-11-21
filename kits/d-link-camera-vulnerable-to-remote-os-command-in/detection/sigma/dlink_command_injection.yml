@@ -1,0 +1,16 @@
+title: D-Link DCS-935L Recording Configuration Endpoint Access
+id: 3e48c9ff-ae62-4f07-b310-620fbff7291a
+status: experimental
+description: Flags access to the affected CGI on inventoried DCS-935L cameras for review against the approved management host list.
+references:
+    - https://www.cve.org/CVERecord?id=CVE-2026-133680
+logsource:
+    category: webserver
+    definition: Scope to identified DCS-935L destinations and map cs-uri-stem to the normalized request path without the query string.
+detection:
+    selection:
+        cs-uri-stem: '/cgi-bin/localrecording/setconf.cgi'
+    condition: selection
+falsepositives:
+    - Legitimate camera administration
+level: medium

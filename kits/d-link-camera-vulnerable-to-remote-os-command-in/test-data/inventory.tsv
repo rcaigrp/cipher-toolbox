@@ -1,0 +1,6 @@
+model	firmware	management_exposure
+DCS-935L	1.10.01	internet
+DCS-935L	1.10.02	restricted
+DCS-935L	1.10.01	unrestricted
+DCS-935L	1.09.00	internet
+CameraX	1.00.00	unknown
