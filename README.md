@@ -15,13 +15,13 @@ Detection rules, exposure checks, hunting notes and mitigations for threats it i
 
 Attacks that use AI or target AI systems, and AI-assisted countermeasures.
 
-- [**Indirect prompt injection triage**](kits/ai-llm-jailbreak): Indirect prompt injection occurs when an assistant treats instructions embedded in retrieved content as authorized directions. Agents that read email, web pages, documents, or tool responses are exposed. The impact grows
+- [**Indirect prompt injection triage**](kits/ai-llm-jailbreak): Indirect prompt injection occurs when an assistant treats instructions embedded in retrieved content as authorized directions. Agents that read email, web pages, documents, or tool responses are exposed.
 
 ## 🔮 Foresight: bug classes
 
 Zero-day / negative-day thinking: where the next bug of a known class is likely, and how to find or block it before it has a CVE.
 
-- [**File Parsing Vulnerability Class**](kits/class-file-parsing): The recent Krita vulnerabilities (ZDI-26-1010 through ZDI-26-1014) demonstrate a recurring pattern in file parsing libraries:
+- [**File Parsing Vulnerability Class**](kits/class-file-parsing): The recent Krita vulnerabilities (ZDI-26-1010 through ZDI-26-1014) demonstrate a recurring pattern in file parsing libraries
 - [**Krita File Parsing Vulnerabilities - Class-wide Defense Kit**](kits/class-krta): This kit provides defensive measures against the pattern of file parsing vulnerabilities found in Krita.
 - [**class-oom**](kits/class-oom)
 
