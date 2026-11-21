@@ -1,0 +1,26 @@
+title: Suspicious Encoded Characters in WordPress GET Path
+id: d00d9e38-08cd-46f8-8f8a-f05ce8709416
+status: experimental
+description: Flags unusual encoding in GET request paths on WordPress sites under review for CVE-2026-120539. This is a generic triage heuristic with unknown coverage for the reported flaw.
+references:
+    - https://nvd.nist.gov/vuln/detail/CVE-2026-120539
+author: Cipher
+date: 2026-11-20
+logsource:
+    category: webserver
+detection:
+    selection_method:
+        http_method: GET
+    selection_path:
+        url_path|contains:
+            - '%00'
+            - '%0a'
+            - '%0d'
+    condition: selection_method and selection_path
+fields:
+    - src_ip
+    - url_path
+    - http_status
+falsepositives:
+    - Security scanners and malformed requests unrelated to this vulnerability
+level: low
