@@ -17,7 +17,8 @@ Detection rules, exposure checks, hunting notes and mitigations for threats it i
 
 Attacks that use AI or target AI systems, and AI-assisted countermeasures.
 
-- [**Direct LLM jailbreak triage**](kits/ai-llm-jailbreak): Direct jailbreaks try to make a model disregard its safety policy through a user prompt. Public chatbots and internal assistants that accept free-form prompts are exposed.
+- [**AI LLM Jailbreak Detection**](kits/ai-llm-jailbreak): An LLM jailbreak is a technique where an attacker manipulates the prompt or input to bypass security controls and get the LLM to perform unintended actions. These attacks can be used to
+- [**AI Voice Fraud Detection**](kits/ai-voice-fraud): AI-generated voice cloning is increasingly being used for fraud, particularly in robocall campaigns.
 
 ## 🔮 Foresight: bug classes
 
