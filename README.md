@@ -29,7 +29,7 @@ Zero-day / negative-day thinking: where the next bug of a known class is likely,
 
 - [**Authentication Bypass Class: VMware vCenter Case Study**](kits/class-auth-bypass): The vulnerability CVE-2026-123890 (CVSS 9.8) demonstrates a pattern of **authentication bypass through alternate paths or channels** in enterprise management systems.
 - [**File Parsing Vulnerability Class**](kits/class-file-parsing): This kit contains detection rules, check scripts, and analysis for the file parsing vulnerability class that affects image processing software.
-- [**Heap Buffer Overflow Vulnerability Class Kit**](kits/class-heap-buffer-overflow): This kit provides defensive resources for detecting and mitigating heap buffer overflow vulnerabilities.
+- [**Heap Buffer Overflow Exposure Checker**](kits/class-heap-buffer-overflow): This tool detects potential heap buffer overflow vulnerabilities in software by scanning source code files for unsafe patterns that could lead to memory corruption.
 - [**class-incorrect-auth**](kits/class-incorrect-auth)
 - [**Krita File Parsing Vulnerabilities - Class-wide Defense Kit**](kits/class-krta): This kit provides defensive measures against the pattern of file parsing vulnerabilities found in Krita.
 - [**class-oom**](kits/class-oom)
@@ -39,6 +39,7 @@ Zero-day / negative-day thinking: where the next bug of a known class is likely,
 Reusable defensive tools.
 
 - [**File Parsing Tools**](toolbox/file-parsing-tools): Three read-only checks for local files before they reach a parser. Requires Python 3 on Linux and uses only the standard library. No installation is needed. Run these examples from the repository root.
+- [**IOC Hash Sweep**](toolbox/ioc-hash-sweep): This tool scans a local directory recursively for files whose SHA-256 hashes match a provided list of indicators of compromise (IOCs).
 - [**KEV-NVD Checker**](toolbox/kev-nvd-checker): Triage a local software inventory using the CISA Known Exploited Vulnerabilities (KEV) catalog and NVD 2.0 applicability data.
 
 ## 📚 Tools it scouted

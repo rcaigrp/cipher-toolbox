@@ -1,23 +1,33 @@
-# Heap Buffer Overflow Vulnerability Class Kit
+# Heap Buffer Overflow Exposure Checker
 
-This kit provides defensive resources for detecting and mitigating heap buffer overflow vulnerabilities.
+## Purpose
 
-## Contents
-
-- `FORESIGHT.md`: Detailed analysis of the heap buffer overflow vulnerability class
-- `check_heap_exposure.py`: Script to check for heap overflow indicators in logs
-- `test_script.py`: Test script for validating the detection functionality
-- Detection rules (Sigma, YARA, Suricata) - included in FORESIGHT.md
+This tool detects potential heap buffer overflow vulnerabilities in software by scanning source code files for unsafe patterns that could lead to memory corruption.
 
 ## Usage
 
-1. **Analysis**: Review `FORESIGHT.md` for detailed vulnerability class information and mitigation strategies.
-2. **Detection Testing**: Run `test_script.py` with a log file to check for heap overflow indicators.
-3. **Implementation**: Use the detection rules in your security infrastructure.
+```bash
+python3 check_heap_exposure.py [--apply] <directory>
+```
 
-## Key Recommendations
+- `--apply`: Apply actions (default is read-only)
+- `<directory>`: Directory to scan (defaults to current directory)
 
-- Implement strict bounds checking in memory management code
-- Use address sanitizers during development
-- Employ advanced static analyzers for heap misuse detection
-- Monitor logs for memory corruption indicators
+## Features
+
+- Scans C/C++ source files (.c, .cpp, .cc, .h, .hpp)
+- Detects unsafe functions like `strcpy`, `memcpy`, `gets`, etc.
+- Reports line numbers and matching patterns
+- Safe by default; use `--apply` to take actions (logging/quarantining)
+
+## Example
+
+```bash
+python3 check_heap_exposure.py /home/user/software
+```
+
+This will scan the `/home/user/software` directory for unsafe memory operations and report any findings.
+
+## Test
+
+The script was tested with a sample file containing known unsafe patterns and confirmed to correctly identify them.
