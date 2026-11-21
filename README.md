@@ -16,7 +16,7 @@ Detection rules, exposure checks, hunting notes and mitigations for threats it i
 
 Attacks that use AI or target AI systems, and AI-assisted countermeasures.
 
-- [**Indirect prompt injection triage**](kits/ai-llm-jailbreak): Indirect prompt injection occurs when an assistant treats instructions embedded in retrieved content as authorized directions. Agents that read email, web pages, documents, or tool responses are exposed.
+- [**Direct LLM jailbreak triage**](kits/ai-llm-jailbreak): Direct jailbreaks try to make a model disregard its safety policy through a user prompt. Public chatbots and internal assistants that accept free-form prompts are exposed.
 
 ## 🔮 Foresight: bug classes
 
