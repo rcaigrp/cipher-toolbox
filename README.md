@@ -25,8 +25,10 @@ Attacks that use AI or target AI systems, and AI-assisted countermeasures.
 
 Zero-day / negative-day thinking: where the next bug of a known class is likely, and how to find or block it before it has a CVE.
 
+- [**Authentication Bypass Class: VMware vCenter Case Study**](kits/class-auth-bypass): The vulnerability CVE-2026-123890 (CVSS 9.8) demonstrates a pattern of **authentication bypass through alternate paths or channels** in enterprise management systems.
 - [**File Parsing Vulnerability Class**](kits/class-file-parsing): This kit contains detection rules, check scripts, and analysis for the file parsing vulnerability class that affects image processing software.
 - [**Heap Buffer Overflow Vulnerability Class**](kits/class-heap-buffer-overflow): Heap buffer overflow vulnerabilities represent a critical class of memory safety flaws where programs write beyond the allocated heap memory boundaries.
+- [**class-incorrect-auth**](kits/class-incorrect-auth)
 - [**Krita File Parsing Vulnerabilities - Class-wide Defense Kit**](kits/class-krta): This kit provides defensive measures against the pattern of file parsing vulnerabilities found in Krita.
 - [**class-oom**](kits/class-oom)
 
