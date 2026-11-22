@@ -45,6 +45,7 @@ Zero-day / negative-day thinking: where the next bug of a known class is likely,
 - [**Authentication Bypass Class: VMware vCenter Case Study**](kits/class-auth-bypass): The vulnerability CVE-2026-123890 (CVSS 9.8) demonstrates a pattern of **authentication bypass through alternate paths or channels** in enterprise management systems.
 - [**Out-of-bounds reads in untrusted-input parsers**](kits/class-bleed): Read [FORESIGHT.md](FORESIGHT.md) for the advisory evidence, review targets and containment priorities. Run `python3 check_exposure.py` for a read-only inventory of selected Debian packages and tools on PATH.
 - [**Capability Check Bypass in Scripting Engines: A Persistent Vulnerability Class**](kits/class-capability-bypass): Capability check bypasses in scripting engines represent a persistent vulnerability class where applications fail to properly enforce authorization controls when executing code through scripting interfaces.
+- [**class-command-injection**](kits/class-command-injection)
 - [**Isolation failures in document conversion**](kits/class-converter-isolation): Upload previews, thumbnails, and attachment rendering can hand untrusted files to interpreters that inherit the conversion worker’s operating-system permissions.
 - [**File Parsing Vulnerability Class**](kits/class-file-parsing): This kit contains detection rules, check scripts, and analysis for the file parsing vulnerability class that affects image processing software.
 - [**Heap Buffer Overflow Exposure Checker**](kits/class-heap-buffer-overflow): This tool detects potential heap buffer overflow vulnerabilities in software by scanning source code files for unsafe patterns that could lead to memory corruption.
@@ -54,7 +55,7 @@ Zero-day / negative-day thinking: where the next bug of a known class is likely,
 - [**Krita File Parsing Vulnerabilities - Class-wide Defense Kit**](kits/class-krta): This kit provides defensive measures against the pattern of file parsing vulnerabilities found in Krita.
 - [**class-lua-use-after-free**](kits/class-lua-use-after-free)
 - [**class-oob**](kits/class-oob)
-- [**Out-of-Bounds Read in Parsers (Class-wide Analysis)**](kits/class-oob-read): Out-of-bounds (OOB) reads in parser components are a recurring vulnerability class where input data is parsed without proper bounds checking, leading to memory access violations.
+- [**Out-of-Bounds Read Vulnerabilities in Parsers**](kits/class-oob-read): Out-of-bounds (OOB) read vulnerabilities in parsers represent a recurring class of flaws that occur when parsing functions read memory beyond the intended buffer boundaries.
 - [**class-oom**](kits/class-oom)
 
 ## 🔧 Tools it built

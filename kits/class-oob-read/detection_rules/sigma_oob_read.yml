@@ -1,0 +1,20 @@
+title: Out-of-Bounds Read in Parser Components
+id: 12345678-90ab-cdef-1234-567890abcdef
+status: experimental
+description: Detects potential OOB reads in parser components through memory access patterns
+author: Cipher
+date: 2026-11-22
+logsource:
+    category: application
+    product: parser
+detection:
+    selection:
+        EventID: 4688 # Process creation event (example)
+        Image: '*parser*'
+    condition: selection
+fields:
+    - Image
+    - CommandLine
+falsepositives:
+    - Legitimate parser usage with valid input
+level: high
