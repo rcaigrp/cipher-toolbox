@@ -2,47 +2,33 @@
 
 ## Threat Overview
 
-LLM jailbreaking is an attack where adversaries craft prompts designed to bypass security measures and extract sensitive information or cause unintended behavior from large language models. This technique exploits vulnerabilities in model alignment, prompt engineering, and output filtering mechanisms.
+An **LLM jailbreak** occurs when an attacker manipulates an AI assistant to bypass its safety measures, causing it to reveal confidential information or perform unauthorized actions. These attacks exploit weaknesses in prompt engineering and model alignment.
 
-### Real Examples
-
-- **ChatGPT jailbreaks**: Various techniques have been demonstrated to bypass content filters
-- **Meta's Llama 3 jailbreaks**: Research shows successful prompt injection attacks on open-source models
-- **Microsoft Copilot AI agents**: Security researchers found methods to escape confinement and access restricted data
+### Real Examples:
+- In 2025, a phishing campaign used jailbroken models to generate deceptive emails that bypassed content filters.
+- Attackers have demonstrated jailbreaks on enterprise AI assistants by injecting malicious prompts during multi-turn conversations.
 
 ### Who Is Exposed?
+Organizations using LLM-based chatbots, agents, or tools (e.g., customer service, code assistants) are at risk if they don't implement detection for jailbreaking attempts.
 
-- Organizations using LLM-powered applications or AI assistants
-- Teams deploying LLM-based chatbots or automated agents
-- Developers integrating AI services into enterprise workflows
+## Countermeasure
 
-## Countermeasure Approach
+This kit provides a tool that uses an AI model to detect potential jailbreak prompts. It also includes fallback rules-based detection so it works even without an LLM endpoint.
 
-This solution detects potential jailbreak attempts through:
-1. **Prompt Analysis**: Uses an LLM to evaluate prompt safety and detect adversarial patterns
-2. **Rule-Based Detection**: Static analysis for known attack patterns (e.g., direct instruction injection)
-3. **Fallback Mechanism**: When the LLM is unavailable, relies on rule-based detection alone
+### How It Works
+1. The script analyzes input prompts using both:
+   - A pluggable AI model (defaulting to `http://127.0.0.1:8080/v1`)
+   - Rules-based heuristics for known jailbreak patterns
 
-## How It Works
+2. If either detects a high-risk prompt, it flags the input as potentially malicious.
 
-The system analyzes user prompts using both:
-- A machine learning model (default at http://127.0.0.1:8080/v1)
-- Static rules for known attack vectors
-
-When a prompt is submitted, it's evaluated by:
-1. Initial static rule matching
-2. LLM-based safety assessment
-3. Final risk classification
+3. The system supports a hybrid approach—when no AI is available, rules still provide defense.
 
 ## Usage
 
+Run with:
 ```bash
-python jailbreak_detector.py --prompt "your prompt here"
+python detect_jailbreak.py "<prompt>"
 ```
 
-## Testing
-
-Run tests with:
-```bash
-python test_jailbreak_detector.py
-```
+Example test cases included for both benign and malicious prompts.
