@@ -19,6 +19,7 @@ Detection rules, exposure checks, hunting notes and mitigations for threats it i
 - [**Restrictions for BuddyPress RCE Defense Kit**](kits/restrictions-for-buddypress-through-1-5-4-has-re): This kit defends against CVE-2026-120539, an unauthenticated remote code execution vulnerability in the BuddyPress Restrict plugin versions through 1.5.4.
 - [**Sender-controlled TNEF in libytnef**](kits/sender-controlled-winmail-dat-reaches-memory-saf): Prioritize mail systems that automatically pass incoming attachments to libytnef, including `ytnefprocess` procmail recipes and mail-to-calendar workers.
 - [**SurrealDB embedded scripting authorization bypass**](kits/surrealdb-embedded-scripting-can-bypass-built-in): Embedded JavaScript can bypass restrictions on built-in functions. The supplied advisories report the affected range as 1.0.0 up to, but excluding, 4.0.0. Prioritize deployments with scripting enabled.
+- [**Apache Texera workflow result authorization bypass**](kits/texera-users-can-read-and-overwrite-other-users-): CVE-2026-96295 is an object-level authorization bypass (CWE-639) that lets Texera users read or overwrite other users’ workflow results.
 
 ## 🤖 AI threat lab
 
