@@ -1,26 +1,29 @@
-title: Texera Workflow Result Access Outside Expected Permissions
-id: 9a1b2c3d-4e5f-4789-a0b1-c2d3e4f5a6b7
+title: Texera Workflow Result Unauthorized Access
+id: 12345678-1234-1234-1234-123456789012
 status: experimental
-description: Flags successful reads or overwrites of Texera workflow results when a defender's independent review of permissions at the time of access indicates the actor lacked the required permission. Requires normalized and enriched audit events.
-references:
-  - https://seclists.org/oss-sec/2026/q4/795
-  - https://www.cve.org/CVERecord?id=CVE-2026-96295
+description: Detects unauthorized access to workflow results in Apache Texera, potentially indicating CVE-2026-96295 exploitation.
 author: Cipher
 date: 2026-11-22
 logsource:
-  category: application
-  product: texera
-  definition: Map local telemetry to the fields below. Populate expected_access from independent ownership, sharing, and role records applicable at the time of the event. Preserve unknown when permission evidence is incomplete.
+    category: application
+    product: texera
+    service: workflow_result_access
 detection:
-  selection:
-    resource_type: workflow_result
-    operation:
-      - read
-      - overwrite
-    outcome: success
-    expected_access: denied
-  condition: selection
+    selection:
+        operation: ['read', 'overwrite']
+        resource_type: 'workflow_result'
+        outcome: 'success'
+        expected_access: 'denied'
+    condition: selection
+fields:
+    - actor
+    - result_id
+    - operation
+    - timestamp
 falsepositives:
-  - Stale or incorrect permission enrichment
-  - Legitimate administrative or delegated access missing from the permission records
+    - Legitimate access by authorized users with elevated privileges
 level: high
+tags:
+    - CVE-2026-96295
+    - authorization_bypass
+    - texera
