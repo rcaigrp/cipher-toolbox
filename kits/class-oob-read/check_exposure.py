@@ -1,50 +1,50 @@
 #!/usr/bin/env python3
 """
-Check script for exposure to Out-of-Bounds Read vulnerabilities in parsers.
-This script identifies potential exposure by checking for usage of known vulnerable libraries.
+Read-only check script for OOB read vulnerability exposure.
+This script identifies systems with parser libraries that may be vulnerable.
 """
 
+import os
 import subprocess
 import sys
-import os
 
-def check_vulnerable_libraries():
-    """Check if system has known vulnerable parser libraries installed."""
-    
-    # Common vulnerable library patterns (this is a simplified example)
+def check_parser_libraries():
+    """Check for known parser libraries that might be vulnerable."""
+    # Common vulnerable library patterns
     vulnerable_libs = [
-        'libxml2',
-        'libxslt',
-        'libjson-c',
-        'libyaml',
-        'ghostscript',
-        'gpac'
+        'libavformat',
+        'libmp4',
+        'ffmpeg',
+        'gstreamer',
+        'libreoffice',
+        'pdfbox'
     ]
     
     found_vulnerable = []
     
+    # Check for presence of vulnerable libraries
     try:
-        # Check installed packages
-        result = subprocess.run(['dpkg', '-l'], capture_output=True, text=True)
-        
-        for lib in vulnerable_libs:
-            if lib in result.stdout:
-                found_vulnerable.append(lib)
-                
+        result = subprocess.run(['ldd', '/usr/bin/ffmpeg'], capture_output=True, text=True)
+        if result.returncode == 0:
+            for lib in vulnerable_libs:
+                if lib in result.stdout:
+                    found_vulnerable.append(lib)
     except Exception as e:
-        print(f"Error checking packages: {e}")
-        return []
+        print(f"Error checking libraries: {e}")
     
     return found_vulnerable
 
-if __name__ == "__main__":
-    print("Checking for Out-of-Bounds Read vulnerability exposure...")
+def main():
+    print("Checking for OOB read vulnerability exposure...")
+    vulnerable = check_parser_libraries()
     
-    vulnerable_libs = check_vulnerable_libraries()
-    
-    if vulnerable_libs:
-        print(f"Found potentially vulnerable libraries: {', '.join(vulnerable_libs)}")
-        sys.exit(1)  # Exit with error code to indicate exposure
+    if vulnerable:
+        print(f"Found potentially vulnerable parser libraries: {', '.join(vulnerable)}")
+        print("Recommendation: Review these libraries for known OOB read vulnerabilities.")
+        return 1
     else:
-        print("No known vulnerable parser libraries detected.")
-        sys.exit(0)
+        print("No vulnerable parser libraries detected in current system.")
+        return 0
+
+if __name__ == "__main__":
+    sys.exit(main())

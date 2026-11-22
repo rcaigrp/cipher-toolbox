@@ -1,0 +1,18 @@
+title: Capability Check Bypass in Scripting Engine
+status: experimental
+description: Detects potential capability bypasses in scripting engines that may indicate privilege escalation vulnerabilities
+author: Cipher
+logsource:
+  category: application
+  product: scripting_engine
+detection:
+  selection:
+    event_id: 1002
+    message: contains 'capability bypass' or 'function bridge' or 'script access'
+  condition: selection
+fields:
+  - process_name
+  - user_id
+  - script_context
+  - function_called
+level: critical
