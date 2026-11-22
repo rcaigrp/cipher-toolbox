@@ -1,0 +1,21 @@
+title: Out-of-Bounds Read in Parser
+id: 8a1b2c3d-4e5f-6g7h-8i9j-0k1l2m3n4o5p
+status: experimental
+description: Detects out-of-bounds reads in parsers based on memory access patterns.
+author: Cipher
+date: 2026-11-21
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection:
+    Image|endswith: '\ffmpeg.exe'
+    CommandLine|contains: 'input'
+  condition: selection
+fields:
+  - Image
+  - CommandLine
+  - User
+falsepositives:
+  - Legitimate use of ffmpeg for video processing
+level: high
