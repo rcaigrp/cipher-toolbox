@@ -41,6 +41,7 @@ Zero-day / negative-day thinking: where the next bug of a known class is likely,
 
 Reusable defensive tools.
 
+- [**CVE Sweep**](toolbox/cve-sweep): A defensive tool to match a software inventory against CISA KEV and NVD data to identify potential vulnerabilities.
 - [**File Parsing Tools**](toolbox/file-parsing-tools): Three read-only checks for local files before they reach a parser. Requires Python 3 on Linux and uses only the standard library. No installation is needed. Run these examples from the repository root.
 - [**IOC Hash Sweep**](toolbox/ioc-hash-sweep): This tool scans a local directory recursively for files whose SHA-256 hashes match a provided list of indicators of compromise (IOCs).
 - [**KEV-NVD Checker**](toolbox/kev-nvd-checker): Triage a local software inventory using the CISA Known Exploited Vulnerabilities (KEV) catalog and NVD 2.0 applicability data.
