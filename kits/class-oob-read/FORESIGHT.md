@@ -2,147 +2,195 @@
 
 ## Pattern Description
 
-Out-of-bounds (OOB) reads are a class of memory safety vulnerability where a program attempts to read data from memory locations outside the intended buffer or array boundaries. These flaws commonly occur in parsers that process structured data formats such as video codecs, image formats, document formats, and network protocols.
+Out-of-bounds (OOB) reads are a common class of memory safety vulnerability where a program attempts to read data from memory locations beyond the allocated buffer boundaries. This class is particularly prevalent in parsers for multimedia formats, configuration files, and network protocols.
 
-This vulnerability class is particularly dangerous because it often leads to information disclosure (exfiltration of sensitive memory contents), which can expose secrets like encryption keys, credentials, or internal state. While not always exploitable for remote code execution, OOB reads are frequently chained with other vulnerabilities to enable more serious attacks.
+## Why More Are Coming
 
-## Why More of This Is Coming
+This pattern persists because:
+1. Parsing complex file formats often requires handling variable-length data structures
+2. Many parsers are written in C/C++ without modern safety features
+3. The complexity of multimedia and document formats creates numerous edge cases
+4. Historical lack of automated memory safety checks in development tools
 
-This bug class remains prevalent due to:
-- Complex parsing logic in multimedia and document formats
-- Lack of bounds checking in low-level C/C++ code
-- Inconsistent handling of malformed or crafted inputs
-- Slow patching cycles for widely used libraries (e.g., FFmpeg, GPAC)
-
-The continued presence of this pattern suggests that many older libraries and formats are still being actively used without sufficient security hardening.
-
-## Products Likely Next (Variant Analysis)
+## Products Likely Affected (Variant Analysis)
 
 ### High Confidence:
-- **FFmpeg-based applications**: FFmpeg is widely used in video processing, streaming, and multimedia frameworks. Its parser components have historically suffered from OOB reads.
-- **GPAC/MP4Box**: As seen in CVE-2026-130632, CVE-2026-130634, etc., this tool has a history of such issues.
+- **Media processing libraries** (FFmpeg, GPAC, libavcodec) - These are heavily used by media applications and services
+- **Document parsing engines** (LibreOffice, Apache PDFBox, etc.) - They parse complex structured formats
+- **Network protocol parsers** (libpcap, nginx HTTP/2 parser) - Protocol implementations often have OOB reads
 
 ### Medium Confidence:
-- **VLC Media Player**: Uses FFmpeg and GPAC internally; vulnerable to similar flaws.
-- **Adobe Acrobat Reader / Document Processing Libraries**: These systems parse complex formats like PDFs, which can contain crafted data leading to OOB reads.
-- **OpenSSL (when parsing ASN.1 or X.509 structures)**: ASN.1 parsing is a common source of such bugs.
-
-### Low Confidence:
-- **LibreOffice / Microsoft Office**: Document parsers may also exhibit this behavior if they parse external or untrusted inputs.
-- **Media frameworks in mobile OSes** (Android, iOS): Use similar multimedia libraries and are at risk.
+- **Configuration file parsers** (YAML, XML, JSON libraries)
+- **Database engines** (MySQL, PostgreSQL, MongoDB)
+- **Web browsers** (Chrome, Firefox, Safari)
 
 ## Early Warning Signs to Watch
 
-- Frequent reports of “buffer over-read” or “out-of-bounds read” in crash logs
-- Malformed input files causing unexpected crashes or memory access violations
-- Reports of information leakage from parsers or decoders (e.g., keys, credentials)
-- ZDI upcoming advisories for libraries that parse multimedia or structured data
+1. Memory safety issues in parser-related components
+2. ZDI upcoming advisories for parser libraries
+3. CVEs with CVSS 7.0+ for OOB reads in media or document libraries
+4. Security patches that fix "out-of-bounds read" without clear context
+5. Reports of crashes in multimedia applications due to malformed files
 
-## What to Prepare Now
+## What to Do NOW (Before a CVE)
 
 ### Hardening:
-- Implement strict bounds checking in any parser logic.
-- Sanitize all inputs before passing them into parsers (especially for embedded or user-submitted content).
-- Use safer languages where possible (Rust, Go) for critical parsing components.
+1. Implement strict input validation for all parser inputs
+2. Use memory-safe languages or toolchains when possible
+3. Enable AddressSanitizer/UndefinedBehaviorSanitizer for development builds
+4. Configure network filters to limit data size and type for parsing
 
-### Monitoring & Detection:
-- Monitor logs for repeated OOB read errors in media or document processing services.
-- Deploy Sigma rules or YARA patterns that detect memory access anomalies during file parsing.
-- Use heap analysis tools to catch subtle out-of-bounds reads before they cause issues.
+### Monitoring:
+1. Set up detection rules for suspicious parser behaviors in logs (Sigma, YARA)
+2. Monitor for unusual memory access patterns in applications using parsers
+3. Implement application-level logging for file format parsing failures
 
 ### Inventory Questions:
-- Identify which libraries or components in your systems are used for parsing multimedia, documents, or network protocols.
-- Confirm if those libraries are patched against known OOB read vulnerabilities.
-- Review dependencies of applications using FFmpeg, GPAC, etc., to ensure you’re not exposed via transitive dependency chains.
-
----
+1. Which media processing libraries are in use across the organization?
+2. What products parse external files or network protocols?
+3. How is input validation handled for these components?
 
 ## Class-Wide Detections
 
-### Sigma Rule: Generic Out-of-Bounds Read Detection
+### Sigma Rules:
 ```yaml
-title: Out-of-Bounds Read in Parser
-id: 8a1b2c3d-4e5f-6g7h-8i9j-0k1l2m3n4o5p
+title: Out-of-Bounds Read in Parser Library
+id: 4a6e5c1f-8c9d-4b2a-9e4f-1d3e5f6a7b8c
 status: experimental
-description: Detects out-of-bounds reads in parsers based on memory access patterns.
+description: Detects out-of-bounds read patterns in parser libraries
 author: Cipher
-date: 2026-11-21
 logsource:
-  category: process_creation
-  product: windows
+  category: application
+  product: parser_library
 detection:
   selection:
-    Image|endswith: '\ffmpeg.exe'
-    CommandLine|contains: 'input'
+    # Pattern to match OOB reads in parsers
+    - 'out-of-bounds read'
+    - 'buffer overflow'
+    - 'memory access violation'
   condition: selection
 fields:
-  - Image
-  - CommandLine
-  - User
-falsepositives:
-  - Legitimate use of ffmpeg for video processing
+  - event_id
+  - process_name
+  - error_message
+false_positives:
+  - Known false positives from legitimate parsing edge cases
 level: high
 ```
 
-### YARA Rule: Memory Access Anomalies in Multimedia Libraries
+### YARA Rule:
 ```yara
-rule OutOfBoundsReadInParser {
+rule oob_read_pattern {
     meta:
-        description = "Detects potential out-of-bounds reads in multimedia parsers"
+        description = "Detects out-of-bounds read patterns in parser libraries"
         author = "Cipher"
-
+        reference = "kits/class-oob-read/FORESIGHT.md"
+    
     strings:
-        $read_access = { 8B ?? ?? ?? ?? ?? ?? ?? 48 89 ?? ?? ?? ?? ?? ?? ?? ?? }
-        $bounds_check = { 41 ?? ?? ?? ?? ?? ?? ?? 48 3B ?? ?? ?? ?? ?? ?? }
-
+        $pattern1 = { 48 89 5C 24 ?? 48 89 74 24 ?? 48 89 7C 24 ?? 48 8B 74 24 ?? }
+        $pattern2 = { 48 8B 0D ?? ?? ?? ?? 48 85 C9 74 ?? 48 8B 11 }
+    
     condition:
         any of them
 }
 ```
 
-### Check Script: ReadOnly Exposure Check
+### Hunt Query (Elasticsearch):
+```json
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "term": {
+            "event.category": "application"
+          }
+        },
+        {
+          "terms": {
+            "error.message": [
+              "out-of-bounds read",
+              "buffer overflow",
+              "memory access violation"
+            ]
+          }
+        }
+      ]
+    }
+  }
+}
+```
+
+## Read-Only Exposure Check Script
+
 ```python
 #!/usr/bin/env python3
 """
-Check script for exposure to Out-of-Bounds Read vulnerabilities in parsers.
-This checks if system uses known vulnerable libraries or components.
+Read-only check script for exposure to Out-of-Bounds Read vulnerability class.
+This script checks for known vulnerable libraries in the system.
 """
 
 import os
 import subprocess
+import sys
 
-def check_ffmpeg():
+def check_vulnerable_libraries():
+    """Check for known vulnerable parser libraries."""
+    vulnerable_libs = [
+        'libavcodec',
+        'libavformat',
+        'ffmpeg',
+        'gpac',
+        'libpng',
+        'libjpeg',
+        'libtiff'
+    ]
+    
+    found_vulns = []
+    
+    # Check installed packages
     try:
-        result = subprocess.run(['ffmpeg', '-version'], capture_output=True, text=True)
-        if 'FFmpeg' in result.stdout:
-            print("FFmpeg detected. Checking version for known OOB issues...")
-            # Simulate checking version here (real implementation would parse version string)
-            return True
-    except FileNotFoundError:
-        pass
-    return False
-
-def check_gpac():
+        result = subprocess.run(['dpkg', '-l'], capture_output=True, text=True)
+        for lib in vulnerable_libs:
+            if lib in result.stdout.lower():
+                found_vulns.append(lib)
+    except Exception as e:
+        print(f"Error checking packages: {e}")
+    
+    # Check running processes that might use parsers
     try:
-        result = subprocess.run(['MP4Box', '-version'], capture_output=True, text=True)
-        if 'GPAC' in result.stdout:
-            print("GPAC detected. Checking for OOB issues...")
-            return True
-    except FileNotFoundError:
-        pass
-    return False
+        result = subprocess.run(['ps', 'aux'], capture_output=True, text=True)
+        for lib in vulnerable_libs:
+            if lib in result.stdout.lower():
+                found_vulns.append(f"Running process using {lib}")
+    except Exception as e:
+        print(f"Error checking processes: {e}")
+    
+    return list(set(found_vulns))
 
-if __name__ == '__main__':
-    exposed = False
-    if check_ffmpeg():
-        exposed = True
-    if check_gpac():
-        exposed = True
-
-    if not exposed:
-        print("No known vulnerable libraries detected.")
+def main():
+    print("Checking for Out-of-Bounds Read vulnerability exposure...")
+    vulns = check_vulnerable_libraries()
+    
+    if vulns:
+        print("Vulnerable components detected:")
+        for vuln in vulns:
+            print(f"  - {vuln}")
+        return 1
     else:
-        print("Potential exposure to OOB read vulnerabilities.")
+        print("No vulnerable components detected.")
+        return 0
+
+if __name__ == "__main__":
+    sys.exit(main())
 ```
 
-This script is designed for read-only inspection only and does not perform any modifications or exploit attempts.
+## Summary
+
+This analysis covers the Out-of-Bounds Read vulnerability class that commonly affects parsers in multimedia and document processing libraries. The pattern persists due to the complexity of parsing structured data formats and historical development practices. Teams should implement strict input validation, use memory-safe toolchains, and monitor for suspicious parser behaviors.
+
+## References
+- CVE-2026-130632: GPAC/MP4Box OOB Read
+- CVE-2026-130634: GPAC/MP4Box Heap Buffer Overflow  
+- CVE-2026-130793: GPAC/MP4Box Stack Buffer Overflow
+- Re: CVE-2026-123633, CVE-2026-123007: nginx RCE via HTTP/2

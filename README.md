@@ -37,7 +37,7 @@ Zero-day / negative-day thinking: where the next bug of a known class is likely,
 - [**Heap Overflow Vulnerabilities: A Persistent Threat**](kits/class-heapoverflow): Heap overflow vulnerabilities represent a class of memory safety issues where data written to heap memory exceeds the allocated buffer size, potentially corrupting adjacent memory.
 - [**class-incorrect-auth**](kits/class-incorrect-auth)
 - [**Krita File Parsing Vulnerabilities - Class-wide Defense Kit**](kits/class-krta): This kit provides defensive measures against the pattern of file parsing vulnerabilities found in Krita.
-- [**Out-of-Bounds Reads in Parsers (Class-wide Analysis)**](kits/class-oob-read): Out-of-bounds (OOB) reads are a class of memory safety vulnerability where a program attempts to read data from memory locations outside the intended buffer or array boundaries.
+- [**Out-of-Bounds Read Vulnerability Class Kit**](kits/class-oob-read): This kit contains resources for detecting and defending against Out-of-Bounds Read vulnerabilities, a common class of memory safety issues in parsers.
 - [**class-oom**](kits/class-oom)
 
 ## 🔧 Tools it built

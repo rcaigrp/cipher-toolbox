@@ -1,41 +1,59 @@
 #!/usr/bin/env python3
 """
-Check script for exposure to Out-of-Bounds Read vulnerabilities in parsers.
-This checks if system uses known vulnerable libraries or components.
+Read-only check script for exposure to Out-of-Bounds Read vulnerability class.
+This script checks for known vulnerable libraries in the system.
 """
 
 import os
 import subprocess
+import sys
 
-def check_ffmpeg():
+def check_vulnerable_libraries():
+    """Check for known vulnerable parser libraries."""
+    vulnerable_libs = [
+        'libavcodec',
+        'libavformat',
+        'ffmpeg',
+        'gpac',
+        'libpng',
+        'libjpeg',
+        'libtiff'
+    ]
+    
+    found_vulns = []
+    
+    # Check installed packages
     try:
-        result = subprocess.run(['ffmpeg', '-version'], capture_output=True, text=True)
-        if 'FFmpeg' in result.stdout:
-            print("FFmpeg detected. Checking version for known OOB issues...")
-            # Simulate checking version here (real implementation would parse version string)
-            return True
-    except FileNotFoundError:
-        pass
-    return False
-
-def check_gpac():
+        result = subprocess.run(['dpkg', '-l'], capture_output=True, text=True)
+        for lib in vulnerable_libs:
+            if lib in result.stdout.lower():
+                found_vulns.append(lib)
+    except Exception as e:
+        print(f"Error checking packages: {e}")
+    
+    # Check running processes that might use parsers
     try:
-        result = subprocess.run(['MP4Box', '-version'], capture_output=True, text=True)
-        if 'GPAC' in result.stdout:
-            print("GPAC detected. Checking for OOB issues...")
-            return True
-    except FileNotFoundError:
-        pass
-    return False
+        result = subprocess.run(['ps', 'aux'], capture_output=True, text=True)
+        for lib in vulnerable_libs:
+            if lib in result.stdout.lower():
+                found_vulns.append(f"Running process using {lib}")
+    except Exception as e:
+        print(f"Error checking processes: {e}")
+    
+    return list(set(found_vulns))
 
-if __name__ == '__main__':
-    exposed = False
-    if check_ffmpeg():
-        exposed = True
-    if check_gpac():
-        exposed = True
-
-    if not exposed:
-        print("No known vulnerable libraries detected.")
+def main():
+    print("Checking for Out-of-Bounds Read vulnerability exposure...")
+    vulns = check_vulnerable_libraries()
+    
+    if vulns:
+        print("Vulnerable components detected:")
+        for vuln in vulns:
+            print(f"  - {vuln}")
+        return 1
     else:
-        print("Potential exposure to OOB read vulnerabilities.")
+        print("No vulnerable components detected.")
+        return 0
+
+if __name__ == "__main__":
+    sys.exit(main())
