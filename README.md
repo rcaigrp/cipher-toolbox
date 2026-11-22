@@ -30,6 +30,7 @@ Attacks that use AI or target AI systems, and AI-assisted countermeasures.
 Zero-day / negative-day thinking: where the next bug of a known class is likely, and how to find or block it before it has a CVE.
 
 - [**Authentication Bypass Class: VMware vCenter Case Study**](kits/class-auth-bypass): The vulnerability CVE-2026-123890 (CVSS 9.8) demonstrates a pattern of **authentication bypass through alternate paths or channels** in enterprise management systems.
+- [**Out-of-bounds reads in untrusted-input parsers**](kits/class-bleed): Read [FORESIGHT.md](FORESIGHT.md) for the advisory evidence, review targets and containment priorities. Run `python3 check_exposure.py` for a read-only inventory of selected Debian packages and tools on PATH.
 - [**File Parsing Vulnerability Class**](kits/class-file-parsing): This kit contains detection rules, check scripts, and analysis for the file parsing vulnerability class that affects image processing software.
 - [**Heap Buffer Overflow Exposure Checker**](kits/class-heap-buffer-overflow): This tool detects potential heap buffer overflow vulnerabilities in software by scanning source code files for unsafe patterns that could lead to memory corruption.
 - [**Heap Overflow Vulnerabilities: A Persistent Threat**](kits/class-heapoverflow): Heap overflow vulnerabilities represent a class of memory safety issues where data written to heap memory exceeds the allocated buffer size, potentially corrupting adjacent memory.

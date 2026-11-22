@@ -1,0 +1,21 @@
+title: Memory Safety Diagnostic From an Untrusted Input Parser Worker
+id: 4c113af0-7596-44fe-98ab-84697e023f8e
+status: experimental
+description: Detects out-of-bounds read diagnostics from instrumented parser workers.
+logsource:
+  category: application
+  service: parser_worker
+detection:
+  worker:
+    ServiceRole: untrusted_input_parser
+  bounds:
+    Message|contains:
+      - 'ERROR: AddressSanitizer: heap-buffer-overflow'
+      - 'ERROR: AddressSanitizer: stack-buffer-overflow'
+      - 'ERROR: AddressSanitizer: global-buffer-overflow'
+  read:
+    Message|contains: 'READ of size '
+  condition: worker and bounds and read
+falsepositives:
+  - Expected failures from authorized regression jobs if their telemetry shares the production stream
+level: high

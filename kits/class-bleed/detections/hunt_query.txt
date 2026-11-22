@@ -1,0 +1,5 @@
+index=parser_workers sourcetype=parser_worker_events ServiceRole=untrusted_input_parser EventType=job_exit (ExitSignal=SIGSEGV OR ExitSignal=SIGBUS OR ExitSignal=SIGABRT)
+| bin _time span=15m
+| stats dc(JobId) AS crashed_jobs values(ExitSignal) AS signals by _time ServiceName InputFormat
+| where crashed_jobs >= 3
+| sort - crashed_jobs
