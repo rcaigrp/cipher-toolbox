@@ -1,0 +1,19 @@
+title: Out-of-Bounds Read in Parser Component
+id: 12345678-90ab-cdef-1234-567890abcdef
+status: experimental
+author: Cipher
+date: 2026-11-22
+logsource:
+  category: application
+  product: parser_library
+detection:
+  selection:
+    event_id: 1001
+    message: contains 'out-of-bounds read'
+  condition: selection
+fields:
+  - process_name
+  - message
+false_positives:
+  - Normal operation with valid inputs
+level: high
