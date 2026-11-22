@@ -1,0 +1,21 @@
+title: Successful NCIC Gateway Authentication From an Unapproved Source
+id: 0f4ff913-c609-497d-9ef5-ffae0099b033
+status: experimental
+description: Flags successful authentication to a locally identified NCIC gateway when the source is explicitly outside the approved inventory. This is a local access-policy anomaly.
+logsource:
+  category: authentication
+  definition: Requires normalized gateway authentication events enriched with the local gateway and approved-source inventories. Omit SourceApproved if the inventory lookup cannot be evaluated.
+detection:
+  selection:
+    Service: ncic_gateway
+    Outcome: success
+    SourceApproved: false
+  condition: selection
+fields:
+  - Account
+  - SourceIp
+  - Gateway
+falsepositives:
+  - Approved network changes pending an inventory update
+  - Expected failover through a source missing from the approved inventory
+level: medium
