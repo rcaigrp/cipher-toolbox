@@ -1,0 +1,5 @@
+# Suricata rule for a dedicated, trusted gateway-to-collector HTTP audit feed.
+# Replace /assistant-audit with the collector path. Scope deployment to the trusted
+# exporter and collector. This requires visible, compact JSON with one event per request.
+# Browser traffic, encrypted bodies and SaaS internals are outside this rule's visibility.
+alert http any any -> any any (msg:"Assistant gateway audit reports unapproved sensitive read in web context"; flow:established,to_server; http.method; content:"POST"; bsize:4; http.uri; content:"/assistant-audit"; bsize:16; http.request_body; content:"|22|event_type|22 3a 22|assistant_tool_access|22|"; fast_pattern; content:"|22|context_source|22 3a 22|web_content|22|"; content:"|22|outcome|22 3a 22|allowed|22|"; pcre:"/\x22resource_type\x22:\x22(?:chat_history|saved_memory)\x22/"; pcre:"/\x22approval_status\x22:\x22(?:missing|denied|unknown)\x22/"; sid:1000221; rev:1;)
