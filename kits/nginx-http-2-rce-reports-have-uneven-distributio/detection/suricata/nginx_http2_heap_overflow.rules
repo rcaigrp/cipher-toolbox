@@ -1,0 +1,3 @@
+# Exposure inventory for cleartext HTTP/2 prior knowledge. Scope HOME_NET to monitored ingress.
+# Normal protocol traffic. Encrypted HTTP/2 and HTTP/1.1 upgrade traffic are outside this rule's scope.
+alert tcp $EXTERNAL_NET any -> $HOME_NET any (msg:"LOCAL Cleartext HTTP/2 client connection preface"; flow:established,to_server,only_stream; content:"PRI * HTTP/2.0|0d 0a 0d 0a|SM|0d 0a 0d 0a|"; startswith; classtype:protocol-command-decode; sid:1001237; rev:1;)

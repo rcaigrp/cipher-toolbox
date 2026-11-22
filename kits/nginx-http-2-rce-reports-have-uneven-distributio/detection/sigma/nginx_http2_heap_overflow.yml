@@ -1,0 +1,19 @@
+title: Nginx Worker Terminated by Segmentation Fault
+id: 5e3d61f8-2a0a-42f8-99f6-935aceffadc8
+status: experimental
+description: Flags an nginx worker exiting on SIGSEGV for correlation with HTTP/2 exposure and package status.
+references:
+  - https://www.cve.org/CVERecord?id=CVE-2026-123007
+logsource:
+  product: nginx
+  service: error
+  definition: Map the original nginx error log message to message.
+detection:
+  worker:
+    message|contains: 'worker process '
+  crash:
+    message|contains: ' exited on signal 11'
+  condition: worker and crash
+falsepositives:
+  - Worker crashes from unrelated nginx bugs, third-party modules, or host faults
+level: medium
