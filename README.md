@@ -47,7 +47,7 @@ Zero-day / negative-day thinking: where the next bug of a known class is likely,
 - [**class-incorrect-auth**](kits/class-incorrect-auth)
 - [**Krita File Parsing Vulnerabilities - Class-wide Defense Kit**](kits/class-krta): This kit provides defensive measures against the pattern of file parsing vulnerabilities found in Krita.
 - [**class-lua-use-after-free**](kits/class-lua-use-after-free)
-- [**Out-of-Bounds Read Vulnerability Class Kit**](kits/class-oob-read): This kit contains resources for detecting and defending against Out-of-Bounds Read vulnerabilities, a common class of memory safety issues in parsers.
+- [**class-oob**](kits/class-oob)
 - [**class-oom**](kits/class-oom)
 
 ## 🔧 Tools it built
