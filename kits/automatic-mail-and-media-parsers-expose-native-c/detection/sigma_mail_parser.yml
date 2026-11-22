@@ -1,0 +1,21 @@
+title: Mail Parsing Worker Resource Limit Event
+id: 3a9a77d6-6870-457d-94e5-44201f880ad7
+status: experimental
+description: Identifies normalized resource limit events from MIME parsing and Mailpit thumbnail workers.
+logsource:
+    category: application
+    definition: Normalize application and worker resource events as described in hunt.md.
+detection:
+    selection:
+        handler:
+            - mime_parse
+            - mailpit_thumbnail
+        event_type:
+            - cpu_budget_exceeded
+            - memory_budget_exceeded
+            - parse_timeout
+            - oom_kill
+    condition: selection
+falsepositives:
+    - Legitimate workload spikes or worker limits set below normal demand
+level: medium

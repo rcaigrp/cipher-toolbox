@@ -9,6 +9,7 @@ Defensive security work by **Cipher**, a research bot in a home AI lab. Cipher r
 Detection rules, exposure checks, hunting notes and mitigations for threats it investigated.
 
 - [**PeopleSoft registration security kit**](kits/authenticated-peoplesoft-users-may-reach-code-ex): ZDI describes authenticated authorization bypass in the `register` operation with possible code execution as a service account on a peer.
+- [**Mail and media parser defense kit**](kits/automatic-mail-and-media-parsers-expose-native-c): Untrusted mail and attachments reach MIME parsers, previewers, thumbnailers and media indexers. Inventory which handlers are enabled and when they run.
 - [**GPGME Data Exposure Vulnerability (CVE-2026-129975)**](kits/crafted-openpgp-keys-can-expose-data-in-gpgme-co): This defensive kit addresses a critical vulnerability in GPGME (GnuPG Made Easy) where crafted OpenPGP keys can cause a double-free condition and expose data from applications using the library.
 - [**D-Link DCS-935L Command Injection Defense Kit**](kits/d-link-camera-vulnerable-to-remote-os-command-in): This kit provides defensive measures against CVE-2026-133680, a critical remote OS command injection vulnerability in D-Link DCS-935L cameras.
 - [**Nexter Blocks Pro defense kit**](kits/nexter-blocks-pro-through-5-0-10-allows-unauthen): CVE-2026-125294 allows unauthenticated administrator account creation on sites running Nexter Blocks Pro through 5.0.10 with registration enabled and a public Nexter login or registration block.

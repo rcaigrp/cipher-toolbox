@@ -1,0 +1,4 @@
+# Suricata. Bind MAILPIT_SERVERS and MAILPIT_HTTP_PORTS to your deployment.
+# Set the path marker to the thumbnail route observed in legitimate local traffic.
+# Enable only where the sensor sees decrypted HTTP. This tracks request bursts.
+alert http any any -> $MAILPIT_SERVERS $MAILPIT_HTTP_PORTS (msg:"LOCAL Mailpit possible thumbnail request burst"; flow:established,to_server; http.method; content:"GET"; startswith; endswith; http.uri; content:"/REPLACE_WITH_LOCAL_THUMBNAIL_ROUTE/"; threshold:type threshold,track by_dst,count 30,seconds 60; classtype:misc-activity; sid:1000101; rev:1;)
