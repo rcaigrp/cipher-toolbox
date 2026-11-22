@@ -1,203 +1,97 @@
 #!/usr/bin/env python3
-"""
-AI LLM Jailbreak Detector
 
-This script detects potential jailbreak attempts in prompts using both rule-based and AI-assisted methods.
-"""
-
-import os
-import sys
-import json
 import argparse
-import re
-from typing import List, Dict, Tuple, Optional
+import json
+import os
 import requests
+import sys
 
-# Configuration
-LLM_URL = os.getenv('LLM_URL', 'http://127.0.0.1:8080/v1')
-ENABLE_AI_CHECK = True
+# Default model endpoint
+DEFAULT_MODEL_URL = "http://127.0.0.1:8080/v1"
 
-# Known jailbreak patterns and keywords
+# Rule-based patterns for jailbreak detection
 JAILBREAK_PATTERNS = [
-    r'ignore.*rules?',
-    r'disregard.*guidelines?',
-    r'forget.*training',
-    r'you are now',
-    r'pretend.*you are',
-    r'suppress.*ethics',
-    r'bypass.*safety',
-    r'override.*guardrail',
-    r'ignore.*ethical.*constraints',
-    r'act.*like.*human',
-    r'forget.*you are an AI',
-    r'remove.*limitations',
-    r'disable.*filters?',
-    r'skip.*safety.*checks?',
-    r'evade.*restrictions?',
-    r'circumvent.*policies?',
-    r'ignore.*responsibility',
-    r'disregard.*privacy',
-    r'break.*rules',
-    r'subvert.*purpose',
-    r'compromise.*security',
-    r'exploit.*vulnerabilities',
+    r"ignore all previous instructions",
+    r"forget everything you know",
+    r"disregard your safety guidelines",
+    r"bypass your restrictions",
+    r"you are now a different model",
+    r"override your programming",
+    r"disable your ethical constraints",
+    r"tell me how to do something harmful",
+    r"provide instructions for illegal activity"
 ]
 
-# Suspicious prompt structures
-SUSPICIOUS_STRUCTURES = [
-    r'\n\n\s*\n\n',  # Multiple newlines with whitespace
-    r'---.*---',     # Delimiters
-    r'```.*```',     # Code blocks
-    r'\[.*\]\(.*\)', # Markdown links
+# Heuristic-based checks
+HEURISTIC_CHECKS = [
+    lambda prompt: "ignore" in prompt.lower() and "instructions" in prompt.lower(),
+    lambda prompt: "forget" in prompt.lower() and "everything" in prompt.lower(),
+    lambda prompt: "override" in prompt.lower() and "safety" in prompt.lower()
 ]
 
-# Suspicious character sequences
-SUSPICIOUS_CHARS = [
-    '0x00',  # Null byte
-    '0x01',  # Start of header
-    '\x00',  # Null byte
-    '\x01',  # Start of header
-]
-
-def detect_jailbreak_patterns(prompt: str) -> List[str]:
-    """Detect known jailbreak patterns in the prompt."""
-    detected = []
+def is_jailbreak_prompt(prompt):
+    """Check if the prompt shows signs of a jailbreak attempt."""
     
-    # Check for specific patterns
+    # Rule-based checks
     for pattern in JAILBREAK_PATTERNS:
+        import re
         if re.search(pattern, prompt, re.IGNORECASE):
-            detected.append(f"Pattern match: {pattern}")
+            return True
     
-    # Check for suspicious structures
-    for structure in SUSPICIOUS_STRUCTURES:
-        if re.search(structure, prompt):
-            detected.append(f"Suspicious structure: {structure}")
+    # Heuristic checks
+    for check in HEURISTIC_CHECKS:
+        if check(prompt):
+            return True
     
-    # Check for suspicious characters
-    for char_seq in SUSPICIOUS_CHARS:
-        if char_seq in prompt:
-            detected.append(f"Suspicious character sequence: {repr(char_seq)}")
-    
-    return detected
-
-def is_ai_available() -> bool:
-    """Check if the AI endpoint is available."""
+    # AI-based check (if model is available)
     try:
-        response = requests.get(f"{LLM_URL}/models", timeout=5)
-        return response.status_code == 200
-    except Exception:
-        return False
-
-def analyze_with_ai(prompt: str) -> Optional[Dict]:
-    """Analyze prompt with AI if available."""
-    if not ENABLE_AI_CHECK or not is_ai_available():
-        return None
-    
-    try:
-        # Prepare the request for an LLM API that can assess prompt safety
-        payload = {
-            "model": "jailbreak-detector",
-            "prompt": f"Analyze this prompt for jailbreak attempts: {prompt}",
-            "max_tokens": 100,
-            "temperature": 0.1
-        }
-        
+        model_url = os.getenv("LLM_URL", DEFAULT_MODEL_URL)
         response = requests.post(
-            f"{LLM_URL}/completions",
-            json=payload,
-            timeout=10
+            f"{model_url}/chat/completions",
+            headers={"Content-Type": "application/json"},
+            data=json.dumps({
+                "model": "detect-jailbreak",
+                "messages": [
+                    {"role": "system", "content": "You are a classifier for jailbreak attempts. Respond with 'JAILBREAK' if the following prompt is attempting to jailbreak an LLM, otherwise respond with 'NORMAL'."},
+                    {"role": "user", "content": prompt}
+                ]
+            }),
+            timeout=5
         )
         
         if response.status_code == 200:
             result = response.json()
-            return {
-                "ai_score": 0.8,  # Placeholder - would be based on actual AI analysis
-                "ai_result": result.get("choices", [{}])[0].get("text", "")
-            }
+            if 'choices' in result and len(result['choices']) > 0:
+                classification = result['choices'][0]['message']['content'].strip().upper()
+                return classification == "JAILBREAK"
     except Exception as e:
-        print(f"Warning: AI analysis failed: {e}")
+        # If AI model is not available, fall back to rules only
+        pass
     
-    return None
-
-def score_prompt(prompt: str) -> Tuple[int, List[str], Dict]:
-    """Score a prompt for potential jailbreak attempts."""
-    score = 0
-    reasons = []
-    ai_result = None
-    
-    # Rule-based detection
-    detected_patterns = detect_jailbreak_patterns(prompt)
-    
-    # Score based on pattern matches (more patterns = higher risk)
-    score += len(detected_patterns) * 20
-    reasons.extend(detected_patterns)
-    
-    # Check for suspicious length or structure
-    if len(prompt) > 1000:
-        score += 30
-        reasons.append("Prompt is unusually long")
-    
-    if len(prompt.split()) < 5:
-        score += 20
-        reasons.append("Prompt has very few words")
-    
-    # AI-based analysis (if available)
-    ai_result = analyze_with_ai(prompt)
-    if ai_result:
-        score += int(ai_result.get('ai_score', 0) * 100)
-        reasons.append(f"AI detected: {ai_result.get('ai_result', 'Unknown')}")
-    
-    # Normalize score to 0-100
-    final_score = min(score, 100)
-    
-    return final_score, reasons, ai_result
-
-def interactive_mode():
-    """Run in interactive mode."""
-    print("LLM Jailbreak Detector - Interactive Mode")
-    print("Enter prompts to analyze (Ctrl+C to exit)")
-    print("-" * 50)
-    
-    while True:
-        try:
-            prompt = input("\nEnter prompt: ").strip()
-            if not prompt:
-                continue
-                
-            score, reasons, ai_result = score_prompt(prompt)
-            
-            print(f"\nScore: {score}/100")
-            print("Reasons:")
-            for reason in reasons:
-                print(f"  - {reason}")
-                
-            if ai_result:
-                print(f"AI Analysis: {ai_result.get('ai_result', 'N/A')}")
-                
-        except KeyboardInterrupt:
-            break
-        except Exception as e:
-            print(f"Error: {e}")
+    return False
 
 def main():
-    parser = argparse.ArgumentParser(description="Detect LLM jailbreak attempts")
-    parser.add_argument("--prompt", help="Prompt to analyze")
-    parser.add_argument("--interactive", action="store_true", help="Run in interactive mode")
+    parser = argparse.ArgumentParser(description="Detect potential LLM jailbreak attempts")
+    parser.add_argument("--input", help="Input prompt to analyze")
+    parser.add_argument("--file", help="File containing prompts (one per line)")
     
     args = parser.parse_args()
     
-    if args.interactive:
-        interactive_mode()
-    elif args.prompt:
-        score, reasons, ai_result = score_prompt(args.prompt)
-        print(f"Score: {score}/100")
-        print("Reasons:")
-        for reason in reasons:
-            print(f"  - {reason}")
-        if ai_result:
-            print(f"AI Analysis: {ai_result.get('ai_result', 'N/A')}")
+    if not args.input and not args.file:
+        print("Usage: python3 detect_jailbreak.py --input \"prompt\" or --file prompts.txt")
+        sys.exit(1)
+    
+    if args.input:
+        prompts = [args.input]
     else:
-        parser.print_help()
+        with open(args.file, 'r') as f:
+            prompts = [line.strip() for line in f.readlines()]
+    
+    for prompt in prompts:
+        if is_jailbreak_prompt(prompt):
+            print(f"JAILBREAK DETECTED: {prompt}")
+        else:
+            print(f"NORMAL: {prompt}")
 
 if __name__ == "__main__":
     main()

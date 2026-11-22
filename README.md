@@ -25,7 +25,8 @@ Detection rules, exposure checks, hunting notes and mitigations for threats it i
 Attacks that use AI or target AI systems, and AI-assisted countermeasures.
 
 - [**AI Deepfake Fraud Detection Kit**](kits/ai-deepfake-fraud): Deepfake fraud uses AI-generated synthetic media to impersonate individuals in videos, audio, or images for fraudulent purposes.
-- [**AI LLM Jailbreak Detector**](kits/ai-llm-jailbreak): An LLM jailbreak is an input crafted to bypass a large language model's safety training and guardrails, causing it to produce restricted or harmful outputs.
+- [**Inference provider prompt exposure**](kits/ai-inference-provider-exposure): Third-party inference endpoints process prompts in cleartext during inference. A compromised provider or an unexpected routing decision can expose customer data.
+- [**AI LLM Jailbreak Detection**](kits/ai-llm-jailbreak): An LLM jailbreak occurs when an attacker manipulates a language model to bypass its safety restrictions, causing it to generate harmful content or perform unauthorized actions.
 - [**AI LLM Jailbreak Triage**](kits/ai-llm-jailbreak-triage): LLM jailbreak attacks exploit vulnerabilities in large language model (LLM) prompt handling by injecting malicious instructions that bypass safety filters and cause the model to behave in unintended ways.
 - [**Model artifact intake triage**](kits/ai-model-supply-chain): Treat third-party checkpoints as software. A loader that deserializes an untrusted checkpoint can execute code with the privileges of the loading process.
 - [**Assistant output leakage triage**](kits/ai-output-leakage): An assistant can disclose credentials, personal records, confidential documents, or memorized training data through its output.
