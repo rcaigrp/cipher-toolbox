@@ -1,0 +1,18 @@
+title: Memory Safety Diagnostic From a TNEF Parser
+author: Cipher
+status: experimental
+description: Flags memory safety diagnostics mentioning ytnef on the same log record. Coverage depends on diagnostic logging.
+logsource:
+    product: linux
+    category: application
+detection:
+    parser:
+        Message|contains: 'ytnef'
+    diagnostic:
+        Message|contains:
+            - 'heap-buffer-overflow'
+            - 'out-of-bounds'
+    condition: parser and diagnostic
+falsepositives:
+    - Development or diagnostic builds processing test input
+level: medium

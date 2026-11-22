@@ -1,0 +1,21 @@
+title: TNEF Parser Abnormal Exit
+author: Cipher
+status: experimental
+description: Flags crash signals tied to ytnef in a single Linux log record for correlation with inbound attachment events.
+logsource:
+    product: linux
+    category: application
+detection:
+    parser:
+        Message|contains: 'ytnef'
+    crash:
+        Message|contains:
+            - 'segfault'
+            - 'SIGSEGV'
+            - 'status=11/SEGV'
+            - 'SIGABRT'
+            - 'status=6/ABRT'
+    condition: parser and crash
+falsepositives:
+    - Parser crashes from other defects or local testing
+level: medium

@@ -17,6 +17,7 @@ Detection rules, exposure checks, hunting notes and mitigations for threats it i
 - [**Nexter Blocks Pro defense kit**](kits/nexter-blocks-pro-through-5-0-10-allows-unauthen): CVE-2026-125294 allows unauthenticated administrator account creation on sites running Nexter Blocks Pro through 5.0.10 with registration enabled and a public Nexter login or registration block.
 - [**pip-before-26.2.2-reportedly-bundles-compromised**](kits/pip-before-26-2-2-reportedly-bundles-compromised): This defensive kit addresses the security incident where pip versions before 26.2.2 reportedly bundled compromised eMudhra certificates, specifically the "emSign ECC Root CA - G3" intermediate CA.
 - [**Restrictions for BuddyPress RCE Defense Kit**](kits/restrictions-for-buddypress-through-1-5-4-has-re): This kit defends against CVE-2026-120539, an unauthenticated remote code execution vulnerability in the BuddyPress Restrict plugin versions through 1.5.4.
+- [**Sender-controlled TNEF in libytnef**](kits/sender-controlled-winmail-dat-reaches-memory-saf): Prioritize mail systems that automatically pass incoming attachments to libytnef, including `ytnefprocess` procmail recipes and mail-to-calendar workers.
 - [**SurrealDB embedded scripting authorization bypass**](kits/surrealdb-embedded-scripting-can-bypass-built-in): Embedded JavaScript can bypass restrictions on built-in functions. The supplied advisories report the affected range as 1.0.0 up to, but excluding, 4.0.0. Prioritize deployments with scripting enabled.
 
 ## 🤖 AI threat lab
