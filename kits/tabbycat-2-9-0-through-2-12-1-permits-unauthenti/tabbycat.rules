@@ -1,0 +1,1 @@
+alert http any any -> $HOME_NET any (msg:"LOCAL Tabbycat tournament API write request"; flow:to_server,established; http.method; pcre:"/^(POST|PUT|PATCH|DELETE)$/"; http.uri; content:"/api/v1/tournaments"; startswith; fast_pattern; pcre:"/^\/api\/v1\/tournaments(?:[\/?]|$)/"; reference:cve,2026-135429; sid:100135429; rev:1;)

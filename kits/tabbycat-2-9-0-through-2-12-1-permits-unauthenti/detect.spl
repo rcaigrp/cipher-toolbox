@@ -1,0 +1,3 @@
+index=web_logs sourcetype=tabbycat_access http_method IN ("POST","PUT","PATCH","DELETE")
+| where uri_path="/api/v1/tournaments" OR like(uri_path,"/api/v1/tournaments/%")
+| table _time request_id clientip http_method uri_path status authenticated_user

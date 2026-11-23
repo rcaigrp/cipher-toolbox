@@ -1,0 +1,32 @@
+title: Tabbycat Tournament API Write Request
+id: 302fdbf7-8c3c-4ce6-8620-926fe21cb648
+status: experimental
+description: Flags write requests to the Tabbycat tournament API for correlation with authentication and audit logs.
+references:
+    - https://nvd.nist.gov/vuln/detail/CVE-2026-135429
+author: Cipher
+date: 2026-11-23
+logsource:
+    category: webserver
+    definition: Scope to Tabbycat access logs and map the HTTP method, normalized path without query string, source IP, and response status fields.
+detection:
+    selection_method:
+        cs-method:
+            - POST
+            - PUT
+            - PATCH
+            - DELETE
+    selection_path_exact:
+        cs-uri-stem: '/api/v1/tournaments'
+    selection_path_child:
+        cs-uri-stem|startswith: '/api/v1/tournaments/'
+    condition: selection_method and (selection_path_exact or selection_path_child)
+fields:
+    - c-ip
+    - cs-method
+    - cs-uri-stem
+    - sc-status
+falsepositives:
+    - Authorized tournament administration and integrations
+    - Requests blocked by the application or reverse proxy
+level: medium
