@@ -1,29 +1,44 @@
-#!/usr/bin/env bash
-set -u
+#!/bin/bash
+# Check for shell injection exposure in bash scripts
+# This is a defensive tool only, no execution or modification
 
-if (( $# > 1 )); then
-    printf 'Usage: %s [source-directory]\n' "$0" >&2
+set -euo pipefail
+
+usage() {
+    printf 'Usage: %s [directory]\nScan shell scripts in directory (default: current directory).\n' "$0"
+}
+
+if [[ $# -eq 1 && ( $1 == --help || $1 == -h ) ]]; then
+    usage
+    exit 0
+fi
+
+if [[ $# -gt 1 ]]; then
+    usage >&2
     exit 2
 fi
-cd -P -- "${1:-.}" || exit 2
+
+target_dir="${1-.}"
+
+if [[ ! -d "$target_dir" ]]; then
+    echo "Error: '$target_dir' is not a directory"
+    exit 2
+fi
 
 # Report candidate locations without executing or printing source code.
-pattern='(^|[[:space:]])(eval[[:space:]]+|((ba|da|z|k)?sh)[[:space:]]+-c([[:space:]]|$))|(^|[^[:alnum:]_])(system|shell_exec|popen|execSync)[[:space:]]*\(|shell[[:space:]]*=[[:space:]]*True'
-find . -type f \( -name '*.sh' -o -name '*.bash' -o -name '*.py' -o -name '*.js' -o -name '*.ts' -o -name '*.php' -o -name '*.rb' \) -exec bash -c '
+cd -- "$target_dir"
+pattern='(^|[^[:alnum:]_])(eval|system|exec|shell)([^[:alnum:]_]|$)'
+find . -type f -name '*.sh' -exec bash -c '
+    set -o pipefail
     pattern=$1
     shift
-    failed=0
-    for file do
-        if matches=$(LC_ALL=C grep -InE -- "$pattern" "$file"); then
-            while IFS=: read -r line remainder; do
-                printf "%q:%s\n" "$file" "$line"
-            done <<< "$matches"
-        else
-            status=$?
-            if (( status != 1 )); then
-                failed=1
-            fi
+    for path do
+        grep -nE -- "$pattern" "$path" | while IFS=: read -r line remainder; do
+            printf "%s:%s\n" "$path" "$line"
+        done
+        statuses=("${PIPESTATUS[@]}")
+        if (( statuses[0] > 1 || statuses[1] != 0 )); then
+            exit 1
         fi
     done
-    exit "$failed"
 ' bash "$pattern" {} +

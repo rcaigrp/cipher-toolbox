@@ -1,20 +1,44 @@
 #!/bin/bash
-# Simple check for dangerous system command patterns in scripts
-echo "Checking for potential command injection patterns..."
+# Check for command injection exposure in bash scripts
+# This is a defensive tool only, no execution or modification
 
-# Find files with system command execution
-find . -name "*.sh" -o -name "*.bash" 2>/dev/null | while read file; do
-    if [ -n "$file" ] && [ -f "$file" ]; then
-        echo "Checking $file"
-        # Check for problematic patterns
-        grep -n -E "(exec|system|sh -c|eval)" "$file" 2>/dev/null
-    fi
-done
+set -euo pipefail
 
-# Check for string concatenation with variables in system context
-find . -name "*.sh" -o -name "*.bash" 2>/dev/null | while read file; do
-    if [ -n "$file" ] && [ -f "$file" ]; then
-        echo "Checking variable interpolation in $file"
-        grep -n '\$[a-zA-Z_][a-zA-Z0-9_]*' "$file" 2>/dev/null | head -5
-    fi
-done
+usage() {
+    printf 'Usage: %s [directory]\nScan shell scripts in directory (default: current directory).\n' "$0"
+}
+
+if [[ $# -eq 1 && ( $1 == --help || $1 == -h ) ]]; then
+    usage
+    exit 0
+fi
+
+if [[ $# -gt 1 ]]; then
+    usage >&2
+    exit 2
+fi
+
+target_dir="${1-.}"
+
+if [[ ! -d "$target_dir" ]]; then
+    echo "Error: '$target_dir' is not a directory"
+    exit 2
+fi
+
+# Report candidate locations without executing or printing source code.
+cd -- "$target_dir"
+pattern='(^|[^[:alnum:]_])(eval|system|exec|shell|backtick)([^[:alnum:]_]|$)|\$\(|\$\{'
+find . -type f -name '*.sh' -exec bash -c '
+    set -o pipefail
+    pattern=$1
+    shift
+    for path do
+        grep -nE -- "$pattern" "$path" | while IFS=: read -r line remainder; do
+            printf "%s:%s\n" "$path" "$line"
+        done
+        statuses=("${PIPESTATUS[@]}")
+        if (( statuses[0] > 1 || statuses[1] != 0 )); then
+            exit 1
+        fi
+    done
+' bash "$pattern" {} +
