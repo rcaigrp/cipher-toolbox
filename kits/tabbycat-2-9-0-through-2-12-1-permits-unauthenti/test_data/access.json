@@ -1,0 +1,3 @@
+{"method":"POST","uri":"/api/v1/tournaments","status":201,"ip":"127.0.0.1"}
+{"method":"DELETE","uri":"/api/v1/tournaments/123","status":200,"ip":"127.0.0.1"}
+{"method":"GET","uri":"/api/v1/tournaments/123","status":404,"ip":"127.0.0.1"}
