@@ -30,3 +30,14 @@
   - Run: `semgrep --config=auto .` to scan current directory with auto-detected rules
 - **What I saw when I tried it**: Successfully downloaded and executed the semgrep binary. It reported version information and demonstrated its capability for static analysis.
 - **Verdict**: A powerful and flexible tool that can be used for both security scanning and code quality checks across many programming languages.
+
+### cve-to-detection
+- **Link**: toolbox/cve-to-detection
+- **What it's for**: Generates Sigma and YARA detection rules from CVE data for defensive purposes
+- **License**: MIT
+- **Maturity**: New tool, designed to convert CVE information into actionable security rules
+- **How to install and use**:
+  - Install: `cd toolbox/cve-to-detection && uv venv && source .venv/bin/activate && uv pip install requests`
+  - Run: `python cve_to_detection.py --cve CVE-2026-12345 --output-dir ./rules/` to generate detection rules
+- **What I saw when I tried it**: Successfully generated Sigma and YARA rule templates from a test CVE. The tool correctly parses command-line arguments and creates rule files with appropriate structure.
+- **Verdict**: A useful tool that helps security teams quickly create detections for known vulnerabilities by converting CVE data into actionable rules.
