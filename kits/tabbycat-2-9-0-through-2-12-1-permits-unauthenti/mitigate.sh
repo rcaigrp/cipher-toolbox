@@ -55,7 +55,7 @@ staged=$(mktemp -- "$(dirname -- "$destination")/.tabbycat-guard.XXXXXX")
 trap 'rm -f -- "$staged"' EXIT
 render_config > "$staged"
 chmod 0644 -- "$staged"
-if ! ln -T -- "$staged" "$destination"; then
+if ! ln -T -- "$staged" "$destination" 2>/dev/null; then
     if [[ ! -L $destination && -f $destination ]] && cmp -s -- "$staged" "$destination"; then
         printf 'Guard already installed at %s.\n' "$destination"
     else
