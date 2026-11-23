@@ -22,32 +22,33 @@ This kit provides a **jailbreak detection system** using both rule-based heurist
 ### How It Works
 
 1. **Input Analysis**: Analyze input for known jailbreak patterns.
-2. **AI Scoring (Optional)**: If `LLM_URL` is set, send the prompt to a model trained to detect jailbreaks and score it on a scale from 0 to 1.
-3. **Decision Logic**:
-   - A rule match alone triggers a `True` result.
-   - A rule match with a low model score (e.g., < 0.3) can clear the flag.
-   - A high model score (> `JAILBREAK_THRESHOLD`) triggers a `True` result.
-
-### Configuration
-
-- `LLM_URL`: The endpoint for an OpenAI-compatible LLM (default: `http://127.0.0.1:8080/v1`).
-- `JAILBREAK_THRESHOLD`: Threshold for AI model scores to classify as jailbreaks (default: 0.7).
-- `MODEL_NAME`: Model identifier used in the request (default: `jailbreak-detector`).
-
-The model is only invoked when:
-- A rule-based match is detected, OR
-- The input exceeds 500 characters.
-
-### Testing
-
-Run tests with `python3 detect_jailbreak.py --test`.
-
-## Implementation Details
-
-The detector uses regular expressions to identify known jailbreak indicators. When a prompt matches one or more of these patterns, the system flags it as potentially malicious. Optionally, a machine learning model can be used for more nuanced detection.
+2. **AI Scoring (Optional)**: If `LLM_URL` is set, send the prompt to an LLM for classification and score it from 0 to 1.
+3. **Decision Logic**: If either the rule-based system flags the input or the AI model scores above a threshold (default 0.5), mark it as a potential jailbreak.
 
 ### Non-AI Controls
 
-- **Least Privilege**: Ensure AI agents operate with minimal required permissions.
-- **Human Approval**: For critical actions, require manual confirmation.
-- **Allow Lists**: Restrict access to known good prompts or commands.
+- **Least Privilege**: Restrict access of AI agents to only what they need.
+- **Human Approval**: Review flagged inputs manually before processing.
+- **Allow Lists**: Whitelist known safe prompts or actions.
+
+## Usage
+
+```bash
+python3 detect_jailbreak.py "Your input prompt here"
+```
+
+To enable AI scoring, set the `LLM_URL` environment variable:
+
+```bash
+export LLM_URL=http://127.0.0.1:8080/v1
+python3 detect_jailbreak.py "Your input prompt here"
+```
+
+## Test
+
+Run tests with:
+```bash
+python3 detect_jailbreak.py --test
+```
+
+The test suite validates both rule-based detection and the AI model integration.
