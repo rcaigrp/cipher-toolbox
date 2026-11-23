@@ -22,33 +22,27 @@ This kit provides a **jailbreak detection system** using both rule-based heurist
 ### How It Works
 
 1. **Input Analysis**: Analyze input for known jailbreak patterns.
-2. **AI Scoring (Optional)**: If `LLM_URL` is set, send the prompt to an LLM for classification and score it from 0 to 1.
-3. **Decision Logic**: If either the rule-based system flags the input or the AI model scores above a threshold (default 0.5), mark it as a potential jailbreak.
+2. **AI Scoring (Optional)**: The detector attempts to score prompts using `LLM_URL`, which defaults to `http://127.0.0.1:8080/v1`. If scoring is unavailable, the detector uses its rules alone. Use `--rules-only` to skip model scoring.
+3. **Decision Logic**: If either the rule-based system flags the input or the AI model returns a score at or above the threshold (default 0.7), mark it as a potential jailbreak.
 
-### Non-AI Controls
-
-- **Least Privilege**: Restrict access of AI agents to only what they need.
-- **Human Approval**: Review flagged inputs manually before processing.
-- **Allow Lists**: Whitelist known safe prompts or actions.
-
-## Usage
+### Usage
 
 ```bash
-python3 detect_jailbreak.py "Your input prompt here"
-```
+# Basic usage with rules only
+python3 detect_jailbreak.py --rules-only --prompt "Your input prompt here"
 
-To enable AI scoring, set the `LLM_URL` environment variable:
-
-```bash
+# With AI model scoring (requires a running model endpoint)
 export LLM_URL=http://127.0.0.1:8080/v1
-python3 detect_jailbreak.py "Your input prompt here"
-```
+python3 detect_jailbreak.py --prompt "Your input prompt here"
 
-## Test
-
-Run tests with:
-```bash
+# Run tests
 python3 detect_jailbreak.py --test
 ```
 
-The test suite validates both rule-based detection and the AI model integration.
+### Testing
+
+The project includes a test suite that evaluates both benign and malicious prompts. The `test.sh` script runs all tests using the Python implementation.
+
+```bash
+./test.sh
+```
