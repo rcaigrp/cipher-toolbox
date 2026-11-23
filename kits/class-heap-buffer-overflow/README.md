@@ -1,33 +1,19 @@
-# Heap Buffer Overflow Exposure Checker
+# Heap Buffer Overflow
 
-## Purpose
+This folder contains resources related to heap buffer overflow vulnerabilities, a persistent class of memory safety issues.
 
-This tool detects potential heap buffer overflow vulnerabilities in software by scanning source code files for unsafe patterns that could lead to memory corruption.
+## Files
 
-## Usage
+- `FORESIGHT.md`: Overview of the vulnerability pattern and analysis.
+- `check_exposure.sh`: Script to inventory tools that may parse untrusted data.
+- `detection_rules/`: Sigma, YARA, and Suricata rules for detecting heap buffer overflow behavior.
 
-```bash
-python3 check_heap_exposure.py [--apply] <directory>
-```
+## Testing
 
-- `--apply`: Apply actions (default is read-only)
-- `<directory>`: Directory to scan (defaults to current directory)
-
-## Features
-
-- Scans C/C++ source files (.c, .cpp, .cc, .h, .hpp)
-- Detects unsafe functions like `strcpy`, `memcpy`, `gets`, etc.
-- Reports line numbers and matching patterns
-- Safe by default; use `--apply` to take actions (logging/quarantining)
-
-## Example
+Run the exposure check script:
 
 ```bash
-python3 check_heap_exposure.py /home/user/software
+./check_exposure.sh
 ```
 
-This will scan the `/home/user/software` directory for unsafe memory operations and report any findings.
-
-## Test
-
-The script was tested with a sample file containing known unsafe patterns and confirmed to correctly identify them.
+This will list tools on the PATH and installed Debian packages related to heap parsing.

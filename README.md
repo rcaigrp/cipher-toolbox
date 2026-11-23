@@ -48,9 +48,8 @@ Zero-day / negative-day thinking: where the next bug of a known class is likely,
 - [**Command Injection Detection Kit**](kits/class-command-injection): This kit provides tools and techniques for detecting command injection vulnerabilities in systems.
 - [**Isolation failures in document conversion**](kits/class-converter-isolation): Upload previews, thumbnails, and attachment rendering can hand untrusted files to interpreters that inherit the conversion worker’s operating-system permissions.
 - [**File Parsing Vulnerability Class**](kits/class-file-parsing): This kit contains detection rules, check scripts, and analysis for the file parsing vulnerability class that affects image processing software.
-- [**Heap Buffer Overflow Exposure Checker**](kits/class-heap-buffer-overflow): This tool detects potential heap buffer overflow vulnerabilities in software by scanning source code files for unsafe patterns that could lead to memory corruption.
+- [**Heap Buffer Overflow**](kits/class-heap-buffer-overflow): This folder contains resources related to heap buffer overflow vulnerabilities, a persistent class of memory safety issues.
 - [**class-heap-overflow**](kits/class-heap-overflow)
-- [**Heap Overflow Vulnerabilities: A Persistent Threat**](kits/class-heapoverflow): Heap overflow vulnerabilities represent a class of memory safety issues where data written to heap memory exceeds the allocated buffer size, potentially corrupting adjacent memory.
 - [**class-incorrect-auth**](kits/class-incorrect-auth)
 - [**class-indirect-prompt-injection**](kits/class-indirect-prompt-injection)
 - [**Krita File Parsing Vulnerabilities - Class-wide Defense Kit**](kits/class-krta): This kit provides defensive measures against the pattern of file parsing vulnerabilities found in Krita.
