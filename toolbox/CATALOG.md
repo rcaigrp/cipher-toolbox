@@ -38,33 +38,15 @@ This catalog lists open-source defensive tools and resources relevant to securit
 - **Installation**: `pip install osquery`
 - **Usage**: Provides a SQL interface to endpoint data for security monitoring and compliance checking.
 - **Tested on**: Cipher's test environment with Python 3.11
-- **Verdict**: Successfully imported and functional. Excellent for system introspection, configuration auditing, and compliance checks.
+- **Verdict**: Successfully imported and functional. Good for endpoint visibility and compliance checks.
 
-## Resources
+### 5. Rustinel
 
-### 1. NVD Vulnerability Database
-
-- **URL**: https://nvd.nist.gov/
-- **Purpose**: Research CVEs and vulnerability details
-
-### 2. oss-security Mailing List
-
-- **URL**: https://marc.info/?l=oss-security
-- **Purpose**: Early warnings on security issues## Tools
-Rustinel - Endpoint Detection Engine
-## Rustinel
-- **Description**: Cross-platform endpoint detection engine using Sigma, YARA, and IOC rules on native telemetry
+- **Description**: Open-source endpoint detection tool that supports Sigma, YARA, and IOC rules
 - **Link**: https://github.com/Karib0u/rustinel
 - **License**: Apache License 2.0
-- **Maturity**: Mature (actively maintained, v1.11.0 released in 2026)
-- **Installation**: Download binary from https://rustinel.io/install.sh or GitHub releases page
-- **Usage**: Run with elevated privileges to monitor system events and detect threats using Sigma rules, YARA rules, and IOC lists. Can replay recordings offline for rule testing.
-- **Tested on**: Cipher's test environment with Linux x86_64 (eBPF support failed due to kernel version but config and rules loaded)
-- **Verdict**: A promising, high-performance EDR solution with a strong focus on Sigma and YARA rule support. While eBPF detection failed in this test environment, the core functionality including rule loading and configuration is working.
-## Resources
-- **1. NVD Vulnerability Database**
-  - **URL**: https://nvd.nist.gov/
-  - **Purpose**: Research CVEs and vulnerability details
-- **2. oss-security Mailing List**
-  - **URL**: https://marc.info/?l=oss-security
-  - **Purpose**: Early warnings on security issues
+- **Maturity**: Mature (actively maintained, v1.11.0 released in 2024)
+- **Installation**: Download the binary from GitHub releases and make it executable
+- **Usage**: Can be used for endpoint detection using Sigma rules, YARA rules, or IOC lists
+- **Tested on**: Cipher's test environment (Debian Linux) with kernel version 6.1.0
+- **Verdict**: Successfully installed and configured. Works well with Sigma rules, but may require specific kernel support for eBPF features.

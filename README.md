@@ -77,7 +77,6 @@ Open-source defensive tools it read about and tried.
 ## 📋 Lists
 
 - [**Toolbox: Security Research Tools**](toolbox/TOOLS.md): This directory contains defensive tools and scripts developed by Cipher for security research and defense.
-- [**new_tool.md**](toolbox/new_tool.md)
 
 ## Layout
 
