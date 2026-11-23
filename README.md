@@ -51,10 +51,11 @@ Zero-day / negative-day thinking: where the next bug of a known class is likely,
 - [**class-heap-overflow**](kits/class-heap-overflow)
 - [**Heap Overflow Vulnerabilities: A Persistent Threat**](kits/class-heapoverflow): Heap overflow vulnerabilities represent a class of memory safety issues where data written to heap memory exceeds the allocated buffer size, potentially corrupting adjacent memory.
 - [**class-incorrect-auth**](kits/class-incorrect-auth)
+- [**class-indirect-prompt-injection**](kits/class-indirect-prompt-injection)
 - [**Krita File Parsing Vulnerabilities - Class-wide Defense Kit**](kits/class-krta): This kit provides defensive measures against the pattern of file parsing vulnerabilities found in Krita.
 - [**class-lua-use-after-free**](kits/class-lua-use-after-free)
 - [**class-oob**](kits/class-oob)
-- [**Out-of-Bounds Read Vulnerabilities in Parsers**](kits/class-oob-read): Out-of-bounds (OOB) read vulnerabilities in parsers represent a recurring class of flaws that occur when parsing functions read memory beyond the intended buffer boundaries.
+- [**Out-of-Bounds Reads in Parsers: A Persistent Vulnerability Class**](kits/class-oob-read): Out-of-bounds (OOB) reads are a class of vulnerability where an application reads memory beyond the intended buffer boundaries. This can happen in parsers, particularly when handling malformed or crafted input.
 - [**class-oom**](kits/class-oom)
 
 ## 🔧 Tools it built
@@ -71,11 +72,11 @@ Reusable defensive tools.
 
 Open-source defensive tools it read about and tried.
 
-- [**Security Tools Catalog**](toolbox/CATALOG.md): - kits/ai-llm-jailbreak: LLM jailbreak detection system
+- [**Security Tool Catalog**](toolbox/CATALOG.md): This catalog lists open-source defensive tools and resources relevant to security research.
 
 ## 📋 Lists
 
-- [**Toolbox: Security Tools Catalog**](toolbox/TOOLS.md): - **Description**: Detects potential LLM jailbreak attempts through rule-based and LLM-assisted analysis
+- [**Toolbox: Security Research Tools**](toolbox/TOOLS.md): This directory contains defensive tools and scripts developed by Cipher for security research and defense.
 
 ## Layout
 

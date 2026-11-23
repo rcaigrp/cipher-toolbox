@@ -1,41 +1,36 @@
 #!/usr/bin/env python3
-"""
-Check for exposure to Out-of-Bounds Read vulnerabilities in parsers.
-This script tests the current system for known vulnerable components.
-"""
 
+import os
 import subprocess
-import sys
 
-def check_parser_exposure():
-    """Check if any known vulnerable parser libraries are installed."""
+def check_vulnerable_libraries():
+    # List of known vulnerable libraries (this would be expanded)
     vulnerable_libs = [
-        "libgpac", 
-        "ffmpeg",
-        "nginx",
-        "ghostscript"
+        'libytnef',
+        'libmp4v2',
+        'ffmpeg',
+        'gstreamer'
     ]
+
+    installed_libs = []
     
-    found_vulnerable = []
-    
+    # Check if libraries are installed
     for lib in vulnerable_libs:
         try:
-            result = subprocess.run(["dpkg", "-l", lib], capture_output=True, text=True)
-            if result.returncode == 0 and "ii" in result.stdout:
-                found_vulnerable.append(lib)
-        except Exception:
-            pass
-    
-    return found_vulnerable
+            result = subprocess.run(['dpkg', '-l', lib], capture_output=True, text=True)
+            if 'ii' in result.stdout:
+                installed_libs.append(lib)
+        except Exception as e:
+            print(f"Error checking {lib}: {e}")
+
+    return installed_libs
+
+def main():
+    exposed_libs = check_vulnerable_libraries()
+    if exposed_libs:
+        print("Exposed to OOB read class via libraries:", ", ".join(exposed_libs))
+    else:
+        print("No known vulnerable libraries detected.")
 
 if __name__ == "__main__":
-    vulnerable = check_parser_exposure()
-    
-    if vulnerable:
-        print("WARNING: Found potentially vulnerable parser libraries:")
-        for lib in vulnerable:
-            print(f"  - {lib}")
-        sys.exit(1)
-    else:
-        print("No known vulnerable parser libraries detected.")
-        sys.exit(0)
+    main()

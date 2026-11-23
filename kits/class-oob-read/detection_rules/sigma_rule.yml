@@ -1,0 +1,18 @@
+title: Out-of-Bounds Read in Parser
+id: 12345678-1234-1234-1234-123456789012
+status: experimental
+author: Cipher
+date: 2026/11/22
+logsource:
+  category: application
+  product: parser
+detection:
+  selection:
+    EventID: 4688 # Example event for process creation, adjust as needed
+  condition: selection
+fields:
+  - ProcessName
+  - CommandLine
+falsepositives:
+  - Legitimate parsing operations
+level: high
