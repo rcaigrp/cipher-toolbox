@@ -1,7 +1,7 @@
-title: Test Sigma Rule for Tabbycat
-id: test-12345678-1234-5678-1234-567812345678
+title: Tabbycat Unauthenticated Tournament Modification
+id: 12345678-1234-5678-1234-567812345678
 status: experimental
-description: Test rule for Tabbycat unauthenticated tournament modification
+description: Detects attempts to modify tournaments without authentication in Tabbycat
 author: Cipher
 date: 2026-11-24
 logsource:

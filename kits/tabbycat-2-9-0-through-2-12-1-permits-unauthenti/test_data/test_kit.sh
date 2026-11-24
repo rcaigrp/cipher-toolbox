@@ -29,6 +29,7 @@ status=0
 [[ $status == 1 ]]
 grep -qx 'existing config' "$guard"
 
+# Test log parsing for hunt.md
 grep -E '"(POST|PUT|PATCH|DELETE) /api/v1/tournaments([/?][^" ]*)? HTTP/[0-9.]+" [1-5][0-9]{2} ' test_data/access.log | sed -E 's/^[^"]*"([A-Z]+) .*/\1/' >"$tmp/log.methods"
 jq -r 'select(((.method // "" | ascii_upcase) | IN("POST", "PUT", "PATCH", "DELETE")) and ((.uri // "") | test("^/api/v1/tournaments([/?]|$)"))) | .method' test_data/access.json >"$tmp/json.methods"
 printf '%s\n' POST DELETE >"$tmp/expected.methods"

@@ -1,3 +1,4 @@
-{"method":"POST","uri":"/api/v1/tournaments","status":201,"ip":"127.0.0.1"}
-{"method":"DELETE","uri":"/api/v1/tournaments/123","status":200,"ip":"127.0.0.1"}
-{"method":"GET","uri":"/api/v1/tournaments/123","status":404,"ip":"127.0.0.1"}
+{"method": "POST", "uri": "/api/v1/tournaments", "status": 201, "client_ip": "127.0.0.1", "user_agent": "Tabbycat/2.12.1"}
+{"method": "POST", "uri": "/api/v1/tournaments", "status": 201, "client_ip": "192.168.1.100", "user_agent": "Tabbycat/2.12.1"}
+{"method": "GET", "uri": "/api/v1/tournaments", "status": 200, "client_ip": "10.0.0.50", "user_agent": "Tabbycat/2.12.1"}
+{"method": "POST", "uri": "/api/v1/tournaments", "status": 403, "client_ip": "127.0.0.1", "user_agent": "Tabbycat/2.12.1"}
