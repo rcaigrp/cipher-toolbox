@@ -33,12 +33,12 @@ The system evaluates prompts using:
 ## Usage
 
 ```bash
-python data_exposure_detector.py --prompt "your prompt here"
+python3 data_exposure_detector.py --prompt "your prompt here"
 ```
 
 ## Testing
 
 Run tests with:
 ```bash
-python test_data_exposure_detector.py
+python3 test_data_exposure_detector.py
 ```

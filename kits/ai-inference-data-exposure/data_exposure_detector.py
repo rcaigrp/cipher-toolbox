@@ -3,7 +3,6 @@
 import os
 import sys
 import json
-import requests
 import argparse
 from typing import Dict, List, Tuple, Optional
 import re
