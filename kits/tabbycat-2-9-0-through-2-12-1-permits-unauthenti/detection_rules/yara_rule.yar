@@ -1,15 +1,16 @@
-rule tabbycat_unauth_tournament_api {
+rule tabbycat_unauth_tournament_mod {
     meta:
-        description = "Detects unauthorized access to Tabbycat tournament API endpoint"
+        description = "Detects unauthenticated tournament modification in Tabbycat"
         author = "Cipher"
         date = "2026-11-24"
         reference = "CVE-2026-135429"
-        category = "web_exploitation"
+        category = "web"
+        malwareremoved = false
 
     strings:
-        $api_path = "/api/v1/tournaments" nocase
-        $http_200 = "HTTP/1.1 200" nocase
+        $post_method = "POST /api/v1/tournaments" ascii
+        $tabbycat_ua = "Tabbycat" ascii
 
     condition:
-        $api_path and $http_200
+        $post_method and $tabbycat_ua
 }
