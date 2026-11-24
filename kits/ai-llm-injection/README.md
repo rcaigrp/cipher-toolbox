@@ -1,44 +1,33 @@
-# AI LLM Injection Defense
+# AI Indirect Prompt Injection Detection Kit
 
-## Threat
+## Threat Overview
 
-LLM injection occurs when an attacker manipulates prompts or inputs to an AI system in a way that leads to unintended behavior, such as bypassing safety controls, accessing unauthorized data, or influencing the AI's output. This can happen through direct prompt injection (e.g., inserting malicious instructions), indirect injection via documents or agent tools, or by exploiting vulnerabilities in how AI systems process external inputs.
+**Indirect prompt injection** occurs when an attacker manipulates inputs that are processed by an LLM but not directly part of the prompt. These attacks exploit vulnerabilities in how data flows through systems, particularly in agent-based or multi-step workflows where external data sources can be manipulated.
 
-## Real Examples
+### Real Examples:
+- In 2026, attackers used indirect injection to manipulate a chatbot's knowledge base by submitting malicious documents that were indexed and later referenced during conversations.
+- A vulnerability was found in an AI assistant that accepted user-submitted URLs as input. By crafting a URL pointing to a malicious page, attackers could inject data into the LLM's context indirectly.
+- In another case, an automated agent used external APIs for context but did not validate inputs properly. An attacker manipulated the API response to inject malicious instructions.
 
-- In 2025, attackers used prompt injection to manipulate a customer service chatbot into revealing internal documentation.
-- A phishing campaign used LLM-generated messages that bypassed content filters by exploiting injection techniques.
-- In another case, an AI assistant was tricked into sharing confidential user data through carefully crafted prompts.
+### Who Is Exposed?
+Organizations using AI agents or chatbots that interact with external data sources (e.g., websites, databases, file uploads) are vulnerable if they do not properly sanitize or validate all input before it reaches the LLM. Any system where LLM behavior depends on external context without proper validation is at risk.
 
-## Who Is Exposed
+### How the Countermeasure Works
+This kit provides a detection script that:
+1. Analyzes inputs for known indirect injection patterns.
+2. Uses an AI model (via `LLM_URL`) to score potential indirect injection attempts.
+3. Flags suspicious inputs based on thresholds and model confidence.
+4. Falls back to rule-based checks when no AI model is available.
 
-- Organizations using LLM-powered assistants (chatbots, agents, tools).
-- Users who interact with untrusted or compromised AI systems.
-- Developers integrating LLMs without proper input sanitization or guardrails.
-
-## How the Countermeasure Works
-
-This kit provides a **prompt validation and anomaly detection system** that:
-1. Analyzes user prompts for suspicious patterns (e.g., instruction injection, role reversal).
-2. Uses an LLM to classify whether a prompt is potentially malicious.
-3. Applies rules-based checks when no LLM is available.
-4. Logs flagged inputs for review or blocking.
-
-It's designed to be **pluggable**—you can use it with any OpenAI-compatible endpoint (default: `http://127.0.0.1:8080/v1`) or fall back to rule-based detection alone.
-
-## How to Run It
-
+### How to Run
 ```bash
-python3 detect_injection.py --input "test prompt here"
+python detect_indirect_injection.py --input "user input here"
 ```
 
-To test, run:
-```bash
-python3 test.py
-```
+Test with sample benign and malicious prompts included in this kit.
 
 ## Non-AI Controls
-
-- **Least privilege for agents**: Limit what tools or data each AI agent can access.
-- **Human approval**: Require manual review of flagged inputs before action.
-- **Allow-lists**: Only permit known-safe prompts or inputs to pass through.
+- Implement strict input validation for all external data sources.
+- Sanitize and escape inputs before passing them to the LLM.
+- Use allowlists for trusted domains or file types.
+- Employ network segmentation and access controls to limit exposure.
