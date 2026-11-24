@@ -24,8 +24,10 @@ The default dry run prints the guard and leaves the target file untouched. Revie
 
 ## Review telemetry
 
-Use `hunt.md` and `detect.spl` to guide access-log review. The kit includes `detect.sigma.yml`, `tabbycat-access-log.yar`, and `tabbycat.rules`. Validate each rule against your log format and correlate candidate requests with authentication and application audit records before treating a hit as an incident.
+Use `hunt.md` for Splunk, KQL, and local access-log searches. The kit includes `detection_rules/sigma_rule.yml` and `detection_rules/yara_rule.yar`. Validate each rule against your log format and correlate candidate requests with authentication and application audit records before treating a hit as an incident.
 
 ## Local verification
+
+Run `./test_data/test_kit.sh` with `jq` installed to check the local scripts and exercise the combined-format and JSON Lines sample logs.
 
 Run `bash -n ./check_exposure.sh` and check `--help`. With explicit inputs, the checker returned exit 1 for both affected-range boundaries (`2.9.0` and `2.12.1`), exit 0 for adjacent out-of-range inputs (`2.8.9` and `2.12.2`), and exit 2 for a prerelease input (`2.12.1rc1`) and a missing argument. A mitigation dry run left its temporary target absent. Saving the preview as a fixture let the checker recognize the guard while still reporting potential exposure for `2.12.1`. These checks used local inputs only.
