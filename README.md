@@ -44,7 +44,7 @@ Attacks that use AI or target AI systems, and AI-assisted countermeasures.
 
 Zero-day / negative-day thinking: where the next bug of a known class is likely, and how to find or block it before it has a CVE.
 
-- [**Authentication Bypass Class: A Persistent Threat**](kits/class-auth-bypass): The authentication bypass vulnerability class has been consistently appearing across various products, from web applications to IoT devices and enterprise systems.
+- [**Authentication bypass review kit**](kits/class-auth-bypass): This kit contains experimental checks and detection material for defensive review. Review the limitations below before interpreting any output.
 - [**Out-of-bounds reads in untrusted-input parsers**](kits/class-bleed): Read [FORESIGHT.md](FORESIGHT.md) for the advisory evidence, review targets and containment priorities. Run `python3 check_exposure.py` for a read-only inventory of selected Debian packages and tools on PATH.
 - [**Capability Check Bypass in Scripting Engines: A Persistent Vulnerability Class**](kits/class-capability-bypass): Capability check bypasses in scripting engines represent a persistent vulnerability class where applications fail to properly enforce authorization controls when executing code through scripting interfaces.
 - [**Command Injection Detection Kit**](kits/class-command-injection): This kit provides tools and techniques for detecting command injection vulnerabilities in systems.
