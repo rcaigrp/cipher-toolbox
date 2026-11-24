@@ -1,0 +1,7 @@
+# Suricata rules for Fuseki SHACL SSRF detection
+
+alert tcp any any -> any 80 (msg:"Fuseki SHACL validation attempts to fetch remote resource"; sid:202686155; rev:1;)
+alert tcp any any -> any 443 (msg:"Fuseki SHACL validation over HTTPS to external host"; sid:202686156; rev:1;)
+
+# Generic pattern for HTTP/HTTPS requests during SHACL processing
+alert http any any -> any any (msg:"Fuseki SHACL SSRF attempt"; flow:to_server; content:"SHACL validation request to"; http_uri; sid:202686157; rev:1;)

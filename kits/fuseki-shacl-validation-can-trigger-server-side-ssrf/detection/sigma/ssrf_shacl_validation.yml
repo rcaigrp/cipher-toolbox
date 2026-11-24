@@ -1,0 +1,31 @@
+title: Fuseki SHACL Validation SSRF Attempt
+id: 12345678-1234-1234-1234-123456789012
+status: experimental
+description: Detects potential server-side request forgery during SHACL validation in Fuseki
+author: Cipher
+date: 2026/11/25
+logsource:
+    category: application
+    product: fuseki
+    service: shacl
+detection:
+    selection:
+        # Example log pattern - adjust based on actual logs
+        - 'SHACL validation request to'
+        - 'Fetching remote resource during SHACL'
+    condition: selection
+fields:
+    - user
+    - ip
+    - url
+    - status_code
+falsepositives:
+    - Legitimate use of remote resources in SHACL validation
+level: high
+references:
+    - https://seclists.org/oss-sec/2026/q4/853
+    - https://jena.apache.org/security/advisories.html
+tags:
+    - attack.initial_access
+    - attack.t1190
+    - cve.2026.86155
