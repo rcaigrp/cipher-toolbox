@@ -18,3 +18,12 @@ or internet-facing deployments.
   - `yara/ssrf_shacl_validation.yar`: YARA rule for file/memory scanning
   - `suricata/ssrf_shacl_validation.rules`: Suricata/Snort rule for network detection
 - `hunt.md`: Hunting queries for Splunk, KQL, and grep/jq to find signs of exploitation.
+
+## Testing
+
+The `check_exposure.sh` script was tested with the following scenarios:
+1. Version 6.2.0 (affected) - should return exit code 1
+2. Version 6.3.0 (not affected) - should return exit code 0
+3. Unknown version - should return exit code 2 (warning)
+
+The script correctly identifies affected versions and handles edge cases.
