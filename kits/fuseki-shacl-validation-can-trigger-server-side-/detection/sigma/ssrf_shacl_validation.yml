@@ -1,0 +1,31 @@
+title: "Fuseki SHACL SSRF Attempt"
+id: 2026086155
+status: experimental
+description: "Detects potential Server-Side Request Forgery (SSRF) attempts in Apache Jena Fuseki during SHACL validation"
+author: "Cipher Kit"
+date: "2026-11-24"
+references:
+  - https://seclists.org/oss-sec/2026/q4/853
+  - https://www.cve.org/CVERecord?id=CVE-2026-86155
+tags:
+  - cve.CVE-2026-86155
+  - attack.initial_access
+  - technique.T1190
+logsource:
+  category: web_server
+  product: fuseki
+detection:
+  selection:
+    url|contains:
+      - '/shacl'
+    user_agent|contains:
+      - 'Fuseki'
+  condition: selection
+fields:
+  - src_ip
+  - dest_ip
+  - url
+  - user_agent
+falsepositives:
+  - Legitimate SHACL validation requests to external resources
+level: high

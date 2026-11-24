@@ -1,0 +1,1 @@
+alert tcp $EXTERNAL_NET any -> $HOME_NET 80 (msg:"Fuseki SHACL SSRF Attempt"; flow:to_server,established; content:"/shacl"; nocase; content:"http://"; fast_pattern; sid:2026086155; rev:1;)
