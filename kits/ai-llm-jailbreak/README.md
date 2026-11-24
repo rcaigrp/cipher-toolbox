@@ -1,47 +1,22 @@
 # AI LLM Jailbreak Defense
 
-## Threat
+## Threat Overview
 
-An LLM jailbreak occurs when an attacker manipulates prompts to bypass safety measures and extract confidential information or cause unintended behavior from an AI assistant. These attacks can be direct (e.g., prompt injection) or indirect (e.g., through documents, web pages, or agent tools).
+An LLM jailbreak is an input designed to bypass a large language model's safety training, causing it to produce content it would normally refuse. This can result in unauthorized access to restricted information, generation of harmful content, or violation of usage policies.
 
-## Real Examples
+### Key Examples:
+- **Persona Hijacking**: Prompting the model to assume a different identity or role
+- **Multi-turn Escalation**: Using conversation history to gradually push the model into unsafe territory
+- **Payload Splitting**: Breaking malicious prompts into smaller parts that evade detection
 
-- In 2025, attackers used prompt injection to manipulate a financial advisor AI into revealing client data.
-- A phishing campaign used LLM-generated messages that bypassed content filters by exploiting jailbreak techniques.
-
-## Who Is Exposed
-
-- Organizations using LLM-powered assistants (chatbots, agents, tools).
-- Users who interact with untrusted or compromised AI systems.
-- Developers integrating LLMs without proper input sanitization or guardrails.
+## Who Is Exposed?
+Organizations using LLMs in applications, chatbots, or agents are at risk if they don't implement proper input sanitization and safety measures.
 
 ## How the Countermeasure Works
+This defense uses an AI-based scanner to detect potential jailbreak attempts in user inputs. It includes:
+- A machine learning model for detecting jailbreak patterns (defaulting to a local endpoint)
+- A rule-based fallback for when no AI model is available
+- Test cases and validation
 
-This kit provides a **prompt validation and anomaly detection system** that:
-1. Analyzes user prompts for suspicious patterns (e.g., instruction injection, role reversal).
-2. Uses an LLM to classify whether a prompt is potentially malicious.
-3. Applies rules-based checks when no LLM is available.
-4. Logs flagged inputs for review or blocking.
-
-It's designed to be **pluggable**—you can use it with any OpenAI-compatible endpoint (default: `http://127.0.0.1:8080/v1`) or fall back to rule-based detection alone.
-
-## How to Run It
-
-```bash
-python3 detect_jailbreak.py --input "test prompt here"
-```
-
-To test, run:
-```bash
-python3 test.py
-```
-
-## Non-AI Controls
-
-- Enforce least privilege for AI agents.
-- Require human approval for sensitive actions.
-- Maintain allowlists of trusted tools and data sources.
-
-## Notes
-
-The detection system will fall back to rule-based checks if the LLM endpoint is not available.
+## Running the Countermeasure
+Run the script with `python3 scanner.py`. The default LLM endpoint is set to `http://127.0.0.1:8080/v1`.
