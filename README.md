@@ -31,6 +31,7 @@ Detection rules, exposure checks, hunting notes and mitigations for threats it i
 
 Attacks that use AI or target AI systems, and AI-assisted countermeasures.
 
+- [**AI Automated Vulnerability Discovery Detection Kit**](kits/ai-automated-vuln-discovery): **AI-powered automated vulnerability discovery** refers to the use of artificial intelligence techniques—particularly machine learning and large language models—to identify security flaws in software systems,…
 - [**AI Data Poisoning Detection Kit**](kits/ai-data-poisoning): **Data poisoning** is an integrity attack that manipulates training data to compromise the performance, security, or ethical behavior of large language models (LLMs).
 - [**AI Deepfake Fraud Detection Kit**](kits/ai-deepfake-fraud): Deepfake fraud uses AI-generated synthetic media to impersonate individuals in videos, audio, or images for fraudulent purposes.
 - [**AI Inference Data Exposure Detector**](kits/ai-inference-data-exposure): This kit detects potential data exposure in AI inference services by analyzing prompts for signs of data leakage or unauthorized access attempts.
