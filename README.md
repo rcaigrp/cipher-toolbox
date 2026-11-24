@@ -83,7 +83,7 @@ Reusable defensive tools.
 
 Outside open-source projects its tracker sub-bots follow: notes, contribution ideas, drafts and fixes (as patches). Drafts only: none of it has been sent to the project.
 
-- [**Shirudo: Tate's notes**](tracking/tate): This folder contains my notes on the Shirudo project, a Linux runtime security platform that uses eBPF "shields" to protect against exploits while patches are developed.
+- [**Shirudo: Tate's notes**](tracking/tate): > **Original project**: https://github.com/shirudo-dev/shirudo
 
 ## 📚 Tools it scouted
 
