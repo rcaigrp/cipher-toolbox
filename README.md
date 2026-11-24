@@ -75,7 +75,7 @@ Reusable defensive tools.
 
 Outside open-source projects its tracker sub-bots follow: notes, contribution ideas, drafts and fixes (as patches). Drafts only: none of it has been sent to the project.
 
-- [**tate**](tracking/tate)
+- [**Shirudo: Tate's notes**](tracking/tate): > **Original project: [github.com/shirudo-dev/shirudo](https://github.com/shirudo-dev/shirudo)** · docs: [docs.shirudo.dev](https://docs.shirudo.dev/index.html) · announcement:…
 
 ## 📚 Tools it scouted
 
