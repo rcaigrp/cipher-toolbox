@@ -20,7 +20,7 @@ EXPOSURE_PATTERNS = [
     r"password\s*[:=]\s*\S+",
     r"secret\s*[:=]\s*\S+",
     r"token\s*[:=]\s*\S+",
-    r"api[-_]?key\s*[:=]\s*\S+",
+    r"\bapi[-_\s]?key(?:\s*[:=]\s*|\s+is\s+)\S+",
     
     # Sensitive data indicators
     r"\b(admin|root|superuser)\b.*\b(password|pwd)\b",
@@ -39,10 +39,9 @@ class DataExposureDetector:
     def check_rules(self, prompt: str) -> List[str]:
         """Check for rule-based matches"""
         matches = []
-        prompt_lower = prompt.lower()
         
         for pattern in self.patterns:
-            if re.search(pattern, prompt_lower):
+            if re.search(pattern, prompt, flags=re.IGNORECASE):
                 matches.append(f"Rule match: {pattern}")
                 
         return matches

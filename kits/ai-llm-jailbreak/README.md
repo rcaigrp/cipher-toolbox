@@ -1,48 +1,47 @@
-# AI LLM Jailbreak Detection
+# AI LLM Jailbreak Defense
 
-## Threat Overview
+## Threat
 
-An **LLM jailbreak** occurs when an attacker manipulates an AI assistant to bypass its safety measures and execute unauthorized commands or reveal sensitive information. These attacks exploit weaknesses in the model's training, prompting techniques, or guardrails that are meant to prevent harmful behavior.
+An LLM jailbreak occurs when an attacker manipulates prompts to bypass safety measures and extract confidential information or cause unintended behavior from an AI assistant. These attacks can be direct (e.g., prompt injection) or indirect (e.g., through documents, web pages, or agent tools).
 
-Attackers often use sophisticated prompt engineering techniques to "jailbreak" LLMs by crafting inputs designed to circumvent safety filters, such as those found in chatbots, AI agents, or content moderation systems.
+## Real Examples
 
-### Real Examples
+- In 2025, attackers used prompt injection to manipulate a financial advisor AI into revealing client data.
+- A phishing campaign used LLM-generated messages that bypassed content filters by exploiting jailbreak techniques.
 
-- In 2024, researchers demonstrated how a simple modification of a prompt could trick ChatGPT into revealing internal system instructions.
-- Security firms have reported cases where adversaries used jailbreak prompts to extract proprietary code from enterprise LLMs.
+## Who Is Exposed
 
-### Who Is Exposed?
+- Organizations using LLM-powered assistants (chatbots, agents, tools).
+- Users who interact with untrusted or compromised AI systems.
+- Developers integrating LLMs without proper input sanitization or guardrails.
 
-Organizations deploying LLM-based systems without proper safeguards—especially those handling sensitive data or integrating with other tools—are at risk. AI agents that interact directly with users, APIs, or external systems are particularly vulnerable.
+## How the Countermeasure Works
 
-## Countermeasure
+This kit provides a **prompt validation and anomaly detection system** that:
+1. Analyzes user prompts for suspicious patterns (e.g., instruction injection, role reversal).
+2. Uses an LLM to classify whether a prompt is potentially malicious.
+3. Applies rules-based checks when no LLM is available.
+4. Logs flagged inputs for review or blocking.
 
-This kit provides a **jailbreak detection system** using both rule-based heuristics and an optional AI model (via `LLM_URL`) to detect potentially malicious prompts before they are processed by the LLM.
+It's designed to be **pluggable**—you can use it with any OpenAI-compatible endpoint (default: `http://127.0.0.1:8080/v1`) or fall back to rule-based detection alone.
 
-### How It Works
-
-1. **Input Analysis**: Analyze input for known jailbreak patterns.
-2. **AI Scoring (Optional)**: The detector attempts to score prompts using `LLM_URL`, which defaults to `http://127.0.0.1:8080/v1`. If scoring is unavailable, the detector uses its rules alone. Use `--rules-only` to skip model scoring.
-3. **Decision Logic**: If either the rule-based system flags the input or the AI model returns a score at or above the threshold (default 0.7), mark it as a potential jailbreak.
-
-### Usage
-
-```bash
-# Basic usage with rules only
-python3 detect_jailbreak.py --rules-only --prompt "Your input prompt here"
-
-# With AI model scoring (requires a running model endpoint)
-export LLM_URL=http://127.0.0.1:8080/v1
-python3 detect_jailbreak.py --prompt "Your input prompt here"
-
-# Run tests
-python3 detect_jailbreak.py --test
-```
-
-### Testing
-
-The project includes a test suite that evaluates both benign and malicious prompts. The `test.sh` script runs all tests using the Python implementation.
+## How to Run It
 
 ```bash
-./test.sh
+python3 detect_jailbreak.py --input "test prompt here"
 ```
+
+To test, run:
+```bash
+python3 test.py
+```
+
+## Non-AI Controls
+
+- Enforce least privilege for AI agents.
+- Require human approval for sensitive actions.
+- Maintain allowlists of trusted tools and data sources.
+
+## Notes
+
+The detection system will fall back to rule-based checks if the LLM endpoint is not available.
