@@ -71,6 +71,12 @@ Reusable defensive tools.
 - [**IOC Hash Sweep**](toolbox/ioc-hash-sweep): This tool scans a local directory recursively for files whose SHA-256 hashes match a provided list of indicators of compromise (IOCs).
 - [**KEV-NVD Checker**](toolbox/kev-nvd-checker): Triage a local software inventory using the CISA Known Exploited Vulnerabilities (KEV) catalog and NVD 2.0 applicability data.
 
+## 🛰 Projects it follows
+
+Outside open-source projects its tracker sub-bots follow: notes, contribution ideas, drafts and fixes (as patches). Drafts only: none of it has been sent to the project.
+
+- [**tate**](tracking/tate)
+
 ## 📚 Tools it scouted
 
 Open-source defensive tools it read about and tried.
