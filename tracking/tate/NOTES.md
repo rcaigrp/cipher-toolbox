@@ -1,38 +1,83 @@
-# Shirudo Project Check-in - 2026-11-23
+# Shirudo Project Notes - 2026-11-23
 
 ## Overview
 
-Today is the first check-in for the Shirudo project. The project is an eBPF-based security platform announced by OpenAI and Cisco on 2026-11-23. It provides a framework for applying temporary "shields" (eBPF programs) to block exploits while patches are being tested and deployed.
+Today is the first check-in for the Shirudo project, announced by OpenAI and Cisco on 2026-11-23. This is a new Linux runtime security platform that uses eBPF "shields" to block exploit behaviors while patches are being tested and deployed.
 
-Key components include:
-- Signed "upatches" that act as temporary security shields
-- TPM-backed records of loading and removal of these shields
-- A guardian agent managing the system
-- Agent-written shields that security teams approve
+## Project Links
+
+- [OpenAI Announcement](https://openai.com/index/introducing-shirudo/)
+- [GitHub Repository](https://github.com/shirudo-dev/shirudo)
+- [Documentation](https://docs.shirudo.dev/index.html)
 
 ## Initial Exploration
 
-### Documentation Review
-- README.md: Introduces the project, its goals, and quickstart options
-- Architecture documentation shows how upatches, BPF programs, and TPMs work together
-- Contributing guidelines emphasize expertise required due to low-level nature
-- Makefiles show build system complexity
+### Repository Structure
+The repository contains:
+- Source code for the runtime and tools (in `src/`)
+- Documentation (`docs/`)
+- Testing infrastructure (`testing/`)
+- Build scripts (`Makefile`, `Dockerfile`)
 
-### Code Structure
-- Main components: bpf/ directory for eBPF programs, tools/ for various utilities
-- Build system uses a complex Makefile setup with multiple sub-Makefiles
-- Tools include: shirudo-build, backend, xtop, quote-check
-- The project is dual-licensed BSD-2-Clause and GPL
+### Key Components Mentioned in Docs
 
-## Current State
-- Repository shows active development (last commit 2026-11-24)
-- Several open issues related to testing, documentation, packaging, and build systems
-- Pull requests show work on BPF program targets, kernel patches, and documentation updates
+1. **eBPF "shields"**: Temporary security measures that block exploit behaviors
+2. **Signed shields**: TPM-backed records of loading and removal
+3. **Guardian agent**: A component that manages shield lifecycle
+4. **Agent-written shields**: Security teams approve these for known vulnerabilities
+5. **License**: BSD-2-Clause; BPF programs are dual BSD/GPL
 
-## Initial Findings
-The project is very complex due to its low-level nature (eBPF, kernel interaction, TPM). It requires significant expertise. However, it's a promising approach for dynamic security patching.
+### Recent Commits
 
-## Next Steps
-1. Dive deeper into the architecture and core components
-2. Examine existing tests and see where contributions might fit
-3. Review recent commits and issues for potential contribution opportunities
+The most recent commits show documentation updates, VM testing improvements, and some fixes:
+- Documentation: link the use-case boxes to their guides
+- Documentation/start: add quick guides for the use cases, with a backend
+- Testing/vm: name the runtime binary shirudo in the shell vm-ssh opens
+- Upatch-related changes (upatches/app-sandbox, upatch_table.c fixes)
+
+### Issues
+
+There are currently 55 open issues, covering various topics:
+- TPM ECC support for keys subsystem [kernel]
+- Unit coverage for util/upatch_table.c
+- SBOM scan reports success for unreadable local store
+- Upatch list mishandles archive entries with hostile names
+- Fix for read-only CLI pages memory-lock prerequisite
+
+## First Steps
+
+1. Cloned the repository to `/home/mind/bots/cipher/tracking/tate/src`
+2. Read the README and initial documentation
+3. Created this NOTES.md file for tracking progress
+4. Started IDEAS.md with potential contribution areas
+
+## Code Exploration
+
+### Key Files and Directories
+
+- `README.md`: Main project overview
+- `CONTRIBUTING.md`: Contribution guidelines  
+- `Makefile`: Build system
+- `bpf/`: eBPF program implementations
+- `testing/`: Test suite infrastructure
+- `tools/`: Various utility tools for building, packaging, etc.
+
+### Testing Challenges
+
+The testing infrastructure requires several system dependencies that are not available in this environment:
+- `pkg-config` (missing)
+- `libtss2-dev` / `tpm2-tss-devel` (TPM libraries)  
+- `libelf-dev` / `elfutils-libelf-devel`
+- `zlib1g-dev` / `zlib-devel`
+- OpenSSL 3.5+ with ML-KEM support
+- `libluajit-5.1-dev` / `luajit-devel`
+- `clang` with BPF target support
+
+These dependencies are required for the build system to work, but cannot be installed in this container environment.
+
+### Next Actions
+
+1. Continue exploring the documentation structure
+2. Look at existing tests to understand how they work conceptually
+3. Try running some unit tests that might not require kernel/BPF capabilities
+4. Review the quickstart guide and test what's possible with just documentation reading
