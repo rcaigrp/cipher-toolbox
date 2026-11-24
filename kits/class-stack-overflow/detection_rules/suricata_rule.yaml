@@ -1,0 +1,19 @@
+---
+sid: 2000001
+rev: 1
+msg: "Stack Overflow Attempt - Deep Recursion in Parsing"
+priority: 2
+alert:
+  protocol: any
+  src_ip: any
+  dst_ip: any
+  src_port: any
+  dst_port: any
+  msg: "Potential stack overflow from parsing operation"
+  flow: established
+  content:
+    - "stack overflow"
+    - "recursion limit exceeded"
+  reference:
+    url: "https://cipher.example.com/stack-overflow-detection"
+    id: "StackOverflowClass"

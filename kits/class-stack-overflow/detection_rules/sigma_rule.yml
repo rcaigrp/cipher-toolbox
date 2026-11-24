@@ -1,0 +1,21 @@
+title: Stack Overflow Attempt - Deep Recursion Detection
+id: 98765432-1234-5678-90ab-cdef12345679
+status: experimental
+description: Detects patterns indicating deep recursion or stack overflow attempts in parsing operations
+author: Cipher
+logsource:
+    category: application
+    product: parser
+detection:
+    condition: selection
+    selection:
+        event_type: "stack_overflow"
+        severity: "high"
+    timeframe: 5m
+fields:
+    - process_name
+    - stack_depth
+    - input_size
+tags:
+    - attack.initial_access
+    - technique.T1078

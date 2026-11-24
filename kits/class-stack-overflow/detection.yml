@@ -1,0 +1,68 @@
+title: Stack Overflow Class Detection Rules
+version: 1.0
+description: Detection rules for stack overflow vulnerabilities in parsing systems
+
+rules:
+  - name: Stack Overflow Attempt - Deep Recursion Detection
+    id: 98765432-1234-5678-90ab-cdef12345679
+    status: experimental
+    description: Detects patterns indicating deep recursion or stack overflow attempts in parsing operations
+    author: Cipher
+    logsource:
+      category: application
+      product: parser
+    detection:
+      condition: selection
+      selection:
+        event_type: "stack_overflow"
+        severity: "high"
+      timeframe: 5m
+    fields:
+      - process_name
+      - stack_depth
+      - input_size
+    tags:
+      - attack.initial_access
+      - technique.T1078
+
+  - name: Stack Overflow Pattern Recognition
+    id: 98765432-1234-5678-90ab-cdef12345678
+    status: experimental
+    description: Detects stack overflow indicators in system logs
+    author: Cipher
+    logsource:
+      category: application
+      product: system
+    detection:
+      condition: selection
+      selection:
+        message: "stack overflow"
+      timeframe: 10m
+    fields:
+      - process_name
+      - error_code
+      - memory_usage
+    tags:
+      - vulnerability.exploitation
+      - attack.execution
+
+  - name: Deep Nesting Detection
+    id: 98765432-1234-5678-90ab-cdef12345677
+    status: experimental
+    description: Detects deeply nested structures that could lead to stack overflow
+    author: Cipher
+    logsource:
+      category: application
+      product: parser
+    detection:
+      condition: selection
+      selection:
+        message: "deeply nested structure"
+      timeframe: 5m
+    fields:
+      - process_name
+      - nesting_level
+      - input_size
+    tags:
+      - vulnerability.discovery
+      - attack.initial_access
