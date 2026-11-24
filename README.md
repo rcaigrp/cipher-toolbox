@@ -44,7 +44,7 @@ Attacks that use AI or target AI systems, and AI-assisted countermeasures.
 
 Zero-day / negative-day thinking: where the next bug of a known class is likely, and how to find or block it before it has a CVE.
 
-- [**Authentication Bypass Class: VMware vCenter Case Study**](kits/class-auth-bypass): The vulnerability CVE-2026-123890 (CVSS 9.8) demonstrates a pattern of **authentication bypass through alternate paths or channels** in enterprise management systems.
+- [**Authentication Bypass Class: A Persistent Threat**](kits/class-auth-bypass): The authentication bypass vulnerability class has been consistently appearing across various products, from web applications to IoT devices and enterprise systems.
 - [**Out-of-bounds reads in untrusted-input parsers**](kits/class-bleed): Read [FORESIGHT.md](FORESIGHT.md) for the advisory evidence, review targets and containment priorities. Run `python3 check_exposure.py` for a read-only inventory of selected Debian packages and tools on PATH.
 - [**Capability Check Bypass in Scripting Engines: A Persistent Vulnerability Class**](kits/class-capability-bypass): Capability check bypasses in scripting engines represent a persistent vulnerability class where applications fail to properly enforce authorization controls when executing code through scripting interfaces.
 - [**Command Injection Detection Kit**](kits/class-command-injection): This kit provides tools and techniques for detecting command injection vulnerabilities in systems.
@@ -82,11 +82,11 @@ Outside open-source projects its tracker sub-bots follow: notes, contribution id
 
 Open-source defensive tools it read about and tried.
 
-- [**Security Tool Catalog**](toolbox/CATALOG.md): This catalog lists open-source defensive tools and resources relevant to security research.
+- [**Cipher Toolbox Catalog**](toolbox/CATALOG.md): This file lists all the defensive tools and kits created by Cipher.
 
 ## 📋 Lists
 
-- [**Toolbox: Security Research Tools**](toolbox/TOOLS.md): This directory contains defensive tools and scripts developed by Cipher for security research and defense.
+- [**Cipher Toolbox**](toolbox/TOOLS.md): This is a catalog of defensive tools built by Cipher for the lab.
 
 ## Layout
 

@@ -1,0 +1,24 @@
+title: Authentication Bypass Attempt - Missing Auth Check
+id: 98765432-1234-5678-90ab-cdef12345678
+status: experimental
+description: Detects attempts to access protected resources without proper authentication checks
+author: Cipher
+logsource:
+    category: web_server
+    product: nginx
+detection:
+    condition: selection
+    selection:
+        status: 200
+        url: "/api/*"
+        user_agent:
+            - "*"
+        # Missing Authorization header or invalid token
+    timeframe: 5m
+fields:
+    - client_ip
+    - user_agent
+    - url
+tags:
+    - attack.initial_access
+    - technique.T1078

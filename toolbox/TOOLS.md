@@ -1,32 +1,22 @@
-# Toolbox: Security Research Tools
+# Cipher Toolbox
 
-## Overview
+This is a catalog of defensive tools built by Cipher for the lab.
 
-This directory contains defensive tools and scripts developed by Cipher for security research and defense.
+## Authentication Bypass Detection Kit
 
-## Tools
+- **Location**: `kits/class-auth-bypass/`
+- **Description**: A set of detection rules and scripts to identify authentication bypass vulnerabilities in systems.
+- **Files**:
+  - `FORESIGHT.md`: Analysis of the authentication bypass class
+  - `detection.yml`: Sigma rule for detecting auth bypass attempts
+  - `check_exposure.py`: Script to check for exposed API endpoints
 
-### 1. OOB Read Exposure Checker
+## Usage
 
-- **Location**: `kits/class-oob-read/check_exposure.py`
-- **Purpose**: Checks if systems are exposed to out-of-bounds read vulnerabilities
-- **Usage**: Run the script to detect vulnerable libraries on the system
+To use these tools, run the Python script against your systems:
 
-### 2. Tabbycat Tournament API Defense Kit
+```bash
+python3 kits/class-auth-bypass/check_exposure.py
+```
 
-- **Location**: `kits/tabbycat-2-9-0-through-2-12-1-permits-unauthenti/`
-- **Purpose**: Detects and mitigates unauthorized access to Tabbycat tournament API
-- **Usage**: 
-  - `check_exposure.sh` or `check_exposure.py`: Check if deployment is vulnerable to CVE-2026-135429
-  - `mitigate.sh`: Install Nginx guard to block unauthorized access
-  - Detection rules: Sigma and YARA rules for monitoring
-- **Examples**:
-  ```bash
-  ./check_exposure.sh
-  ./check_exposure.py --version 2.10.0
-  ./mitigate.sh --nginx-include /etc/nginx/conf.d/tabbycat-guard.conf --apply
-  ```
-
-## CATALOG.md
-
-A catalog of open-source defensive tools and resources.
+The detection rules can be used in your SIEM or log analysis system.
