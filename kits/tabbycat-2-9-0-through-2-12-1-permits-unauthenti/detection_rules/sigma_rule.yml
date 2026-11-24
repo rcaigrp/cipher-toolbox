@@ -1,0 +1,22 @@
+title: Tabbycat Tournament API Unauthorized Access
+id: 8a7b9c0d-1e2f-3g4h-5i6j-7k8l9m0n1o2p
+status: experimental
+description: Detects unauthorized access to the Tabbycat tournament API endpoint which may indicate exploitation of CVE-2026-135429
+author: Cipher
+date: 2026-11-24
+logsource:
+    category: web_server
+    product: nginx
+detection:
+    selection:
+        uri|contains:
+            - '/api/v1/tournaments'
+        status: 200
+    condition: selection
+fields:
+    - client_ip
+    - user_agent
+    - request
+falsepositives:
+    - Legitimate administrative access to the tournament API
+level: high
