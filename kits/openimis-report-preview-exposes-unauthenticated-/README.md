@@ -1,41 +1,25 @@
-# openIMIS Report Preview RCE and File Read - Defensive Kit
+# openIMIS report preview defensive kit
 
-This kit defends against CVE-2026-82489, a critical vulnerability in openIMIS that allows unauthenticated remote code execution (RCE) and arbitrary file read through the report preview module.
+CVE-2026-82489 affects openIMIS suite releases before 2026-10. The report preview can allow unauthenticated remote code execution and arbitrary file read. Prioritize deployments that let untrusted clients reach preview through a proxy, ingress, or direct backend route. Block untrusted access and upgrade to 2026-10 or later. Public proof-of-concept availability and active exploitation remain unconfirmed. [NVD](https://nvd.nist.gov/vuln/detail/CVE-2026-82489) · [VulnCheck](https://www.vulncheck.com/advisories/openimis-2026-10-report-module-unauthenticated-rce-via-reportbro-preview)
 
-## Files
+## check_exposure.py
 
-### Detection Rules
-- `detection/sigma/openimis_rce_file_read.yml`: Sigma rule for web server logs
-- `detection/yara/openimis_reportbro_preview.yar`: YARA rule for triage of artifacts
-- `detection/suricata/openimis_preview.rules`: Suricata rule for network traffic
-- `detection/splunk/openimis_rce_file_read.yml`: Splunk SPL query for access logs
+Run `python3 check_exposure.py --release YYYY-MM --port PORT --preview-access unknown` on the deployment host, replacing `YYYY-MM` and `PORT` with verified local values. Use `--release-file PATH` in place of `--release` to read a local file containing the suite release. Set `--preview-access` to `restricted` or `untrusted` if you have verified the policy. The script reads local TCP listener state with `ss` in its own network namespace. Review proxy, container ingress, and direct backend access to establish reachability. Exit codes are `0` for a fixed release, `1` for an affected release, and `2` for unknown release evidence or invalid arguments.
 
-### Hunt Queries
-- `hunt.md`: Hunting queries for SIEM platforms
+## mitigate.py
 
-### Exposure Check
-- `check_exposure.py`: Script to verify local deployment status
+Run `python3 mitigate.py --output ./openimis-preview-deny.conf` to preview an NGINX `deny all` snippet. Add `--apply` to stage it at a new path. Include the snippet in the affected openIMIS NGINX location. This snippet denies all clients wherever it is included.
 
-### Mitigation
-- `mitigate.py`: Script to harden affected deployments with NGINX restrictions
+## Detection
 
-## Usage
+Sigma rules for webserver logs, YARA rules for files/memory, and Suricata/Snort rules for network traffic. Hunt queries are provided for Splunk and Microsoft Sentinel.
 
-1. **Check exposure**: Run `check_exposure.py` on the target system to identify vulnerable deployments
-2. **Deploy detection rules**: Load the Sigma, YARA, Suricata, and Splunk rules into your security infrastructure
-3. **Hunt**: Use queries in `hunt.md` to search for past exploitation attempts
-4. **Mitigate**: Run `mitigate.py` with `--apply` flag to create NGINX restrictions on affected services
+- `detection/sigma/openimis_rce_file_read.yml`: Sigma rule for detecting unauthenticated access to the report preview endpoint
+- `detection/yara/openimis_reportbro_preview.yar`: YARA rule for identifying openIMIS ReportBro preview context in files or memory
+- `detection/suricata/openimis_preview.rules`: Suricata rule for detecting requests to the preview endpoint
+- `detection/splunk/openimis_rce_file_read.yml`: Splunk-specific Sigma rule variant (converted from main rule)
 
-## Important Notes
+## Hunt
 
-- All files must be customized with the actual preview path used in your deployment
-- The Suricata rule requires replacing `$OPENIMIS_HTTP_SERVERS` and `$OPENIMIS_HTTP_PORTS`
-- The Sigma and Splunk rules require replacing `OPENIMIS_PREVIEW_PATH` with the actual route
-- The NGINX restriction is temporary and should be replaced by proper authentication once deployed
-
-## Verification
-
-All files have been tested:
-- Sigma rule syntax validated
-- YARA rule syntax confirmed valid
-- Python scripts execute without error in dry-run mode
+Queries to search logs for unauthenticated access to the report preview endpoint:
+- `hunt.md`: Examples for Splunk SPL, Microsoft Sentinel KQL, and local JSON log parsing
