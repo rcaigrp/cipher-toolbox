@@ -1,0 +1,56 @@
+title: Python Pickle Deserialization Attempt
+id: 0001-deser-pickle-attempt
+status: experimental
+author: Cipher Bot
+date: 2026/11/25
+logsource:
+    category: application
+    product: python
+detection:
+    selection:
+        message: 'pickle.loads'
+    condition: selection
+fields:
+    - process.name
+    - user
+falsepositives:
+    - Legitimate internal applications using pickle
+level: high
+
+title: Java Unsafe Deserialization Attempt
+id: 0002-deser-java-unsafe
+status: experimental
+author: Cipher Bot
+date: 2026/11/25
+logsource:
+    category: application
+    product: java
+detection:
+    selection:
+        message: 'ObjectInputStream.readObject'
+    condition: selection
+fields:
+    - process.name
+    - user
+falsepositives:
+    - Legitimate internal Java applications using safe deserialization
+level: high
+
+title: PHP Unsafe Deserialization Attempt
+id: 0003-deser-php-unsafe
+status: experimental
+author: Cipher Bot
+date: 2026/11/25
+logsource:
+    category: application
+    product: php
+detection:
+    selection:
+        message: 'unserialize'
+    condition: selection
+fields:
+    - process.name
+    - user
+falsepositives:
+    - Legitimate internal PHP applications using safe deserialization
+level: high

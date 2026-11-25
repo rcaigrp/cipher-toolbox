@@ -1,0 +1,20 @@
+title: Directory Traversal Attempt
+id: 8d7c9a1b-4e5f-6a7b-8c9d-0e1f2a3b4c5d
+status: experimental
+description: Detects attempts to traverse directories using path traversal sequences
+author: Cipher
+date: 2026-11-25
+logsource:
+    category: web_server
+    product: nginx
+detection:
+    selection:
+        request:
+            - '*../*'
+            - '*..\\*'
+    condition: selection
+fields:
+    - client_ip
+    - user_agent
+    - url
+level: high
