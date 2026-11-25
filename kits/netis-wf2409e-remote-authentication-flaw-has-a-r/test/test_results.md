@@ -1,8 +1,8 @@
 # Netis WF2409E defensive kit review
 
-- Verified all six file paths named in the kit README.
-- Both scripts passed Bash syntax checks and returned usage with `--help`. The local exposure check reported no matching listeners. The mitigation script printed its dry-run plan, and the automated test verified that `--apply` exits with status 2.
-- All three unit tests passed, including synthetic listener cases and positive and negative YARA inventory samples. The existing `test_file.txt` also produced no YARA match.
-- Sigma CLI parsed the rule and reported zero errors or issues.
-- The documented jq filter returned the expected match from one positive and five negative synthetic firewall events.
-- Reviewed the Suricata example by inspection. Engine validation remains pending because Suricata is unavailable locally. The Splunk and KQL examples were reviewed by inspection.
+- Verified that all eight project files named in the kit README exist.
+- All three CLI entry points displayed usage with `--help`. Both shell scripts passed `bash -n`. Both exposure checks reported no matching local listeners, and `mitigate.sh` printed its dry-run plan.
+- All 12 pytest cases passed. The tests exercise both exposure checks with synthetic listener output, check the guidance on router reachability and firmware, and verify the mitigation dry run and the `--apply` exit status of 2.
+- YARA matched the synthetic `Netis WF2409E` sample and returned no match for the vendor-only sample or `test_file.txt`.
+- Sigma CLI reported zero validation errors or issues. Firewall event matching in a deployed backend remains unverified.
+- Reviewed the Suricata rule and Splunk example by inspection. Suricata was unavailable for engine validation, and the Splunk query was not executed.

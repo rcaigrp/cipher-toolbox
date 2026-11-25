@@ -42,6 +42,9 @@ def test_checker_reports_listener_scope(checker, tmp_path, rows, status, verdict
     result = run_script(checker, env=env)
     assert result.returncode == (2 if status else 0), result.stderr
     assert verdict in (result.stderr if status else result.stdout)
+    if not status:
+        assert "internet reachability require separate verification" in result.stdout
+        assert "Firmware verdict: UNKNOWN" in result.stdout
 
 
 def test_mitigation_dry_run():

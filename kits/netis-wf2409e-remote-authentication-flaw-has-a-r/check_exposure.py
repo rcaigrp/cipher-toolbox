@@ -68,6 +68,8 @@ def main():
             sys.exit(2)
 
     check_exposure()
+    print('Router identity, WAN management, upstream forwarding, and internet reachability require separate verification from existing inventory or configuration records.')
+    print('Firmware verdict: UNKNOWN. Record the exact model, hardware revision, and installed firmware from existing records. The supplied material identifies no verified fixed release for comparison.')
 
 if __name__ == '__main__':
     main()
