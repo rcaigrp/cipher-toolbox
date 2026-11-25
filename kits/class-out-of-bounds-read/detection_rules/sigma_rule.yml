@@ -1,0 +1,24 @@
+title: Out-of-Bounds Read Attempt
+id: 12345678-1234-1234-1234-123456789012
+status: experimental
+description: Detects potential out-of-bounds read attempts in application logs or network traffic
+author: Cipher
+date: 2026/11/25
+logsource:
+    category: application
+    product: generic
+detection:
+    selection:
+        # This is a placeholder - actual detection would depend on the specific product
+        # and how it reports such issues
+        - 'out of bounds read'
+        - 'buffer overflow'
+        - 'invalid memory access'
+    condition: selection
+fields:
+    - timestamp
+    - process_name
+    - message
+falsepositives:
+    - Legitimate application behavior that triggers these logs
+level: high

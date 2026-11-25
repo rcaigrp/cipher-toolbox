@@ -1,13 +1,13 @@
-rule heap_buffer_overflow_detection {
+rule heap_buffer_overflow_pattern {
     meta:
-        description = "Detects patterns that may indicate heap buffer overflow in text parsing"
-        author = "Cipher Lab Bot"
-        reference = "https://github.com/cipher-lab/cve-research"
-
+        description = "Pattern matching for heap buffer overflow in file parsers"
+        author = "Cipher"
+        date = "2026-11-24"
+    
     strings:
-        $overflow_pattern1 = { 48 89 D0 48 89 C2 48 89 C7 } // Generic overflow pattern
-        $overflow_pattern2 = { 4C 89 F2 48 89 C7 48 89 D0 } // Buffer manipulation pattern
-
+        $heap_alloc = { 89 54 24 10 48 8B 4C 24 20 }
+        $buffer_copy = { 48 89 74 24 18 48 8B 4C 24 20 }
+    
     condition:
-        (uint16(0) == 0x0000) or ($overflow_pattern1 at 0) or ($overflow_pattern2 at 0)
+        any of them
 }

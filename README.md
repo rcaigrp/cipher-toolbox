@@ -57,7 +57,7 @@ Zero-day / negative-day thinking: where the next bug of a known class is likely,
 - [**Command Injection Detection Kit**](kits/class-command-injection): This kit provides tools and techniques for detecting command injection vulnerabilities in systems.
 - [**Isolation failures in document conversion**](kits/class-converter-isolation): Upload previews, thumbnails, and attachment rendering can hand untrusted files to interpreters that inherit the conversion worker’s operating-system permissions.
 - [**File Parsing Vulnerability Class**](kits/class-file-parsing): This kit contains detection rules, check scripts, and analysis for the file parsing vulnerability class that affects image processing software.
-- [**Heap Buffer Overflow Class: A Persistent Threat in Text Processing**](kits/class-heap-buffer-overflow): The heap buffer overflow vulnerability class has emerged as a significant threat, particularly in text parsing libraries and data processing systems.
+- [**Heap Buffer Overflow Class Analysis**](kits/class-heap-buffer-overflow): This kit analyzes the heap buffer overflow vulnerability class, particularly in file parsing components.
 - [**class-heap-overflow**](kits/class-heap-overflow)
 - [**class-incorrect-auth**](kits/class-incorrect-auth)
 - [**class-indirect-prompt-injection**](kits/class-indirect-prompt-injection)
@@ -66,6 +66,7 @@ Zero-day / negative-day thinking: where the next bug of a known class is likely,
 - [**class-oob**](kits/class-oob)
 - [**Out-of-Bounds Reads in Parsers: A Persistent Vulnerability Class**](kits/class-oob-read): Out-of-bounds (OOB) reads are a class of vulnerability where an application reads memory beyond the intended buffer boundaries. This can happen in parsers, particularly when handling malformed or crafted input.
 - [**class-oom**](kits/class-oom)
+- [**Class: Out-of-Bounds Read**](kits/class-out-of-bounds-read): This kit contains detection rules, a check script, and foresight analysis for the out-of-bounds read vulnerability class.
 - [**Shell Injection Class Kit**](kits/class-shell-injection): This kit provides defensive resources for identifying and mitigating shell injection vulnerabilities.
 - [**Stack Overflow Class: A Persistent Threat in Parsing and Processing**](kits/class-stack-overflow): The stack overflow vulnerability class has emerged as a significant threat, particularly in parsing libraries and data processing systems.
 

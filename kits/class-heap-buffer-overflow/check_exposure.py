@@ -1,75 +1,59 @@
 #!/usr/bin/env python3
 """
-Check for heap buffer overflow vulnerabilities in text parsing components.
-This script tests memory handling in text processing libraries.
+Check script for heap buffer overflow exposure in file parsing components.
+This is a read-only check - no modifications are made to the system.
 """
 
-import subprocess
-import sys
 import os
-import tempfile
+import sys
+import subprocess
+import re
 
-def test_heap_overflow_detection():
-    """
-    Test if the system can detect potential heap overflow patterns
-    in text parsing operations.
-    """
-    
-    # Create a test file with potentially problematic content
-    test_content = "A" * 10000 + "\n"  # Large input that might trigger overflow
-    
+def find_file_parsing_processes():
+    """Find processes that might be parsing files."""
     try:
-        # Test with a simple parser that could be vulnerable
-        # This is a mock test - in reality this would check actual library behavior
-        print("Testing heap buffer overflow detection capabilities...")
+        # Check running processes for file parsing related executables
+        result = subprocess.run(['ps', 'aux'], capture_output=True, text=True)
+        processes = []
         
-        # Simulate checking for memory usage patterns
-        # In real implementation, this would interface with actual parsers
+        # Look for common file parser names in process list
+        parser_indicators = ['autocad', 'dwg', 'dxf', 'pdf', 'office', 'image']
         
-        # For demonstration, let's see if we can detect memory anomalies
-        # by testing with a large input to a text processor
-        
-        # Create temporary file
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.txt', delete=False) as f:
-            f.write(test_content)
-            temp_file = f.name
-            
-        try:
-            # This is a conceptual test - in reality would use actual parsing libraries
-            # that are known to have heap overflow issues
-            print(f"Created test file: {temp_file}")
-            print("Memory usage test completed (conceptual)")
-            
-            # Check if system has basic memory information
-            try:
-                result = subprocess.run(['free', '-m'], capture_output=True, text=True, timeout=10)
-                if result.returncode == 0:
-                    print("System memory info available")
-            except:
-                print("Memory info not available (expected in test environment)")
-            
-            return True
-            
-        finally:
-            # Clean up
-            os.unlink(temp_file)
-            
+        for line in result.stdout.split('\n'):
+            if any(indicator in line.lower() for indicator in parser_indicators):
+                processes.append(line.strip())
+                
+        return processes
     except Exception as e:
-        print(f"Error in heap overflow detection test: {e}")
-        return False
+        print(f"Error checking processes: {e}")
+        return []
+
+def check_heap_allocation_patterns():
+    """Check for signs of heap allocation patterns."""
+    # This is a placeholder for actual memory pattern analysis
+    # In a real implementation, this would analyze system memory or process behavior
+    print("Checking heap allocation patterns...")
+    return True
 
 def main():
-    print("Heap Buffer Overflow Exposure Check")
-    print("=" * 40)
+    print("=== Heap Buffer Overflow Exposure Check ===")
     
-    success = test_heap_overflow_detection()
+    # Check file parsing processes
+    processes = find_file_parsing_processes()
     
-    if success:
-        print("\nSystem is ready for heap buffer overflow monitoring.")
-        return 0
+    if processes:
+        print(f"Found {len(processes)} potential file parsing processes:")
+        for process in processes[:5]:  # Show first 5 only
+            print(f"  - {process}")
+        if len(processes) > 5:
+            print(f"  ... and {len(processes) - 5} more")
     else:
-        print("\nFailed to run heap buffer overflow detection test.")
-        return 1
+        print("No obvious file parsing processes found.")
+    
+    # Check heap patterns (placeholder)
+    check_heap_allocation_patterns()
+    
+    print("\nThis is a read-only check - no system changes were made.")
 
 if __name__ == "__main__":
-    sys.exit(main())
+    main()

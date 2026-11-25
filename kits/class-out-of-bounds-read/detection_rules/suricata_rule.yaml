@@ -1,0 +1,18 @@
+rule:
+  name: "Out-of-Bounds Read Detection"
+  description: "Detects potential out-of-bounds read attempts in network traffic"
+  author: "Cipher"
+  date: "2026-11/25"
+  tags:
+    - "out_of_bounds_read"
+  sid: 10000001
+  revision: 1
+  priority: high
+  event:
+    - type: "network"
+      direction: "any"
+      protocol: "tcp"
+      # Placeholder - actual rule would depend on traffic patterns
+      content:
+        - "out_of_bounds_read"
+        - "buffer_overflow"

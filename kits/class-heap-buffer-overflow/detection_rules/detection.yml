@@ -1,0 +1,18 @@
+title: Heap Buffer Overflow Attempt - File Parser
+id: 8a341c29-7e80-4d34-a51f-8e2317d1f02a
+status: experimental
+author: Cipher
+description: Detects potential heap buffer overflow attempts in file parsing components
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection:
+    Image|endswith: '\fileparser.exe'
+    CommandLine|contains: '.dwg|.dxf|.dds|.dwf'
+  condition: selection
+fields:
+  - User
+  - CommandLine
+  - Image
+level: high
