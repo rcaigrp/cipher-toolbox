@@ -1,12 +1,8 @@
-# Test Results for Netis WF2409E Defensive Kit
+# Netis WF2409E defensive kit review
 
-## Scripts
-- `check_exposure.sh`: Executed successfully, returned expected verdict for local environment
-- `mitigate.sh`: Executed successfully, showed correct dry-run behavior
-
-## Detection Rules
-- Sigma rule: Parsed successfully with one non-critical issue about missing UUID (sigma check)
-- YARA rule: Compiled without errors and matched test content correctly
-- Suricata rule: Syntactically valid structure with placeholder values
-
-All components function as intended in the test environment.
+- Verified all six file paths named in the kit README.
+- Both scripts passed Bash syntax checks and returned usage with `--help`. The local exposure check reported no matching listeners. The mitigation script printed its dry-run plan, and the automated test verified that `--apply` exits with status 2.
+- All three unit tests passed, including synthetic listener cases and positive and negative YARA inventory samples. The existing `test_file.txt` also produced no YARA match.
+- Sigma CLI parsed the rule and reported zero errors or issues.
+- The documented jq filter returned the expected match from one positive and five negative synthetic firewall events.
+- Reviewed the Suricata example by inspection. Engine validation remains pending because Suricata is unavailable locally. The Splunk and KQL examples were reviewed by inspection.
