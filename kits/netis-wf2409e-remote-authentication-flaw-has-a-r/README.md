@@ -1,27 +1,30 @@
-# Netis WF2409E management exposure (CVE-2026-136136)
+# Netis WF2409E management exposure kit
 
-The supplied investigation reports that NVD lists a public exploit. Independent verification of a proof of concept, active exploitation, affected firmware versions, and a fixed firmware release remains unavailable. Prioritize inventoried WF2409E routers with management access reachable from the internet through WAN administration, forwarding, or permissive firewall policy. Confirm the exact hardware revision and installed firmware using existing records. [NVD](https://nvd.nist.gov/vuln/detail/CVE-2026-136136) · [Netis firmware support](https://www.netis-systems.com/support/downinfo.html?id=62)
+The exposure checks inventory local TCP listeners on ports 80, 443, 8080, and 8443. They make no network requests. Review router identity, hardware revision, firmware, WAN management, upstream forwarding, and internet reachability using existing inventory and configuration records. The supplied material identifies no verified fixed firmware release.
 
-## Local exposure check
+## Usage
 
-Run `./check_exposure.sh` on the local host. It inventories TCP listeners on ports 80, 443, 8080, and 8443 without sending network requests. Assess the router and upstream WAN policy from existing configuration records. Firmware status remains unknown until a fixed release is verified.
+Run from this directory. The checks require `ss` from `iproute2`.
 
-## Mitigation plan
+```bash
+bash check_exposure.sh
+python3 check_exposure.py
+bash mitigate.sh
+```
 
-Run `./mitigate.sh` to print the management isolation and firmware verification steps. `--apply` exits with an error and leaves configuration intact because the supplied material provides no verified device-specific procedure and the local host has no confirmed enforcement role. An authorized administrator can use the printed plan at the router or upstream enforcement point.
+`mitigate.sh` prints a dry-run isolation plan covering WAN management, forwarding, and approved management networks. `--apply` exits with status 2 without changing configuration because the kit has no verified device-specific procedure.
 
-## Sigma
+## Detection and hunting
 
-`detection/sigma/netis-wf2409e-auth-flaw.yml` flags allowed traffic to inventoried management endpoints from sources outside the approved management network. This is an exposure signal.
+- `hunt.md` contains a firewall log query and sample-event validation guidance.
+- `detection/netis-wf2409e-management.rules` flags connection attempts to inventoried management endpoints from outside approved networks.
+- `detection/sigma/netis-wf2409e-auth-flaw.yml` provides a firewall log template. Substitute your inventory, allowlist, and field mappings before deployment.
+- `detection/yara/netis-wf2409e-exploit.yar` is included for review. Validate its indicators against confirmed incident evidence before relying on it.
 
-## YARA
+## Tests
 
-`detection/yara/netis-wf2409e-exploit.yar` finds Netis and WF2409E identifiers in local files or memory dumps for inventory triage.
+```bash
+python3 -m pytest test/test_kit.py -v
+```
 
-## Suricata
-
-`detection/netis-wf2409e-management.rules` is a placeholder rule with example addresses. Replace the documentation addresses and example ports with inventoried values before enabling. Source address is the approved management network as seen by the sensor.
-
-## Hunt queries
-
-`hunt.md` provides examples for Splunk SPL, Microsoft KQL, and local grep/jq to search firewall logs for allowed connections to WF2409E management endpoints from unapproved sources.
+The suite uses synthetic local listener output and checks the mitigation script's dry-run and `--apply` behavior.

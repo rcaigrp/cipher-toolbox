@@ -1,20 +1,32 @@
-title: Unapproved Traffic Allowed to Netis WF2409E Management
-id: cf54a921-c2e3-42e2-8482-4b7fede09940
+title: Netis WF2409E Management Access From Outside Approved Networks
+id: 12345678-1234-1234-1234-123456789012
 status: experimental
-description: Flags allowed connections to inventoried WF2409E management endpoints from outside the approved management network. This is an exposure signal.
+description: Flags allowed connections to inventoried Netis WF2409E management endpoints from outside approved management networks. Replace the example IPs and CIDRs, and map firewall action and address fields before deployment.
+author: Cipher
+date: 2026-11-25
 logsource:
     category: firewall
 detection:
     selection:
-        destination_device_model: 'WF2409E'
-        destination_service_role: 'management'
-        action: 'allow'
-        source_is_approved_management: false
-    condition: selection
+        dst_ip:
+            - '192.0.2.10'
+            - '2001:db8::10'
+        dst_port:
+            - 80
+            - 443
+            - 8080
+            - 8443
+        action: allow
+    filter_approved_management:
+        src_ip|cidr:
+            - '198.51.100.0/24'
+            - '2001:db8:1::/48'
+    condition: selection and not filter_approved_management
 fields:
     - src_ip
     - dst_ip
     - dst_port
+    - action
 falsepositives:
-    - Stale inventory or incomplete management network classification.
-level: high
+    - Approved management traffic from addresses missing from the configured allowlist
+level: medium

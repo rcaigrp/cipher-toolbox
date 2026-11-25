@@ -1,37 +1,17 @@
-# Hunt for unexpected WF2409E management access
+# Hunt for Netis WF2409E management exposure
 
-Use existing firewall logs enriched with inventory and approved management network membership as seen at the logging point. The examples use `destination_device_model`, `destination_service_role`, `action`, `source_is_approved_management`, `src_ip`, `dst_ip`, and `dst_port`. Normalize `action` to `allow` for allowed traffic. The approval field is a Boolean in KQL and JSON. Review missing approval values separately as telemetry gaps. A match identifies allowed traffic outside the approved management network.
+Use firewall logs to find allowed connections to inventoried WF2409E management endpoints from outside approved management networks. This identifies management access that needs review. Router identity, firmware status, and internet reachability require separate verification from existing records.
 
-## Splunk SPL
+## Splunk example
+
+Replace the documentation addresses and CIDRs with your inventory and allowlist. Map `action`, `src_ip`, `dst_ip`, and `dst_port` to your firewall fields. Use destination addresses as recorded at the point where the firewall logs the connection, accounting for address translation.
 
 ```spl
-index=firewall earliest=-24h destination_device_model=WF2409E destination_service_role=management action=allow source_is_approved_management=false
-| stats count as connections min(_time) as first_seen max(_time) as last_seen by src_ip dst_ip dst_port
-| sort - connections
+index=network action=allow dst_ip IN ("192.0.2.10", "2001:db8::10") dst_port IN (80, 443, 8080, 8443)
+| where isnotnull(src_ip) AND NOT (cidrmatch("198.51.100.0/24", src_ip) OR cidrmatch("2001:db8:1::/48", src_ip))
+| stats count min(_time) AS first_seen max(_time) AS last_seen BY src_ip dst_ip dst_port
 ```
 
-## Microsoft KQL
+The Sigma template in `detection/sigma/netis-wf2409e-auth-flaw.yml` uses the same example inventory and allowlist. Before deployment, replay sample events for allowed traffic from an unapproved source, allowed traffic from an approved source, denied traffic, and traffic to an unrelated destination. Only the first case should match. Exercise IPv4 and IPv6 and check how your backend handles missing source addresses.
 
-```kusto
-FirewallLogs
-| where TimeGenerated >= ago(24h)
-| where destination_device_model == "WF2409E" and destination_service_role == "management"
-| where action == "allow" and source_is_approved_management == false
-| summarize connections=count(), first_seen=min(TimeGenerated), last_seen=max(TimeGenerated) by src_ip, dst_ip, dst_port
-| order by connections desc
-```
-
-## Local grep and jq
-
-For normalized newline-delimited JSON, grep provides a quick inventory review and jq applies the full policy predicate.
-
-```bash
-grep -F 'WF2409E' firewall.jsonl
-jq -c 'select(.destination_device_model == "WF2409E" and
-              .destination_service_role == "management" and
-              .action == "allow" and
-              .source_is_approved_management == false)
-       | {src_ip, dst_ip, dst_port}' firewall.jsonl
-```
-
-Confirm the destination and management port against inventory, account for NAT as seen by the sensor, and review router administration records for unexpected changes. Check both IPv4 and IPv6 policy when investigating exposure.
+For each match, review the firewall zone, forwarding policy, and approved management paths. Confirm the hardware revision and firmware from existing records. Run `./mitigate.sh` to review the isolation plan.
