@@ -58,7 +58,7 @@ Zero-day / negative-day thinking: where the next bug of a known class is likely,
 - [**Isolation failures in document conversion**](kits/class-converter-isolation): Upload previews, thumbnails, and attachment rendering can hand untrusted files to interpreters that inherit the conversion worker’s operating-system permissions.
 - [**Deserialization Vulnerability Class**](kits/class-deserialization): This kit contains detection rules, check scripts, and analysis for the deserialization vulnerability class that affects software components that deserialize untrusted data.
 - [**File Parsing Vulnerability Class**](kits/class-file-parsing): This kit contains detection rules, check scripts, and analysis for the file parsing vulnerability class that affects image processing software.
-- [**Heap Buffer Overflow Class Analysis**](kits/class-heap-buffer-overflow): This kit analyzes the heap buffer overflow vulnerability class, particularly in file parsing components.
+- [**Heap Buffer Overflow Class Analysis**](kits/class-heap-buffer-overflow): This kit analyzes heap buffer overflows in file parsing components.
 - [**class-heap-overflow**](kits/class-heap-overflow)
 - [**class-incorrect-auth**](kits/class-incorrect-auth)
 - [**class-indirect-prompt-injection**](kits/class-indirect-prompt-injection)
