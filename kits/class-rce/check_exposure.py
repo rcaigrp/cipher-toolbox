@@ -12,23 +12,33 @@ def find_unsafe_patterns(directory):
     unsafe_patterns = [
         r'eval\s*\(',
         r'exec\s*\(',
+        r'system\s*\(',
+        r'shell\s*\(',
         r'os\.system\s*\(',
+        r'os\.popen\s*\(',
         r'subprocess\.call\s*\(',
         r'subprocess\.run\s*\(',
-        r'pickle\.loads?\s*\(',
+        r'subprocess\.Popen\s*\(',
+        r'pickle\.loads\s*\(',
+        r'pickle\.load\s*\(',
+        r'json\.loads\s*\(',
         r'yaml\.load\s*\(',
-        r'json\.loads?\s*\(',
+        r'yaml\.full_load\s*\(',
+        r'xml\.etree\.ElementTree\.parse\s*\(',
+        r'xml\.minidom\.parseString\s*\(',
+        r'base64\.decode\s*\(',
         r'importlib\.import_module\s*\(',
-        r'response\.render\s*\(',
-        r'eval\s*\(\s*request\.',
-        r'exec\s*\(\s*request\.',
-        r'os\.system\s*\(\s*request\.',
-        r'subprocess\.call\s*\(\s*request\.',
-        r'subprocess\.run\s*\(\s*request\.',
-        r'pickle\.loads?\s*\(\s*request\.',
-        r'yaml\.load\s*\(\s*request\.',
-        r'json\.loads?\s*\(\s*request\.',
-        r'importlib\.import_module\s*\(\s*request\.',
+        r'__import__\s*\(',
+        r'globals\s*\(\)',
+        r'locals\s*\(\)',
+        r'compile\s*\(',
+        r'execfile\s*\(',
+        r'open\s*\(',
+        r'eval\s*\(',
+        r'exec\s*\(',
+        r'filter\s*\(',
+        r'map\s*\(',
+        r'reduce\s*\(',
     ]
     
     findings = []
@@ -44,20 +54,50 @@ def find_unsafe_patterns(directory):
                     for pattern in unsafe_patterns:
                         matches = re.finditer(pattern, content)
                         for match in matches:
-                            line_num = content[:match.start()].count('\n') + 1
+                            line_number = content[:match.start()].count('\n') + 1
                             findings.append({
                                 'file': filepath,
-                                'line': line_num,
+                                'line': line_number,
                                 'pattern': pattern,
-                                'context': content[max(0, match.start()-20):match.end()+20]
+                                'match': match.group()
                             })
                 except Exception as e:
                     print(f"Error reading {filepath}: {e}")
     
     return findings
 
+def main():
+    """Main function to demonstrate the check."""
+    # For demonstration, we'll create a test file with some unsafe patterns
+    test_code = '''
+import os
+import pickle
+import subprocess
+
+def unsafe_function(user_input):
+    # This is an example of potentially dangerous code
+    result = eval(user_input)
+    system_call = os.system("echo " + user_input)
+    pickled_data = pickle.loads(user_input)
+    subproc = subprocess.call(user_input)
+    return result
+'''
+    
+    with open('/tmp/test_rce.py', 'w') as f:
+        f.write(test_code)
+    
+    # Check the test file
+    findings = find_unsafe_patterns('/tmp')
+    
+    if findings:
+        print("Potential RCE exposure patterns found:")
+        for finding in findings:
+            print(f"File: {finding['file']}, Line: {finding['line']}")
+            print(f"Pattern: {finding['pattern']}")
+            print(f"Match: {finding['match']}")
+            print("---")
+    else:
+        print("No potential RCE exposure patterns found.")
+
 if __name__ == "__main__":
-    # This would be run against codebases or configurations
-    print("RCE Exposure Check Script - Demo")
-    print("This is a simplified check for demonstration purposes.")
-    print("In practice, this would scan actual code repositories.")
+    main()

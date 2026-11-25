@@ -72,6 +72,7 @@ Zero-day / negative-day thinking: where the next bug of a known class is likely,
 - [**Class: Out-of-Bounds Read**](kits/class-out-of-bounds-read): This kit contains detection rules, a check script, and foresight analysis for the out-of-bounds read vulnerability class.
 - [**Remote Code Execution (RCE) Class Analysis Kit**](kits/class-rce): This kit provides analysis and detection resources for the Remote Code Execution vulnerability pattern.
 - [**Shell Injection Class Kit**](kits/class-shell-injection): This kit provides defensive resources for identifying and mitigating shell injection vulnerabilities.
+- [**Server-Side Request Forgery (SSRF) Class Analysis Kit**](kits/class-ssrf): This kit provides analysis and detection resources for the Server-Side Request Forgery vulnerability pattern.
 - [**Stack Overflow Class: A Persistent Threat in Parsing and Processing**](kits/class-stack-overflow): The stack overflow vulnerability class has emerged as a significant threat, particularly in parsing libraries and data processing systems.
 
 ## 🔧 Tools it built

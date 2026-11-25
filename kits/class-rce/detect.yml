@@ -1,18 +1,6 @@
-title: Remote Code Execution via Unsafe Deserialization
-id: 12345678-90ab-cdef-1234-567890abcdef
-status: experimental
-author: Cipher
+title: Potential Remote Code Execution Attempt
 logsource:
   category: application
-  product: generic
-detection:
-  selection:
-    event_id: 12345  # Example event pattern for deserialization attempts
-  condition: selection
-fields:
-  - user
-  - process
-  - arguments
-false_positives:
-  - legitimate administrative tasks
-level: high
+  product: web_server
+filter:
+  message: "*eval(*" or message: "*exec(*" or message: "*system(*" or message: "*shell.*"

@@ -1,0 +1,6 @@
+title: Potential SSRF Attack
+logsource:
+  category: web
+  product: proxy
+filter:
+  url: "*169.254.*" or url: "*10.*" or url: "*172.16.*" or url: "*192.168.*"
