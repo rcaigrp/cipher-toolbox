@@ -36,7 +36,20 @@ The system analyzes:
 ## Running the Countermeasure
 
 ```bash
-python3 deepfake_detector.py --input-file <video_or_audio_file>
+python3 triage.py --input-text "<transcript or incident summary>"
 ```
 
-The script will analyze the media and return a risk assessment score.
+The script will analyze the input and return a risk assessment score.
+
+## Test Cases
+
+```bash
+python3 test_triage.py
+```
+
+## Non-AI Controls
+
+- Implement multi-factor authentication for all high-value transactions
+- Require verbal confirmation for financial requests
+- Establish clear communication protocols for executive-level decisions
+- Conduct regular security awareness training on deepfake threats

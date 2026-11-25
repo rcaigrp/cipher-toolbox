@@ -38,8 +38,8 @@ Attacks that use AI or target AI systems, and AI-assisted countermeasures.
 - [**AI Inference Data Exposure Detector**](kits/ai-inference-data-exposure): This kit detects potential data exposure in AI inference services by analyzing prompts for signs of data leakage or unauthorized access attempts.
 - [**Inference provider prompt exposure**](kits/ai-inference-provider-exposure): Third-party inference endpoints process prompts in cleartext during inference. A compromised provider or an unexpected routing decision can expose customer data.
 - [**AI inference supply-chain exposure**](kits/ai-inference-supply-chain): Prompts sent through inference gateways can pass through providers and resellers that see the full request.
-- [**AI Indirect Prompt Injection Detection Kit**](kits/ai-llm-injection): **Indirect prompt injection** occurs when an attacker manipulates inputs that are processed by an LLM but not directly part of the prompt.
-- [**AI Jailbreak Detection Kit**](kits/ai-llm-jailbreak): An **LLM jailbreak** occurs when an attacker manipulates an LLM to bypass its safety measures, constraints, or intended behavior.
+- [**AI LLM Injection Detection**](kits/ai-llm-injection): An LLM injection attack occurs when an attacker manipulates inputs to a large language model in a way that allows them to influence the model's behavior or extract sensitive information.
+- [**AI LLM Jailbreak Detection**](kits/ai-llm-jailbreak): An LLM jailbreak occurs when an attacker manipulates a large language model to bypass its safety measures, prompting it to generate harmful content, reveal confidential information, or perform unauthorized actions.
 - [**Model artifact intake triage**](kits/ai-model-supply-chain): Treat third-party checkpoints as software. A loader that deserializes an untrusted checkpoint can execute code with the privileges of the loading process.
 - [**Assistant output leakage triage**](kits/ai-output-leakage): An assistant can disclose credentials, personal records, confidential documents, or memorized training data through its output.
 - [**ai-phishing-triage**](kits/ai-phishing-triage)

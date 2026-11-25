@@ -15,7 +15,7 @@ RULES = {
     'financial_request': r'\b(wire|transfer funds|send payment|bank details|bank account|gift cards)\b',
     'urgency': r'\b(urgent|immediately|right now|before close|within the hour)\b',
     'bypasses_verification': r'\b(skip (approval|verification)|don[’\']t (call|verify|tell)|keep (this|it) (secret|confidential)|off the record)\b',
-    'sensitive_request': r'\b(send|share|read out)\s+(the |your )?(password|one-time code|verification code|recovery code)\b',
+    'sensitive_request': r'\b(send|share|read out)\s+(?:(?:me|us)\s+|with\s+(?:me|us)\s+)?(?:(?:the|your)\s+)?(password|one-time code|verification code|recovery code)\b',
 }
 
 
