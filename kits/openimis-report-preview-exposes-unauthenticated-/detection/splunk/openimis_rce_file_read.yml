@@ -1,0 +1,20 @@
+title: openIMIS Report Preview Request Without a Validated Identity - Splunk
+id: 5f7fcbf0-8a1e-437b-b6c3-8a29e89e3fe8
+status: experimental
+description: Flags traffic to the deployment-specific report preview route when the access log explicitly records an unauthenticated request. Correlate with response status and application telemetry.
+author: Cipher
+references:
+    - https://nvd.nist.gov/vuln/detail/CVE-2026-82489
+logsource:
+    category: webserver
+    product: splunk
+    definition: Scope to openIMIS and map cs-uri-stem to the normalized request path and auth_state to the trusted ingress authentication result. Replace the path placeholder before deployment.
+detection:
+    selection:
+        cs-uri-stem: 'OPENIMIS_PREVIEW_PATH'
+        auth_state: 'unauthenticated'
+    condition: selection
+falsepositives:
+    - Requests blocked by ingress policy
+    - Expected anonymous requests during authorized monitoring
+level: medium

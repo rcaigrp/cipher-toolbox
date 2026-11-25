@@ -1,0 +1,4 @@
+# Replace OPENIMIS_PREVIEW_PATH with the exact path observed in your own deployment before loading.
+# Scope OPENIMIS_HTTP_SERVERS and OPENIMIS_HTTP_PORTS to the monitored openIMIS listeners.
+# Requires visibility into decoded HTTP. A match indicates preview access and warrants log correlation.
+alert http any any -> $OPENIMIS_HTTP_SERVERS $OPENIMIS_HTTP_PORTS (msg:"LOCAL openIMIS report preview request"; flow:established,to_server; http.uri; content:"OPENIMIS_PREVIEW_PATH"; startswith; pcre:"/^OPENIMIS_PREVIEW_PATH(?:\?|$)/"; classtype:policy-violation; sid:100082489; rev:1;)
