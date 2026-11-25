@@ -17,7 +17,7 @@ Sigma rules for webserver logs, YARA rules for files/memory, and Suricata/Snort 
 - `detection/sigma/openimis_rce_file_read.yml`: Sigma rule for detecting unauthenticated access to the report preview endpoint
 - `detection/yara/openimis_reportbro_preview.yar`: YARA rule for identifying openIMIS ReportBro preview context in files or memory
 - `detection/suricata/openimis_preview.rules`: Suricata rule for detecting requests to the preview endpoint
-- `detection/splunk/openimis_rce_file_read.yml`: Splunk-specific Sigma rule variant (converted from main rule)
+- `detection/splunk/openimis_rce_file_read_splunk.yml`: Splunk-specific Sigma rule variant (converted from main rule)
 
 ## Hunt
 
