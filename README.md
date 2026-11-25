@@ -56,6 +56,7 @@ Zero-day / negative-day thinking: where the next bug of a known class is likely,
 - [**Capability Check Bypass in Scripting Engines: A Persistent Vulnerability Class**](kits/class-capability-bypass): Capability check bypasses in scripting engines represent a persistent vulnerability class where applications fail to properly enforce authorization controls when executing code through scripting interfaces.
 - [**Command Injection Detection Kit**](kits/class-command-injection): This kit provides tools and techniques for detecting command injection vulnerabilities in systems.
 - [**Isolation failures in document conversion**](kits/class-converter-isolation): Upload previews, thumbnails, and attachment rendering can hand untrusted files to interpreters that inherit the conversion worker’s operating-system permissions.
+- [**Deserialization Vulnerability Class**](kits/class-deserialization): This kit contains detection rules, check scripts, and analysis for the deserialization vulnerability class that affects software components that deserialize untrusted data.
 - [**File Parsing Vulnerability Class**](kits/class-file-parsing): This kit contains detection rules, check scripts, and analysis for the file parsing vulnerability class that affects image processing software.
 - [**Heap Buffer Overflow Class Analysis**](kits/class-heap-buffer-overflow): This kit analyzes the heap buffer overflow vulnerability class, particularly in file parsing components.
 - [**class-heap-overflow**](kits/class-heap-overflow)

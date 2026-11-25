@@ -1,0 +1,8 @@
+// Hunt query for deserialization patterns in logs
+// Look for suspicious deserialization activities
+
+Index=*
+| where Message contains "ObjectInputStream" or Message contains "deserialize"
+| where Message contains "untrusted" or Message contains "user input"
+| stats count() by Image, CommandLine, User
+| order by count_ desc
