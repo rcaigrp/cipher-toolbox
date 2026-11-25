@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
 Security script to check for RCE exposure patterns in code.
-This is a simplified version for demonstration purposes.
 """
 
+import argparse
 import os
 import re
 
@@ -12,7 +12,7 @@ def find_unsafe_patterns(directory):
     unsafe_patterns = [
         r'eval\s*\(',
         r'exec\s*\(',
-        r'system\s*\(',
+        r'(?<![\w.])system\s*\(',
         r'shell\s*\(',
         r'os\.system\s*\(',
         r'os\.popen\s*\(',
@@ -34,8 +34,6 @@ def find_unsafe_patterns(directory):
         r'compile\s*\(',
         r'execfile\s*\(',
         r'open\s*\(',
-        r'eval\s*\(',
-        r'exec\s*\(',
         r'filter\s*\(',
         r'map\s*\(',
         r'reduce\s*\(',
@@ -67,37 +65,24 @@ def find_unsafe_patterns(directory):
     return findings
 
 def main():
-    """Main function to demonstrate the check."""
-    # For demonstration, we'll create a test file with some unsafe patterns
-    test_code = '''
-import os
-import pickle
-import subprocess
+    parser = argparse.ArgumentParser(description="Check source files for potential RCE exposure patterns.")
+    parser.add_argument("directory", help="directory containing source files to scan")
+    args = parser.parse_args()
+    if not os.path.isdir(args.directory):
+        parser.error(f"{args.directory!r} is not a directory")
 
-def unsafe_function(user_input):
-    # This is an example of potentially dangerous code
-    result = eval(user_input)
-    system_call = os.system("echo " + user_input)
-    pickled_data = pickle.loads(user_input)
-    subproc = subprocess.call(user_input)
-    return result
-'''
-    
-    with open('/tmp/test_rce.py', 'w') as f:
-        f.write(test_code)
-    
-    # Check the test file
-    findings = find_unsafe_patterns('/tmp')
-    
-    if findings:
-        print("Potential RCE exposure patterns found:")
-        for finding in findings:
-            print(f"File: {finding['file']}, Line: {finding['line']}")
-            print(f"Pattern: {finding['pattern']}")
-            print(f"Match: {finding['match']}")
-            print("---")
-    else:
+    findings = find_unsafe_patterns(args.directory)
+    if not findings:
         print("No potential RCE exposure patterns found.")
+        return
+
+    print("Potential RCE exposure patterns found:")
+    for finding in findings:
+        print(f"File: {finding['file']}, Line: {finding['line']}")
+        print(f"Pattern: {finding['pattern']}")
+        print(f"Match: {finding['match']}")
+        print("---")
+
 
 if __name__ == "__main__":
     main()

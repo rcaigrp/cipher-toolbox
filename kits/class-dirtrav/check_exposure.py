@@ -4,9 +4,9 @@ Directory Traversal Exposure Check Script
 This script identifies potential directory traversal vulnerabilities in file handling code.
 """
 
+import argparse
 import os
 import re
-import sys
 
 def check_directory_traversal_patterns(file_path):
     """
@@ -19,9 +19,8 @@ def check_directory_traversal_patterns(file_path):
         # Patterns that indicate potential directory traversal issues
         patterns = [
             r'(\.\./)',
-            r'(\.\\)',
-            r'os\.path\.join.*\.\.',
-            r'path\.join.*\.\.',
+            r'(\.\.\\)',
+            r'\b(?:os\.)?path\.join.*\.\.',
             r'file\.open.*\.\.',
             r'open.*\.\.',
             r'load.*\.\.',
@@ -68,16 +67,12 @@ def main():
     """
     Main function to run the directory traversal exposure check
     """
-    if len(sys.argv) != 2:
-        print("Usage: python check_exposure.py <directory_to_scan>")
-        sys.exit(1)
-    
-    scan_dir = sys.argv[1]
-    
-    if not os.path.exists(scan_dir):
-        print(f"Directory {scan_dir} does not exist")
-        sys.exit(1)
-    
+    parser = argparse.ArgumentParser(description=__doc__.strip())
+    parser.add_argument('directory', help='directory containing source files to scan')
+    scan_dir = parser.parse_args().directory
+    if not os.path.isdir(scan_dir):
+        parser.error(f'{scan_dir!r} is not a directory')
+
     print(f"Scanning {scan_dir} for directory traversal patterns...")
     
     issues = scan_directory(scan_dir)

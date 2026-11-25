@@ -3,6 +3,7 @@
 Security script to check for deserialization exposure patterns in code.
 """
 
+import argparse
 import os
 import re
 
@@ -11,7 +12,6 @@ def find_unsafe_deserialization_patterns(directory):
     unsafe_patterns = [
         # Python unsafe deserialization
         r'pickle\.loads?\s*\(',
-        r'pickle\.load\s*\(',
         r'yaml\.load\s*\(',
         r'json\.loads?\s*\(',  # Potentially dangerous if used with untrusted data
         
@@ -56,10 +56,24 @@ def find_unsafe_deserialization_patterns(directory):
     return findings
 
 def main():
-    # This would be run against codebases or configurations
-    print("Deserialization Exposure Check Script - Demo")
-    print("This is a simplified check for demonstration purposes.")
-    print("In practice, this would scan actual code repositories.")
+    parser = argparse.ArgumentParser(description="Check source files for potential deserialization exposure patterns.")
+    parser.add_argument("directory", help="directory containing source files to scan")
+    args = parser.parse_args()
+    if not os.path.isdir(args.directory):
+        parser.error(f"{args.directory!r} is not a directory")
+
+    findings = find_unsafe_deserialization_patterns(args.directory)
+    if not findings:
+        print("No potential deserialization exposure patterns found.")
+        return
+
+    print("Potential deserialization exposure patterns found:")
+    for finding in findings:
+        print(f"File: {finding['file']}, Line: {finding['line']}")
+        print(f"Pattern: {finding['pattern']}")
+        print(f"Context: {finding['context']}")
+        print("---")
+
 
 if __name__ == "__main__":
     main()
