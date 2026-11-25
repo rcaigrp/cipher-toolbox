@@ -19,7 +19,7 @@ bash mitigate.sh
 - `hunt.md` contains a firewall log query and sample-event validation guidance.
 - `detection/netis-wf2409e-management.rules` flags connection attempts to inventoried management endpoints from outside approved networks.
 - `detection/sigma/netis-wf2409e-auth-flaw.yml` provides a firewall log template. Substitute your inventory, allowlist, and field mappings before deployment.
-- `detection/yara/netis-wf2409e-exploit.yar` is included for review. Validate its indicators against confirmed incident evidence before relying on it.
+- `detection/yara/netis-wf2409e-exploit.yar` identifies local artifacts that contain both the Netis vendor name and the WF2409E model name for inventory triage.
 
 ## Tests
 
