@@ -1,0 +1,20 @@
+title: Unapproved Traffic Allowed to Netis WF2409E Management
+id: cf54a921-c2e3-42e2-8482-4b7fede09940
+status: experimental
+description: Flags allowed connections to inventoried WF2409E management endpoints from outside the approved management network. This is an exposure signal.
+logsource:
+    category: firewall
+detection:
+    selection:
+        destination_device_model: 'WF2409E'
+        destination_service_role: 'management'
+        action: 'allow'
+        source_is_approved_management: false
+    condition: selection
+fields:
+    - src_ip
+    - dst_ip
+    - dst_port
+falsepositives:
+    - Stale inventory or incomplete management network classification.
+level: high

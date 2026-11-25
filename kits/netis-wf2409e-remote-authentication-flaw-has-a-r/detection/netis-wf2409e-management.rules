@@ -1,0 +1,3 @@
+# Replace the documentation addresses and example ports with inventoried values before enabling.
+# Source address is the approved management network as seen by the sensor.
+alert tcp ![192.0.2.0/24] any -> [198.51.100.10] [80,443] (msg:"POLICY Unapproved source attempted Netis WF2409E management connection"; flags:S; sid:1002409; rev:1;)
