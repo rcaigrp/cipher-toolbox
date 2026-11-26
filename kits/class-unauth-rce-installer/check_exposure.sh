@@ -20,8 +20,18 @@ root=$1
 paths=(install.php core/install.php wp-admin/install.php setup admin/install install bootstrap init)
 found=0
 for path in "${paths[@]}"; do
-    if [[ -L "$root/$path" || -e "$root/$path" ]]; then
+    if [[ -d "$root/$path" ]]; then
+        printf 'Candidate setup directory: %q\n' "$path"
+        found=1
+    elif [[ -L "$root/$path" || -e "$root/$path" ]]; then
         printf 'Candidate setup artifact: %q\n' "$path"
+        found=1
+    fi
+done
+
+for path in admin/setup core/install core/setup; do
+    if [[ -d "$root/$path" ]]; then
+        printf 'Candidate setup directory: %q\n' "$path"
         found=1
     fi
 done

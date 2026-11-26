@@ -79,7 +79,7 @@ Zero-day / negative-day thinking: where the next bug of a known class is likely,
 - [**Server-Side Request Forgery (SSRF) Class Analysis Kit**](kits/class-ssrf): This kit provides analysis and detection resources for the Server-Side Request Forgery vulnerability pattern.
 - [**Stack Overflow Class: A Persistent Threat in Parsing and Processing**](kits/class-stack-overflow): The stack overflow vulnerability class has emerged as a significant threat, particularly in parsing libraries and data processing systems.
 - [**Template Injection Flaws in Web Applications**](kits/class-template-injection): Template injection vulnerabilities occur when user input is directly embedded into templates without proper sanitization or escaping.
-- [**Public exposure of web application setup workflows**](kits/class-unauth-rce-installer): Setup workflows can create privileged accounts, write configuration, or initialize a datastore before ordinary application authentication is available.
+- [**Class-Unauth-RCE-Installer Kit**](kits/class-unauth-rce-installer): This kit detects potential installer scripts that could lead to unauthenticated remote code execution vulnerabilities.
 - [**.NET untrusted deserialization exposure review**](kits/class-untrusted-deserialization): Run `./check_exposure.sh --help` for usage. Run `./check_exposure.sh /path/to/project` to scan local files, or omit the directory to scan the current directory. The checker requires Bash, `find`, `grep`, and `strings`.
 
 ## 🔧 Tools it built
