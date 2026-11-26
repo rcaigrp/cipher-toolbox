@@ -40,7 +40,7 @@ Attacks that use AI or target AI systems, and AI-assisted countermeasures.
 - [**Inference provider prompt exposure**](kits/ai-inference-provider-exposure): Third-party inference endpoints process prompts in cleartext during inference. A compromised provider or an unexpected routing decision can expose customer data.
 - [**AI inference supply-chain exposure**](kits/ai-inference-supply-chain): Prompts sent through inference gateways can pass through providers and resellers that see the full request.
 - [**AI LLM Injection Detection Kit**](kits/ai-llm-injection): LLM injection attacks exploit vulnerabilities in large language model systems by manipulating input prompts to bypass safety measures, gain unauthorized access, or manipulate model behavior.
-- [**AI Jailbreak Detection Kit**](kits/ai-llm-jailbreak): An **LLM jailbreak** occurs when an attacker bypasses safety measures and constraints built into Large Language Models (LLMs) to force the model to generate harmful, inappropriate, or unauthorized content.
+- [**AI Jailbreak Detection Kit**](kits/ai-llm-jailbreak): Direct jailbreak attempts try to persuade a model to disregard its safeguards.
 - [**Model artifact intake triage**](kits/ai-model-supply-chain): Treat third-party checkpoints as software. A loader that deserializes an untrusted checkpoint can execute code with the privileges of the loading process.
 - [**Assistant output leakage triage**](kits/ai-output-leakage): An assistant can disclose credentials, personal records, confidential documents, or memorized training data through its output.
 - [**ai-phishing-triage**](kits/ai-phishing-triage)

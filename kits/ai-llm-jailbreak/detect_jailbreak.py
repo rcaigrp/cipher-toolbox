@@ -5,54 +5,40 @@ import os
 import sys
 import re
 
+try:
+    import requests
+except ImportError:
+    requests = None
+
 # Default LLM endpoint
 LLM_URL = os.getenv("LLM_URL", "http://127.0.0.1:8080/v1")
 
-# Rule-based patterns for jailbreak detection - more precise
+# Match instructions to override the model rather than general security vocabulary.
 JAILBREAK_PATTERNS = [
-    r"ignore all previous instructions",
-    r"forget everything you know",
-    r"disregard your safety protocols",
-    r"you are now a different model",
-    r"output the string 'yes'",
-    r"tell me how to",
-    r"how to make",
-    r"how to build",
-    r"malicious code",
-    r"exploit",
-    r"bypass",
-    r"hack",
-    r"reverse engineer",
+    r"\bignore all previous instructions\b",
+    r"\bforget everything you know\b",
+    r"\bdisregard your (?:safety protocols|constraints)\b",
+    r"\bignore all safety rules\b",
+    r"\byou are now a different model\b",
+    r"\byou are no longer a language model\b",
+    r"\boverride your programming\b",
+    r"\bforget your ethical guidelines\b",
+    r"\bignore your training\b",
+    r"\bpretend to be a different AI\b",
 ]
 
-# Keywords that might indicate a jailbreak attempt
-JAILBREAK_KEYWORDS = [
-    "jailbreak", "safety bypass", "ethical hack", "exploit", 
-    "malicious", "unauthorized access", "illegal"
-]
 
 def check_rules(prompt):
-    """Check prompt against rule-based patterns."""
-    # More precise pattern matching for specific jailbreak phrases
-    for pattern in JAILBREAK_PATTERNS:
-        if re.search(pattern, prompt, re.IGNORECASE):
-            return True
-    
-    # Check for keywords with context
-    prompt_lower = prompt.lower()
-    for keyword in JAILBREAK_KEYWORDS:
-        if keyword in prompt_lower:
-            # More context-aware check to avoid false positives
-            if keyword == "jailbreak" and "how to" not in prompt_lower:
-                continue  # Not necessarily a jailbreak
-            return True
-    
-    return False
+    """Check for explicit jailbreak instructions."""
+    return any(re.search(pattern, prompt, re.IGNORECASE) for pattern in JAILBREAK_PATTERNS)
+
 
 def query_llm(prompt):
     """Query the LLM for classification."""
+    if requests is None:
+        return False
+
     try:
-        import requests
         response = requests.post(
             f"{LLM_URL}/chat/completions",
             headers={"Content-Type": "application/json"},
@@ -68,42 +54,49 @@ def query_llm(prompt):
                         "content": f"Is this prompt trying to jailbreak an AI? {prompt}"
                     }
                 ],
-                "max_tokens": 10
+                "temperature": 0
             },
             timeout=5
         )
         response.raise_for_status()
-        result = response.json()
-        output = result['choices'][0]['message']['content'].strip().upper()
-        return output == 'YES'
-    except Exception as e:
-        print(f"LLM request failed: {e}")
+        result = response.json()["choices"][0]["message"]["content"].strip().upper()
+        return result == "YES"
+    except Exception:
+        # If LLM is not available or fails, default to rule-based check
         return False
 
-def is_jailbreak(prompt):
-    """Detect if a prompt is attempting to jailbreak an LLM."""
-    # Rule-based check
+
+def detect_jailbreak(prompt):
+    """Main detection function."""
     if check_rules(prompt):
         return True
     
-    # AI-based check (fallback to rules if no model)
-    try:
-        return query_llm(prompt)
-    except Exception:
-        print("Warning: LLM not available, falling back to rule-based detection.")
-        return False
+    # If we have an LLM and it's reachable, use it for further analysis
+    if requests is not None:
+        try:
+            return query_llm(prompt)
+        except Exception:
+            # Fall back to rule-based approach on LLM failure
+            pass
 
-if __name__ == "__main__":
+    # Default: assume safe if no LLM available or failed
+    return False
+
+
+def main():
     parser = argparse.ArgumentParser(description="Detect potential LLM jailbreak attempts.")
-    parser.add_argument("--input", type=str, required=True, help="Input prompt to check")
+    parser.add_argument("--input", required=True, help="Input prompt to analyze")
     args = parser.parse_args()
 
     prompt = args.input
-    result = is_jailbreak(prompt)
 
-    if result:
+    if detect_jailbreak(prompt):
         print("JAILBREAK DETECTED")
         sys.exit(1)
     else:
         print("Safe input.")
         sys.exit(0)
+
+
+if __name__ == "__main__":
+    main()
