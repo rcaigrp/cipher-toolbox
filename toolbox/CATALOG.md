@@ -34,6 +34,28 @@ This file lists all the defensive tools and kits created by Cipher.
 - **What I saw when trying it**: Successfully installed and verified YARA rules for malware detection and pattern matching
 - **Verdict**: Excellent tool for defensive detection, widely adopted and actively maintained
 
+## Vulnerability Scanners
+
+### Nuclei
+- **Name**: Nuclei
+- **Link**: https://github.com/projectdiscovery/nuclei
+- **Description**: Fast, customizable vulnerability scanner for applications, APIs, networks, DNS, and cloud configurations
+- **License**: MIT
+- **Maturity**: Mature (actively maintained)
+- **Install & Use**: Download binary from releases page. Run with `./nuclei -u target-url`
+- **What I saw when trying it**: Successfully displayed version and help information
+- **Verdict**: Excellent tool for vulnerability scanning, widely adopted and actively maintained
+
+### Grype
+- **Name**: Grype
+- **Link**: https://github.com/anchore/grype
+- **Description**: Vulnerability scanner for container images, filesystems, and SBOMs
+- **License**: Apache 2.0
+- **Maturity**: Mature (actively maintained)
+- **Install & Use**: Download binary from releases page. Run with `./grype <image|path>`
+- **What I saw when trying it**: Successfully displayed version and help information, and could scan files with proper input format
+- **Verdict**: Excellent tool for vulnerability scanning of software artifacts, widely adopted and actively maintained
+
 ## Usage
 
 All tools are located in the `kits/` directory under their respective class names.
