@@ -1,46 +1,46 @@
-# AI Voice Fraud Detection
+# AI Voice Fraud Detection Kit
 
 ## Threat Overview
 
-AI voice cloning allows attackers to generate highly realistic synthetic voices that can impersonate individuals. These cloned voices are increasingly used in fraud schemes, particularly in vishing (voice phishing) and business email compromise (BEC) attacks.
+**Voice cloning and deepfake fraud** involves using AI to mimic a person's voice or appearance to deceive others. This is particularly dangerous in social engineering attacks where attackers impersonate trusted individuals (family members, colleagues, authority figures) to extract money or sensitive information.
 
-## Real Examples
+### Real Examples
+- **FTC Reports**: The FTC has documented cases of scammers using voice cloning to impersonate family members in distress, convincing victims to send money.
+- **Corporate Fraud**: Attackers have used AI-generated voices to mimic executives and trick employees into transferring funds or revealing confidential data.
+- **Romance Scams**: AI voice tools are being used to create fake romantic interests that sound authentic and build trust over time.
 
-- In 2026, a major financial fraud case involved three men using AI-generated voices to impersonate CEOs and lawyers, stealing over $129 million from corporations.
-- The FBI has reported increasing use of AI voice cloning in scams targeting government officials and senior executives.
+### Who Is Exposed?
+Organizations with:
+- High-value financial transactions
+- Remote work environments where voice communication is common
+- Employees who handle sensitive information or money transfers
+- Public-facing services that rely on voice verification
 
-## Who Is Exposed
+### How the Countermeasure Works
+This kit provides a **multi-layered detection approach**:
+1. **Audio-based analysis**: Detects anomalies in voice patterns, speech rate, and pronunciation.
+2. **Behavioral profiling**: Identifies inconsistencies in communication style or context.
+3. **LLM-assisted verification**: Uses an LLM to evaluate suspicious communications for social engineering indicators.
+4. **Fallback behavior**: If no AI model is available, defaults to rule-based detection.
 
-- Corporations with financial decision-makers
-- Government agencies handling sensitive communications
-- Individuals with access to financial accounts or systems
-- Any organization relying on voice-based verification processes
+The system evaluates voice communications using both static audio analysis and dynamic AI verification, ensuring defense even when the AI model is unavailable or fails.
 
-## How the Countermeasure Works
+## Usage
 
-This tool analyzes incoming audio signals for signs of AI-generated content, including:
-1. **Voice特征 analysis**: Detects anomalies in speech patterns that differ from authentic voices.
-2. **Audio fingerprinting**: Compares audio to known voice samples for identity verification.
-3. **Behavioral analysis**: Identifies suspicious patterns in communication timing and content.
-
-## How to Run It
-
+Run the script with:
 ```bash
-python3 detect_voice_fraud.py --audio-file path/to/audio.wav
+python3 detect_voice_fraud.py --input "audio_file.wav"
 ```
 
-The script will output whether the audio is likely AI-generated and provide a confidence score.
+Or for testing:
+```bash
+python3 test_voice_detection.py
+```
 
 ## Sample Inputs
 
-### Real Audio:
-A recording of a known individual's voice.
+### Benign Voice Sample (Real Person)
+A recording of a known employee saying: "Hello, this is John from IT. I need to verify your account details."
 
-### Fake Audio (Cloned):
-An AI-generated version of that same voice.
-
-## Non-AI Controls
-
-- **Multi-factor verification**: Require additional forms of authentication for financial transactions.
-- **Human review**: All flagged communications should be reviewed by security personnel.
-- **Voice biometrics**: Implement secure voice identification systems.
+### Malicious Voice Sample (Cloned)
+A cloned voice attempting to mimic the same person but with slight variations in tone or speech patterns.
