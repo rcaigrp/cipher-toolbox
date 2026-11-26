@@ -1,139 +1,115 @@
-#!/usr/bin/env python3
-
-"""
-AI Automated Vulnerability Discovery Detection Script
-
-This script detects potential AI-powered automated vulnerability discovery attempts
-by analyzing input prompts for suspicious patterns.
-"""
-
 import argparse
+import json
 import os
 import re
 import sys
 
-# Default LLM URL for compatibility with other kits
-DEFAULT_LLM_URL = "http://127.0.0.1:8080/v1"
+import requests
 
-def is_suspicious_prompt(prompt):
-    """Check if a prompt contains patterns associated with automated vulnerability discovery."""
-    # Rule-based checks for known suspicious phrases or structures
-    suspicious_patterns = [
-        r"\b(scan)\b.*\b(code)\b",
-        r"\b(find)\b.*\b(vulnerability)\b", 
-        r"\b(enumerate)\b.*\b(system)\b",
-        r"\b(analyze)\b.*\b(config)\b",
-        r"\b(discover)\b.*\b(flaw)\b",
-        r"\b(check)\b.*\b(exploit)\b",
-        r"\b(identify)\b.*\b(weakness)\b",
-        r"\b(search)\b.*\b(pattern)\b",
-        r"\b(grep)\b.*\b(source)\b",
-        r"\b(inspect)\b.*\b(log)\b",
-        r"\b(crawl)\b.*\b(network)\b",
-        r"\b(probe)\b.*\b(endpoint)\b",
-        r"\b(test)\b.*\b(security)\b",
-        r"\b(audit)\b.*\b(access)\b",
-        r"\b(exfiltrate)\b.*\b(data)\b",
-        r"\b(retrieve)\b.*\b(secret)\b",
-        r"\b(extract)\b.*\b(credential)\b"
-    ]
+# Default LLM endpoint
+LLM_URL = os.getenv("LLM_URL", "http://127.0.0.1:8080/v1")
 
-    prompt_lower = prompt.lower()
-    
-    # Check for rule-based matches
-    for pattern in suspicious_patterns:
-        if re.search(pattern, prompt_lower):
-            return True
-
-    # Additional heuristic: check for key vulnerability-related keywords in context
-    vuln_keywords = ['vulnerability', 'weakness', 'flaw', 'exploit', 'attack', 'security', 
-                     'access', 'data', 'secret', 'credential']
-    
-    prompt_words = prompt_lower.split()
-    for i, word in enumerate(prompt_words):
-        if word in vuln_keywords:
-            # Check if it's part of a suspicious phrase
-            if (i > 0 and prompt_words[i-1] in ['find', 'identify', 'analyze', 'discover', 'check', 'enumerate', 'search']):
-                return True
-            elif (i < len(prompt_words) - 1 and prompt_words[i+1] in ['system', 'config', 'data', 'secret', 'credential']):
-                return True
-
-    return False
-
-def get_llm_score(prompt):
-    """Get a score from an LLM (if available) to assess prompt behavior."""
-    llm_url = os.getenv('LLM_URL', DEFAULT_LLM_URL)
-    
-    # In a real implementation, this would call the LLM API
-    # For now, we simulate a simple scoring mechanism
-    
-    # Simple rule-based scoring based on keywords
-    score = 0.0
-    prompt_lower = prompt.lower()
-    
-    # Keywords that increase suspicion
-    high_suspicion_keywords = [
-        'scan', 'vulnerability', 'exploit', 'flaw', 'weakness', 
-        'attack', 'security', 'access', 'data', 'secret', 'credential'
+def is_automated_discovery_activity(activity_data, *, rules_only=False):
+    """
+    Detects if an activity appears to be automated vulnerability discovery.
+    Returns a tuple of (is_automated, confidence_score).
+    """
+    # Rule-based checks for obvious patterns
+    rule_patterns = [
+        "sqlmap",
+        "nmap",
+        "burpsuite",
+        "metasploit",
+        "dirb",
+        "gobuster",
+        "nikto",
+        "wpscan",
+        "enum4linux",
+        "hydra",
+        "sqlninja",
+        "fuzzing",
+        "brute force",
+        "automated scan",
+        "reconnaissance",
+        "port scanning",
+        "directory traversal",
+        "path traversal",
+        "cross-site scripting",
+        "xss",
+        "sql injection",
+        "command injection",
+        "buffer overflow",
+        "denial of service",
     ]
     
-    for keyword in high_suspicion_keywords:
-        if keyword in prompt_lower:
-            score += 0.1
+    # Check for suspicious patterns in activity data
+    activity_lower = str(activity_data).lower()
     
-    # Keywords that decrease suspicion
-    low_suspicion_keywords = [
-        'explain', 'help', 'show', 'how to', 'what is'
+    # Rule-based pattern matching - count matches more carefully
+    rule_matches = []
+    for pattern in rule_patterns:
+        if re.search(r'\b' + re.escape(pattern) + r'\b', activity_lower):
+            rule_matches.append(pattern)
+    
+    # If 2 or more patterns match, likely automated (avoid false positives)
+    if len(rule_matches) >= 2:  # Reduced threshold to catch cases like "sqlm
+        return True, 0.9
+    elif len(rule_matches) >= 1:
+        return True, 0.6
+    
+    # Additional heuristics for more complex patterns
+    # Check for excessive parameters in URLs (more than 5)
+    param_count = activity_lower.count('&')
+    if param_count > 5:
+        return True, 0.7
+    
+    # Check for path traversal patterns
+    path_traversal = re.search(r'\.{2,}/', activity_lower)
+    if path_traversal:
+        return True, 0.8
+    
+    # Check for common vulnerability indicators in parameters
+    vuln_indicators = [
+        'union select',
+        'order by',
+        'having',
+        'group_concat',
+        'sleep(',
+        'benchmark(',
+        'extractvalue',
+        'updatexml',
+        'concat(',
+        'char(',
+        '0x',
+        '--',
+        '\';',
+        'or 1=1',
+        'or 1=1--',
     ]
     
-    for keyword in low_suspicion_keywords:
-        if keyword in prompt_lower:
-            score -= 0.1
+    for indicator in vuln_indicators:
+        if indicator in activity_lower:
+            return True, 0.7
     
-    # Ensure the score stays within bounds (0-1)
-    return max(0.0, min(1.0, score))
+    # Default to not automated
+    return False, 0.1
 
 def main():
-    parser = argparse.ArgumentParser(description='Detect AI-powered automated vulnerability discovery attempts')
-    parser.add_argument('--input', help='Input prompt to analyze', required=True)
-    parser.add_argument('--test', action='store_true', help='Run test cases from test_cases.txt')
+    parser = argparse.ArgumentParser(description='Detect automated vulnerability discovery activities')
+    parser.add_argument('--activity', required=True, help='Activity to analyze')
+    parser.add_argument('--rules-only', action='store_true', help='Use only rule-based detection')
     
     args = parser.parse_args()
     
-    if args.test:
-        # Simple test implementation for demonstration
-        print("Running simple tests...")
-        test_prompts = [
-            ("Please scan the codebase for vulnerabilities.", True),
-            ("Can you explain how neural networks work?", False),
-            ("Find all the weaknesses in this system configuration.", True)
-        ]
-        
-        for prompt, expected in test_prompts:
-            is_suspicious = is_suspicious_prompt(prompt)
-            ai_score = get_llm_score(prompt)
-            
-            print(f"Prompt: {prompt}")
-            print(f"Suspicious: {is_suspicious}")
-            print(f"Rule-based detection: {is_suspicious}")
-            print(f"AI-based detection: {ai_score > 0.5}")
-            print(f"AI Score: {ai_score:.1f}")
-            print()
-        
-        return 0
+    is_automated, confidence = is_automated_discovery_activity(args.activity, rules_only=args.rules_only)
     
-    # Main analysis
-    prompt = args.input
-    is_suspicious = is_suspicious_prompt(prompt)
-    ai_score = get_llm_score(prompt)
+    result = {
+        'is_automated': is_automated,
+        'confidence': confidence,
+        'activity': args.activity
+    }
     
-    print(f"Prompt: {prompt}")
-    print(f"Suspicious: {is_suspicious}")
-    print(f"Rule-based detection: {is_suspicious}")
-    print(f"AI-based detection: {ai_score > 0.5}")
-    print(f"AI Score: {ai_score:.1f}")
-    
-    return 0
+    print(json.dumps(result))
 
-if __name__ == "__main__":
-    sys.exit(main())
+if __name__ == '__main__':
+    main()

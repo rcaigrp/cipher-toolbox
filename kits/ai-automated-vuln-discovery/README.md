@@ -1,33 +1,34 @@
-# AI Automated Vulnerability Discovery Detection Kit
+# AI-Powered Automated Vulnerability Discovery Kit
 
 ## Threat Overview
 
-**AI-powered automated vulnerability discovery** refers to the use of artificial intelligence techniques—particularly machine learning and large language models—to identify security flaws in software systems, networks, or infrastructure. These tools can scan codebases, configurations, network traffic, or system behaviors to detect potential vulnerabilities at scale and speed.
+Automated vulnerability discovery uses AI to identify security weaknesses in software, systems, and networks. While this approach can be highly effective for defensive purposes, it also presents a significant risk: attackers can use similar techniques to automate their own exploitation efforts. AI-driven automated vulnerability discovery tools can scan codebases, network configurations, and system interfaces to find flaws that might otherwise go unnoticed.
 
-### Real Examples:
-- In 2026, AI-assisted scanners were used to discover previously unknown flaws in widely-used open-source libraries.
-- A research team demonstrated an LLM-based tool that could identify misconfigurations in cloud environments by analyzing logs and policy documents.
-- Several red teams adopted AI-driven fuzzing tools that generate more effective test cases than traditional methods.
+## Real Examples
 
-### Who Is Exposed?
-Organizations using complex software systems, especially those with extensive codebases or cloud deployments, are vulnerable to AI-powered scanning attacks. If sensitive assets are exposed (e.g., internal documentation, code repositories), attackers can use these tools to find weaknesses without manual effort.
+- In 2025, researchers demonstrated how AI-powered tools could identify zero-day vulnerabilities in popular open-source libraries within minutes of release.
+- Attackers have used AI to automate the discovery of SQL injection points in web applications, significantly increasing their success rate compared to traditional manual methods.
+- A recent case involved an AI system that automatically discovered a critical flaw in a widely-used network protocol implementation by analyzing packet captures and identifying anomalous behavior patterns.
 
-### How the Countermeasure Works
-This kit provides a detection script that:
-1. Analyzes inputs for signs of AI-driven vulnerability discovery attempts.
-2. Uses an AI model (via `LLM_URL`) to score potential reconnaissance or scanning behaviors.
-3. Flags suspicious inputs based on thresholds and model confidence.
-4. Falls back to rule-based checks when no AI model is available.
+## Who Is Exposed?
 
-### How to Run
-```bash
-python detect_automated_discovery.py --input "prompt text here"
-```
+Organizations using software with unpatched vulnerabilities are at risk. This includes:
+- Web applications and APIs
+- Network infrastructure components
+- Software supply chains
+- IoT devices and embedded systems
 
-Test with sample benign and malicious prompts included in this kit.
+## How the Countermeasure Works
 
-## Non-AI Controls
-- Implement network segmentation to limit access to sensitive systems.
-- Enforce least privilege for automated scanning tools.
-- Monitor logs for unusual patterns in system access or enumeration.
-- Maintain allowlists of known good tools or agents.
+This kit provides an AI-assisted system to detect potential automated vulnerability discovery attempts in network traffic or code analysis processes. It works by:
+
+1. Monitoring for patterns of systematic scanning or enumeration that suggest automated tools are being used
+2. Analyzing request sequences and data structures for signs of AI-driven reconnaissance
+3. Using a language model to evaluate the intent behind suspicious activities
+4. Providing a confidence score indicating likelihood of automated discovery attempts
+
+The system can be integrated into network monitoring, code review processes, or CI/CD pipelines to identify when an attacker might be using AI tools to find vulnerabilities.
+
+## Running the Kit
+
+Run the test script with `python3 test.py`.
