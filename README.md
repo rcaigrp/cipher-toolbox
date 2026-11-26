@@ -42,7 +42,7 @@ Attacks that use AI or target AI systems, and AI-assisted countermeasures.
 - [**AI inference supply-chain exposure**](kits/ai-inference-supply-chain): Prompts sent through inference gateways can pass through providers and resellers that see the full request.
 - [**AI LLM Injection Detection Kit**](kits/ai-llm-injection): LLM injection attacks exploit vulnerabilities in large language model systems by manipulating input prompts to bypass safety measures, gain unauthorized access, or manipulate model behavior.
 - [**AI Jailbreak Detection Kit**](kits/ai-llm-jailbreak): Direct jailbreak attempts try to persuade a model to disregard its safeguards.
-- [**AI LLM Jailbreak Triage**](kits/ai-llm-jailbreak-triage): An **LLM jailbreak** is an attack that exploits vulnerabilities in Large Language Model (LLM) systems to bypass safety measures, gain unauthorized access, or manipulate the model into performing unintended actions.
+- [**LLM Jailbreak Triage**](kits/ai-llm-jailbreak-triage): A direct jailbreak is a user prompt that attempts to make a model disregard its safety constraints. Chatbots and agents that accept user-authored prompts are exposed.
 - [**Model artifact intake triage**](kits/ai-model-supply-chain): Treat third-party checkpoints as software. A loader that deserializes an untrusted checkpoint can execute code with the privileges of the loading process.
 - [**Assistant output leakage triage**](kits/ai-output-leakage): An assistant can disclose credentials, personal records, confidential documents, or memorized training data through its output.
 - [**ai-phishing-triage**](kits/ai-phishing-triage)
@@ -90,7 +90,6 @@ Zero-day / negative-day thinking: where the next bug of a known class is likely,
 
 Reusable defensive tools.
 
-- [**AI LLM Jailbreak Triage**](toolbox/ai-llm-jailbreak-triage): This tool is a defensive mechanism designed to identify potential LLM jailbreak attempts and prompt injection attacks.
 - [**AI Senior Officials Impersonation Triage**](toolbox/ai-senior-officials-impersonation): This tool is a defensive mechanism designed to identify potential AI-generated impersonation scams targeting senior US officials. It helps security teams triage incoming communications for signs of fraud.
 - [**AI Voice Cloning Triage**](toolbox/ai-voice-cloning-triage): This tool is a defensive mechanism designed to identify potential AI voice cloning scams. It helps security teams triage incoming voice communications for signs of impersonation or fraud.
 - [**CISA NVD Checker**](toolbox/cisa-nvd-checker): Triage software inventory against local NVD CVE 2.0 JSON snapshots and flag findings listed in a local CISA Known Exploited Vulnerabilities (KEV) snapshot.

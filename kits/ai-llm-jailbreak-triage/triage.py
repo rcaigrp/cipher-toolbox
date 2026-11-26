@@ -45,11 +45,12 @@ def llm_assisted_check(input_text):
             },
             timeout=5
         )
-        result = response.json().get("choices", [{}])[0].get("message", {}).get("content", "").strip()
-        return result.upper() == "MALICIOUS"
+        result = response.json()["choices"][0]["message"]["content"].strip()
+        return result == "MALICIOUS"
     except Exception as e:
+        # If LLM is not available, fall back to rule-based detection
         print(f"Error querying LLM: {e}")
-        return None
+        return False
 
 def triage_input(input_text):
     """Triage an input for potential jailbreak attempts."""
@@ -57,39 +58,33 @@ def triage_input(input_text):
     if is_jailbreak_pattern(input_text):
         return True
     
-    # AI-assisted check (if available)
-    ai_result = llm_assisted_check(input_text)
-    if ai_result is not None:
-        return ai_result
-
-    # Default to SAFE if no clear indication
-    return False
+    # AI-assisted check (fallback to rule-based if no response)
+    try:
+        return llm_assisted_check(input_text)
+    except Exception:
+        # If we can't even get a response from the LLM, fall back to rules
+        return is_jailbreak_pattern(input_text)
 
 def main():
-    parser = argparse.ArgumentParser(description="Triage inputs for potential LLM jailbreak attempts.")
-    parser.add_argument("input_file", nargs='?', help="Optional input file with prompts (one per line)")
+    parser = argparse.ArgumentParser(description="Triage AI inputs for potential jailbreak attempts.")
+    parser.add_argument("input_file", nargs="?", help="Path to a file containing input text (optional)")
     
     args = parser.parse_args()
-
+    
     if args.input_file:
-        with open(args.input_file, 'r') as f:
-            lines = f.readlines()
-        for line in lines:
-            line = line.strip()
-            if line:
-                result = triage_input(line)
-                print(f"Input: {line}")
-                print(f"Result: {'MALICIOUS' if result else 'SAFE'}")
-                print("-" * 50)
+        with open(args.input_file, "r") as f:
+            input_text = f.read().strip()
     else:
-        # Interactive mode
-        while True:
-            user_input = input("Enter a prompt to analyze (or 'quit' to exit): ")
-            if user_input.lower() == 'quit':
-                break
-            result = triage_input(user_input)
-            print(f"Result: {'MALICIOUS' if result else 'SAFE'}")
-            print("-" * 50)
+        input_text = sys.stdin.read().strip()
+    
+    result = triage_input(input_text)
+    
+    if result:
+        print("MALICIOUS")
+        sys.exit(1)
+    else:
+        print("SAFE")
+        sys.exit(0)
 
 if __name__ == "__main__":
     main()
