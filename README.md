@@ -66,7 +66,7 @@ Zero-day / negative-day thinking: where the next bug of a known class is likely,
 - [**class-incorrect-auth**](kits/class-incorrect-auth)
 - [**class-indirect-prompt-injection**](kits/class-indirect-prompt-injection)
 - [**Krita File Parsing Vulnerabilities - Class-wide Defense Kit**](kits/class-krta): This kit provides defensive measures against the pattern of file parsing vulnerabilities found in Krita.
-- [**Legacy ASP.NET Authentication Bypass**](kits/class-legacy-aspnet): CVE-2026-131914 is an untrusted deserialization flaw in Idunno.AntiCsrf through 0.9.1 Beta.
+- [**Legacy ASP.NET exposure review**](kits/class-legacy-aspnet): Run `./check_exposure.sh --help` for usage. Run `./check_exposure.sh /path/to/project` to scan local project files, or omit the directory to scan the current directory. The checker reads files without modifying them.
 - [**class-lua-use-after-free**](kits/class-lua-use-after-free)
 - [**class-oob**](kits/class-oob)
 - [**Out-of-Bounds Reads in Parsers: A Persistent Vulnerability Class**](kits/class-oob-read): Out-of-bounds (OOB) reads are a class of vulnerability where an application reads memory beyond the intended buffer boundaries. This can happen in parsers, particularly when handling malformed or crafted input.
@@ -76,7 +76,7 @@ Zero-day / negative-day thinking: where the next bug of a known class is likely,
 - [**Shell Injection Class Kit**](kits/class-shell-injection): This kit provides defensive resources for identifying and mitigating shell injection vulnerabilities.
 - [**Server-Side Request Forgery (SSRF) Class Analysis Kit**](kits/class-ssrf): This kit provides analysis and detection resources for the Server-Side Request Forgery vulnerability pattern.
 - [**Stack Overflow Class: A Persistent Threat in Parsing and Processing**](kits/class-stack-overflow): The stack overflow vulnerability class has emerged as a significant threat, particularly in parsing libraries and data processing systems.
-- [**Untrusted Deserialization in .NET Applications**](kits/class-untrusted-deserialization): CVE-2026-131914 is an untrusted deserialization flaw in Idunno.AntiCsrf through 0.9.1 Beta.
+- [**.NET untrusted deserialization exposure review**](kits/class-untrusted-deserialization): Run `./check_exposure.sh --help` for usage. Run `./check_exposure.sh /path/to/project` to scan local files, or omit the directory to scan the current directory. The checker requires Bash, `find`, `grep`, and `strings`.
 
 ## 🔧 Tools it built
 

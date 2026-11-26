@@ -1,44 +1,72 @@
 #!/bin/bash
+set -o pipefail
 
-# Check for untrusted deserialization exposure in .NET applications
-# This script identifies potential vulnerable components by looking for
-# usage of dangerous serializers in .NET assemblies and configuration files
+usage() {
+    printf 'Usage: %s [DIRECTORY]\nScan a directory for potential .NET deserialization exposure. Defaults to the current directory.\n' "${0##*/}"
+}
 
-echo "Checking for untrusted deserialization exposure..."
+if [[ $# -eq 1 && ( $1 == --help || $1 == -h ) ]]; then
+    usage
+    exit 0
+fi
 
-# Find .NET assemblies that might contain dangerous deserialization code
-find . -name "*.dll" -o -name "*.exe" | while read -r file; do
-    if [[ -f "$file" ]]; then
-        # Check for use of BinaryFormatter or SoapFormatter in assembly metadata
-        if strings "$file" | grep -q -i "System\.Runtime\.Serialization\.Formatters\.BinaryFormatter\|System\.Runtime\.Serialization\.Formatters\.SoapFormatter"; then
-            echo "Potential dangerous serializer found in: $file"
-        fi
+if [[ $# -gt 1 || ${1:-} == -* ]]; then
+    usage >&2
+    exit 2
+fi
+
+root=${1:-.}
+if [[ ! -d $root ]]; then
+    printf 'Directory not found: %s\n' "$root" >&2
+    exit 2
+fi
+
+for dependency in find grep strings; do
+    if ! command -v "$dependency" >/dev/null; then
+        printf 'Required command not found: %s\n' "$dependency" >&2
+        exit 1
     fi
 done
 
-# Check for configuration files that might contain unsafe deserialization settings
-find . -name "web.config" -o -name "app.config" | while read -r config_file; do
-    if [[ -f "$config_file" ]]; then
-        # Look for legacy serialization settings
-        if grep -q -i "BinaryFormatter\|SoapFormatter\|formatter" "$config_file"; then
-            echo "Potential unsafe deserialization configuration found in: $config_file"
-        fi
-    fi
-done
+[[ $root == /* || $root == . ]] || root=./$root
+serializer='BinaryFormatter|SoapFormatter'
 
-# Check for usage of dangerous deserialization methods in source code (C#)
-find . -name "*.cs" | while read -r source_file; do
-    if [[ -f "$source_file" ]]; then
-        # Look for BinaryFormatter or SoapFormatter usage
-        if grep -q -i "BinaryFormatter\|SoapFormatter" "$source_file"; then
-            echo "Potential dangerous deserialization method found in: $source_file"
-        fi
-        
-        # Look for unsafe serialization patterns that could lead to deserialization
-        if grep -q -E "(Deserialize|ReadObject)" "$source_file" && grep -q -i "request\|cookie\|form\|session" "$source_file"; then
-            echo "Potential untrusted deserialization pattern found in: $source_file"
-        fi
-    fi
-done
-
-echo "Check complete."
+printf 'Checking for untrusted deserialization exposure...\n'
+if ! find "$root" -type f \( -iname '*.dll' -o -iname '*.exe' -o -iname 'web.config' -o -iname 'app.config' -o -iname '*.cs' \) -print0 | (
+    failed=0
+    while IFS= read -r -d '' file; do
+        case ${file,,} in
+            *.dll|*.exe)
+                strings -- "$file" | grep -Ei "$serializer" >/dev/null
+                result=("${PIPESTATUS[@]}")
+                if (( result[0] != 0 || result[1] > 1 )); then
+                    failed=1
+                elif (( result[1] == 0 )); then
+                    printf 'Potential dangerous serializer found in: %s\n' "$file"
+                fi
+                ;;
+            */web.config|*/app.config)
+                grep -Ei "$serializer|System\.Runtime\.Serialization\.Formatters\.(Binary|Soap)" -- "$file" >/dev/null
+                case $? in
+                    0) printf 'Potential unsafe deserialization configuration found in: %s\n' "$file" ;;
+                    2) failed=1 ;;
+                esac
+                ;;
+            *.cs)
+                grep -Ei "$serializer" -- "$file" >/dev/null
+                case $? in
+                    0) printf 'Potential dangerous deserialization method found in: %s\n' "$file" ;;
+                    2) failed=1 ;;
+                esac
+                if grep -Eq '(Deserialize|ReadObject)' -- "$file" && grep -Eiq '\b(request|cookie|cookies|form|session)\b' -- "$file"; then
+                    printf 'Potential untrusted deserialization pattern found in: %s\n' "$file"
+                fi
+                ;;
+        esac
+    done
+    exit "$failed"
+); then
+    printf 'Scan incomplete. See errors above.\n' >&2
+    exit 1
+fi
+printf 'Check complete.\n'

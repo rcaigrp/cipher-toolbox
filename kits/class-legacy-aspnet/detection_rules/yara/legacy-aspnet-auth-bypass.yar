@@ -6,8 +6,8 @@ rule legacy_aspnet_auth_bypass {
         reference = "CVE-2026-131914"
 
     strings:
-        $cookie_pattern = /ASPXAUTH=[A-Za-z0-9+/=]+/
-        $form_data = /__VIEWSTATE=[A-Za-z0-9+/=]+/
+        $cookie_pattern = /ASPXAUTH=[A-Za-z0-9+\/=]+/
+        $form_data = /__VIEWSTATE=[A-Za-z0-9+\/=]+/
         $legacy_serialization = /BinaryFormatter|SoapFormatter/
 
     condition:

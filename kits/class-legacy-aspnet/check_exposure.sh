@@ -1,31 +1,53 @@
 #!/bin/bash
 
-# Check for exposure to legacy ASP.NET authentication bypass vulnerabilities
+usage() {
+    echo 'Usage: check_exposure.sh [DIRECTORY]'
+    echo 'Scan local ASP.NET project files for exposure indicators. Defaults to the current directory.'
+}
 
-echo "Checking for legacy ASP.NET authentication bypass exposure..."
+case ${1-} in
+    -h|--help)
+        usage
+        exit 0
+        ;;
+    -*)
+        usage >&2
+        exit 2
+        ;;
+esac
+if (( $# > 1 )); then
+    usage >&2
+    exit 2
+fi
+cd -- "${1-.}" || exit 2
 
-# Check for vulnerable Idunno.AntiCsrf library usage
-if grep -r "Idunno.AntiCsrf" . --include="*.csproj" --include="*.xml" 2>/dev/null; then
-    echo "WARNING: Idunno.AntiCsrf library detected in project files"
-    grep -r "Idunno.AntiCsrf" . --include="*.csproj" --include="*.xml" 2>/dev/null
+scan() {
+    local message=$1 matches status
+    shift
+    if matches=$(grep -rn "$@" .); then
+        printf '%s\n' "$message" "$matches"
+    else
+        status=$?
+        if (( status != 1 )); then
+            exit "$status"
+        fi
+    fi
+}
+
+printf '%s\n' 'Checking local files for legacy ASP.NET exposure indicators...'
+scan 'WARNING: Idunno.AntiCsrf reference detected' \
+    -F -e 'Idunno.AntiCsrf' --include='*.csproj' --include='*.xml' --include='*.config' --include='*.props'
+
+webforms=$(find . -type f \( -iname '*.aspx' -o -iname '*.ascx' \) -print) || exit 2
+if [[ -n $webforms ]]; then
+    printf '%s\n' 'INFO: Legacy ASP.NET WebForms files detected'
+    head -n 5 <<< "$webforms"
 fi
 
-# Check for legacy ASP.NET WebForms usage
-if find . -name "*.aspx" -o -name "*.ascx" | head -n 1 >/dev/null 2>&1; then
-    echo "INFO: Legacy ASP.NET WebForms files detected"
-    find . -name "*.aspx" -o -name "*.ascx" | head -n 5
-fi
+scan 'WARNING: BinaryFormatter or SoapFormatter reference detected' \
+    -E -w -e 'BinaryFormatter|SoapFormatter' --include='*.cs'
+scan 'INFO: Cookieless session state indicator detected' \
+    -Ei -e "<sessionState[[:space:]][^>]*[[:space:]]cookieless[[:space:]]*=[[:space:]]*(\"(true|UseUri)\"|'(true|UseUri)')" \
+    --include='*.xml' --include='*.config'
 
-# Check for binary serialization usage in code
-if grep -r "BinaryFormatter\|SoapFormatter" . --include="*.cs" 2>/dev/null; then
-    echo "WARNING: Binary/SoapFormatter usage detected in source code"
-    grep -r "BinaryFormatter\|SoapFormatter" . --include="*.cs" 2>/dev/null
-fi
-
-# Check for vulnerable session state configuration
-if grep -r "cookieless" . --include="*.xml" --include="*.config" 2>/dev/null | grep -i "true"; then
-    echo "INFO: Cookieless session state detected (potential risk)"
-    grep -r "cookieless" . --include="*.xml" --include="*.config" 2>/dev/null | grep -i "true"
-fi
-
-echo "Check complete."
+printf '%s\n' 'Check complete.'
