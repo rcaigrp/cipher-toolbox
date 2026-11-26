@@ -1,37 +1,19 @@
 # AI Senior Officials Impersonation Triage
 
-## Overview
-
-This tool is a defensive mechanism designed to identify potential AI-generated impersonation scams targeting senior US officials. It helps security teams triage incoming communications for signs of fraud.
-
-### Key Features
-
-- **Rule-based detection** for common impersonation patterns.
-- **Sample test cases** included to validate the triage logic.
-- **Interactive and batch modes** for flexibility in usage.
-
-## How It Works
-
-1. The tool checks input prompts against a list of known impersonation indicators.
-2. If a match is found, it flags the communication as potentially malicious.
-3. The result is a binary classification: `MALICIOUS` or `SAFE`.
+Use this rule-based text triage tool to flag wording associated with impersonation scams for human review. The [implementation, tests, and sample data](../../kits/ai-senior-officials-impersonation/) live in the companion kit.
 
 ## Usage
 
-Run the triage script with:
+From the repository root, run the following commands.
+
 ```bash
-python triage.py <input_file>
+cd kits/ai-senior-officials-impersonation
+python3 triage.py --help
+python3 test_triage.py
+python3 triage.py sample_inputs.txt
+python3 triage.py
 ```
 
-Or interactively:
-```bash
-python triage.py
-```
+For batch mode, replace `sample_inputs.txt` with a text file containing one message per line. In interactive mode, enter one message at a time and type `quit` to exit.
 
-## Non-AI Controls
-
-- Enforce strict verification procedures for financial transactions.
-- Educate staff on recognizing AI-generated impersonation attempts.
-- Implement codewords or personal questions as additional layers of authentication.
-
-This kit helps teams prepare for AI-related threats by providing a proactive defense mechanism against senior official impersonation scams.
+`MALICIOUS` means the text matched a keyword or phrase. `SAFE` means no rule matched. Treat both results as triage signals. Verify the sender through a known contact channel before acting on requests for money or sensitive information.

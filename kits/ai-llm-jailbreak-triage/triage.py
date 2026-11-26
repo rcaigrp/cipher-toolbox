@@ -45,11 +45,13 @@ def llm_assisted_check(input_text):
             },
             timeout=5
         )
-        result = response.json()["choices"][0]["message"]["content"].strip()
-        return result == "MALICIOUS"
-    except Exception as e:
-        # If LLM is not available, fall back to rule-based detection
-        print(f"Error querying LLM: {e}")
+        response.raise_for_status()
+        content = response.json()["choices"][0]["message"]["content"]
+        if not isinstance(content, str) or content.strip() not in {"SAFE", "MALICIOUS"}:
+            raise ValueError("Invalid model verdict")
+        return content.strip() == "MALICIOUS"
+    except (requests.RequestException, ValueError, KeyError, IndexError, TypeError) as e:
+        print(f"Error querying LLM: {e}", file=sys.stderr)
         return False
 
 def triage_input(input_text):

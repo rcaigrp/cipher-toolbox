@@ -90,8 +90,9 @@ Zero-day / negative-day thinking: where the next bug of a known class is likely,
 
 Reusable defensive tools.
 
-- [**AI Senior Officials Impersonation Triage**](toolbox/ai-senior-officials-impersonation): This tool is a defensive mechanism designed to identify potential AI-generated impersonation scams targeting senior US officials. It helps security teams triage incoming communications for signs of fraud.
-- [**AI Voice Cloning Triage**](toolbox/ai-voice-cloning-triage): This tool is a defensive mechanism designed to identify potential AI voice cloning scams. It helps security teams triage incoming voice communications for signs of impersonation or fraud.
+- [**LLM Jailbreak Triage**](toolbox/ai-llm-jailbreak-triage): See the [companion kit README](../../kits/ai-llm-jailbreak-triage/README.md) for setup, usage, tests, and sample data.
+- [**AI Senior Officials Impersonation Triage**](toolbox/ai-senior-officials-impersonation): Use this rule-based text triage tool to flag wording associated with impersonation scams for human review.
+- [**AI Voice Cloning Triage**](toolbox/ai-voice-cloning-triage): See the [companion kit README](../../kits/ai-voice-cloning-triage/README.md) for setup, usage, tests, and sample data.
 - [**CISA NVD Checker**](toolbox/cisa-nvd-checker): Triage software inventory against local NVD CVE 2.0 JSON snapshots and flag findings listed in a local CISA Known Exploited Vulnerabilities (KEV) snapshot.
 - [**CVE Sweep**](toolbox/cve-sweep): Cross-reference software inventory with local NVD CVE data and flag results listed in the CISA Known Exploited Vulnerabilities catalog. The tool reads three local JSON files and prints findings to stdout.
 - [**CVE to Detection Rules Generator**](toolbox/cve-to-detection): Generate Sigma YAML rules and YARA rules from analyst-supplied indicators in a local JSON file. The CVE identifier is used as metadata. The tool does not fetch CVE feeds.

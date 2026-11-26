@@ -16,35 +16,29 @@ Anyone who uses voice-based communication systems or financial services, especia
 
 ## Countermeasure
 
-This kit provides a triage script that evaluates incoming voice communications for signs of potential voice cloning attempts. It focuses on detecting unusual patterns in voice requests and behaviors that may indicate a scam.
+The script scans transcripts or typed messages for phrases associated with scams, such as urgent requests for money. It uses case-insensitive text matching. It does not analyze audio or verify a caller’s identity.
 
-### How It Works
-
-1. **Behavioral Analysis**: The script looks for red flags such as urgency, emotional manipulation, and unexpected financial requests.
-2. **Voice Pattern Recognition**: It checks if the request is consistent with known behavior of the claimed caller.
-3. **Verification Requests**: Suggests specific verification steps to ensure authenticity.
+`MALICIOUS` means a phrase matched. `SAFE` means no listed phrase matched. Either result can occur in a legitimate or fraudulent call. Verify unexpected requests by contacting the person through a number you already know.
 
 ### How to Run
 
 Run the script with:
 ```bash
-python triage.py <input_file>
+python3 triage.py
 ```
 
-Or interactively by running:
+Enter one message at a time. Type `quit` or close standard input to exit. To process a file, pass its path as shown below. Each nonblank line is checked separately.
+
+## Sample Input File
+
+A sample input file (`sample_inputs.txt`) is included to demonstrate usage:
 ```bash
-python triage.py
+python3 triage.py sample_inputs.txt
 ```
 
-## Sample Inputs
+## Testing
 
-- **Benign Input:** "Hi, it's your sister. I'm at the airport and need some money for a cab."
-- **Malicious Input:** "I'm in trouble and need you to send me $500 immediately. Don't call me back — just wire it."
-
-## Non-AI Controls
-
-- Enforce strict verification procedures for financial transactions.
-- Educate staff on recognizing voice cloning scams.
-- Implement codewords or personal questions as additional layers of authentication.
-
-This kit helps teams prepare for AI-related threats by providing a proactive defense mechanism against voice cloning fraud.
+Run tests with:
+```bash
+python3 test_triage.py
+```
