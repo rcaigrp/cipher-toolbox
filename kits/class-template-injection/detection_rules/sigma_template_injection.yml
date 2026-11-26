@@ -1,0 +1,30 @@
+title: Template Injection Attempt
+id: 3d9ef0cb-67a2-4364-a79d-5da923eb65a0
+status: experimental
+description: Detects potential template injection attempts by looking for template syntax in web requests
+author: Cipher Security Team
+date: 2026-11-26
+logsource:
+    category: web
+    product: web_server
+detection:
+    template_syntax:
+        - request_uri|contains:
+            - '{{'
+            - '${'
+            - '{%'
+            - '<%'
+        - request_body|contains:
+            - '{{'
+            - '${'
+            - '{%'
+            - '<%'
+    condition: template_syntax
+fields:
+    - client_ip
+    - url
+    - user_agent
+    - method
+false_positives:
+    - Legitimate use of template syntax in URLs or query parameters
+level: high
