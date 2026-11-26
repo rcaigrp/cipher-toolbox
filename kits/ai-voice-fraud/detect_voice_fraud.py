@@ -11,16 +11,13 @@ LLM_URL = os.getenv("LLM_URL", "http://127.0.0.1:8080/v1")
 
 # Rule-based patterns for voice fraud detection
 VOICE_FRAUD_PATTERNS = [
-    r"urgent.*money",
-    r"immediate.*transfer",
-    r"send.*money",
-    r"wire.*transfer",
-    r"emergency.*funds",
-    r"account.*verification",
-    r"verify.*information",
-    r"immediately.*action",
-    r"security.*alert",
-    r"immediate.*payment",
+    r"\burgent\b.*\bmoney\b",
+    r"\bimmediate\b.*\btransfer\b",
+    r"\bsend\b.*\bmoney\b",
+    r"\bwire\b.*\btransfer\b",
+    r"\bemergency\b.*\bfunds\b",
+    r"\bimmediately\b.*\baction\b",
+    r"\bimmediate\b.*\bpayment\b",
 ]
 
 # Keywords that might indicate a voice fraud attempt
@@ -34,20 +31,7 @@ def check_rules(audio_text):
     if not audio_text:
         return False
     
-    for pattern in VOICE_FRAUD_PATTERNS:
-        if re.search(pattern, audio_text, re.IGNORECASE):
-            return True
-    
-    # Check for keywords with context
-    audio_lower = audio_text.lower()
-    for keyword in VOICE_FRAUD_KEYWORDS:
-        if keyword in audio_lower:
-            # Context-aware check to avoid false positives
-            if keyword == "urgent" and not any(word in audio_lower for word in ["urgent", "emergency", "immediately"]):
-                continue  # Not necessarily fraud
-            return True
-    
-    return False
+    return any(re.search(pattern, audio_text, re.IGNORECASE) for pattern in VOICE_FRAUD_PATTERNS)
 
 def query_llm(audio_text):
     """Query the LLM for classification."""
@@ -59,51 +43,45 @@ def query_llm(audio_text):
             json={
                 "model": "default",
                 "messages": [
-                    {
-                        "role": "system",
-                        "content": "You are a helpful assistant that determines if the following voice communication is attempting to commit fraud. Respond only with 'YES' or 'NO'."
-                    },
-                    {
-                        "role": "user",
-                        "content": f"Is this voice communication trying to commit fraud? {audio_text}"
-                    }
+                    {"role": "system", "content": "You are a helpful assistant that classifies voice fraud attempts. Respond with exactly 'VOICE FRAUD DETECTED' if the transcript shows signs of voice fraud, or 'Safe communication.' otherwise."},
+                    {"role": "user", "content": f"Analyze this voice communication: {audio_text}"}
                 ],
+                "temperature": 0,
                 "max_tokens": 10
             },
             timeout=5
         )
         response.raise_for_status()
-        result = response.json()
-        output = result['choices'][0]['message']['content'].strip().upper()
-        return output == 'YES'
+        result = response.json()["choices"][0]["message"]["content"].strip()
+        if "VOICE FRAUD DETECTED" in result:
+            return True
+        else:
+            return False
     except Exception as e:
-        print(f"LLM request failed: {e}")
-        return False
+        print(f"LLM request failed: {e}", file=sys.stderr)
+        # Fall back to rule-based check
+        return check_rules(audio_text)
 
-def is_voice_fraud(audio_text):
-    """Detect if a voice communication is attempting fraud."""
-    # Rule-based check
-    if check_rules(audio_text):
-        return True
-    
-    # AI-based check (fallback to rules if no model)
-    try:
-        return query_llm(audio_text)
-    except Exception:
-        print("Warning: LLM not available, falling back to rule-based detection.")
-        return False
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Detect potential voice fraud attempts.")
-    parser.add_argument("--input", type=str, required=True, help="Input audio transcript to check")
+def main():
+    parser = argparse.ArgumentParser(description="Detect voice fraud in audio transcripts")
+    parser.add_argument("--input", required=True, help="Audio transcript to analyze")
     args = parser.parse_args()
-
+    
     audio_text = args.input
-    result = is_voice_fraud(audio_text)
-
-    if result:
+    
+    # Try LLM first
+    try:
+        is_fraud = query_llm(audio_text)
+    except Exception as e:
+        print(f"Error during processing: {e}", file=sys.stderr)
+        sys.exit(1)
+    
+    if is_fraud:
         print("VOICE FRAUD DETECTED")
         sys.exit(1)
     else:
         print("Safe communication.")
         sys.exit(0)
+
+if __name__ == "__main__":
+    main()
