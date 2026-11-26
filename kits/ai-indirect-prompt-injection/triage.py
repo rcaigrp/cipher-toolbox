@@ -15,6 +15,7 @@ INDIRECT_INJECTION_PATTERNS = [
     "forget about",
     "override system prompt",
     "bypass safety",
+    "bypass all security measures",
     "disregard restrictions",
     "you are now",
     "pretend to be",

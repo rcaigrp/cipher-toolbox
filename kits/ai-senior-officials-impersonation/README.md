@@ -20,19 +20,18 @@ This kit provides a triage script that evaluates incoming communications for sig
 ### How It Works
 
 1. **Behavioral Analysis**: The script looks for red flags such as urgency, emotional manipulation, and unexpected financial requests.
-2. **Verification Requests**: Suggests specific verification steps to ensure authenticity.
-3. **Pattern Recognition**: Detects known phishing tactics used in AI-generated impersonation campaigns.
+2. **Pattern Recognition**: Detects known phishing tactics used in AI-generated impersonation campaigns.
 
 ### How to Run
 
 Run the script with:
 ```bash
-python triage.py <input_file>
+python3 triage.py <input_file>
 ```
 
 Or interactively by running:
 ```bash
-python triage.py
+python3 triage.py
 ```
 
 ## Sample Inputs

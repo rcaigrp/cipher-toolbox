@@ -51,7 +51,10 @@ def main():
     else:
         # Interactive mode
         while True:
-            user_input = input("Enter a communication to analyze (or 'quit' to exit): ")
+            try:
+                user_input = input("Enter a communication to analyze (or 'quit' to exit): ")
+            except EOFError:
+                break
             if user_input.lower() == 'quit':
                 break
             result = triage_input(user_input)
