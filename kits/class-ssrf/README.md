@@ -1,25 +1,27 @@
-# Server-Side Request Forgery (SSRF) Class Analysis Kit
+# SSRF Defense Kit
 
-This kit provides analysis and detection resources for the Server-Side Request Forgery vulnerability pattern.
+This kit provides tools and guidance to defend against Server-Side Request Forgery (SSRF) vulnerabilities.
 
-## Files
+## Contents
 
-- `FORESIGHT.md`: Detailed analysis of the SSRF vulnerability pattern, including variant analysis and early warning signs
-- `detect.yml`: Sigma rule for detecting SSRF patterns in logs
-- `check_exposure.py`: Python script to check code for SSRF exposure patterns
+- `FORESIGHT.md`: Analysis of the SSRF vulnerability class and its implications
+- `detection.yml`: Sigma rule for detecting SSRF attempts
+- `ssrf_check.py`: Script to check URLs for potential SSRF risks
 
 ## Usage
 
-1. Review `FORESIGHT.md` to understand the SSRF vulnerability pattern and identify potential exposures in your systems
-2. Use `check_exposure.py` to scan codebases for unsafe patterns (requires actual code repository scanning)
-3. Implement the Sigma rule in your detection system
+### Check URL Safety
 
-## Detection Approach
+```bash
+python3 ssrf_check.py <url>
+```
 
-This kit provides class-wide detection capabilities that catch behaviors associated with SSRF vulnerabilities, not just specific CVEs.
+The script will return exit code 0 if the URL appears safe, or 1 if it detects a potential SSRF risk.
 
-## Important Notes
+## Recommendations
 
-- This is a defensive analysis kit only - no exploit code or attack tools
-- The exposure check script is for demonstration purposes and would need to be adapted for actual use against code repositories
-- This kit focuses on early detection and prevention before specific CVEs are announced
+- Implement strict egress filtering to restrict outbound traffic
+- Validate and sanitize all user-supplied URLs
+- Use allowlists for allowed domains/URLs
+- Monitor logs and network traffic for unusual patterns
+- Isolate internal services from untrusted networks

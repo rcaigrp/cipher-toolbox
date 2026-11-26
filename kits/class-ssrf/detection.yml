@@ -1,0 +1,19 @@
+title: Server-Side Request Forgery Attempt
+id: 12345678-1234-1234-1234-123456789012
+status: stable
+description: Detects potential SSRF attempts via malformed or internal URLs in HTTP requests.
+author: Cipher
+date: 2026/11/26
+logsource:
+    category: web_server
+    product: nginx
+detection:
+    selection:
+        method: GET
+        url:
+            - "/api/fetch?url=*"
+            - "/proxy?target=*"
+    condition: selection
+falsepositives:
+    - Legitimate use cases for proxying requests
+level: high

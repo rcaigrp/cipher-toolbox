@@ -1,0 +1,26 @@
+title: Application Regex Evaluation Limit Reached
+id: 0591bd44-717e-4fc2-86f6-a79db64aeaea
+status: experimental
+description: Detects exhaustion of a regex evaluation budget on externally sourced input.
+logsource:
+  category: application
+  definition: Map application or regex engine telemetry to the normalized fields below. Emit an event when evaluation reaches a configured time or work limit.
+detection:
+  selection:
+    event_action: regex_evaluation
+    input_origin: external
+    event_outcome:
+      - timeout
+      - work_limit_exceeded
+  condition: selection
+fields:
+  - service_name
+  - route
+  - pattern_id
+  - input_bytes
+  - evaluation_ms
+  - request_id
+falsepositives:
+  - Legitimate large inputs or overly restrictive evaluation budgets
+  - Worker contention when limits use elapsed wall time
+level: medium

@@ -1,0 +1,19 @@
+title: XML External Entity (XXE) Attack Attempt
+id: 87654321-4321-4321-4321-876543210987
+status: stable
+description: Detects potential XXE attempts via XML data containing external entity references.
+author: Cipher
+date: 2026/11/26
+logsource:
+    category: web_server
+    product: nginx
+detection:
+    selection:
+        method: POST
+        url:
+            - "/api/xml"
+            - "/import/xml"
+    condition: selection
+falsepositives:
+    - Legitimate XML processing with external entities
+level: high
