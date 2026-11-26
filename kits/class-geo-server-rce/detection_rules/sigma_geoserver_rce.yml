@@ -1,0 +1,23 @@
+title: GeoServer WMS RCE Attempt
+id: 12345678-90ab-cdef-1234-567890abcdef
+status: experimental
+description: Detects attempts to exploit GeoServer WMS RCE vulnerability.
+author: Cipher
+date: 2026-11-26
+logsource:
+  category: web
+  product: web_server
+detection:
+  selection:
+    url|endswith:
+      - '/geoserver/wms'
+  condition: selection
+fields:
+  - remote_addr
+  - user_agent
+  - request_uri
+  - http_method
+  - response_status
+falsepositives:
+  - Legitimate WMS requests (requires human validation)
+level: high

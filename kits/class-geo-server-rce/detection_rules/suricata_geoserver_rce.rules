@@ -1,0 +1,3 @@
+alert http any any -> any any (msg:"GeoServer WMS RCE Attempt"; uricontent:"/geoserver/wms"; sid:1000004; rev:1;)
+alert http any any -> any any (msg:"GeoServer WMS RCE Attempt"; content:"REQUEST="; sid:1000005; rev:1;)
+alert http any any -> any any (msg:"GeoServer WMS RCE Attempt"; content:"LAYERS="; sid:1000006; rev:1;)

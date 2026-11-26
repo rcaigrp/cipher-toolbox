@@ -57,10 +57,12 @@ Zero-day / negative-day thinking: where the next bug of a known class is likely,
 - [**Capability Check Bypass in Scripting Engines: A Persistent Vulnerability Class**](kits/class-capability-bypass): Capability check bypasses in scripting engines represent a persistent vulnerability class where applications fail to properly enforce authorization controls when executing code through scripting interfaces.
 - [**Command Injection Detection Kit**](kits/class-command-injection): This kit provides tools and techniques for detecting command injection vulnerabilities in systems.
 - [**Isolation failures in document conversion**](kits/class-converter-isolation): Upload previews, thumbnails, and attachment rendering can hand untrusted files to interpreters that inherit the conversion worker’s operating-system permissions.
+- [**Unauthenticated RCE in Drupal installer**](kits/class-cve-2026-132165): The Drupal installer is a critical component that allows for the setup and configuration of a new Drupal site.
 - [**Deserialization Vulnerabilities in Web Applications**](kits/class-deser): This kit covers the class of vulnerabilities related to insecure deserialization, particularly in .NET applications.
 - [**Deserialization Vulnerability Class**](kits/class-deserialization): This kit contains detection rules, check scripts, and analysis for the deserialization vulnerability class that affects software components that deserialize untrusted data.
 - [**Directory Traversal Vulnerability Class**](kits/class-dirtrav): This kit provides resources for detecting and defending against directory traversal vulnerabilities.
 - [**File Parsing Vulnerability Class**](kits/class-file-parsing): This kit contains detection rules, check scripts, and analysis for the file parsing vulnerability class that affects image processing software.
+- [**Unauthenticated RCE in GeoServer through WMS requests**](kits/class-geo-server-rce): GeoServer is an open-source software server for sharing geospatial data. It provides a range of services, including Web Map Service (WMS), Web Feature Service (WFS), and Web Coverage Service (WCS).
 - [**Heap Buffer Overflow Class Analysis**](kits/class-heap-buffer-overflow): This kit analyzes heap buffer overflows in file parsing components.
 - [**class-heap-overflow**](kits/class-heap-overflow)
 - [**class-incorrect-auth**](kits/class-incorrect-auth)
@@ -76,6 +78,7 @@ Zero-day / negative-day thinking: where the next bug of a known class is likely,
 - [**Shell Injection Class Kit**](kits/class-shell-injection): This kit provides defensive resources for identifying and mitigating shell injection vulnerabilities.
 - [**Server-Side Request Forgery (SSRF) Class Analysis Kit**](kits/class-ssrf): This kit provides analysis and detection resources for the Server-Side Request Forgery vulnerability pattern.
 - [**Stack Overflow Class: A Persistent Threat in Parsing and Processing**](kits/class-stack-overflow): The stack overflow vulnerability class has emerged as a significant threat, particularly in parsing libraries and data processing systems.
+- [**Public exposure of web application setup workflows**](kits/class-unauth-rce-installer): Setup workflows can create privileged accounts, write configuration, or initialize a datastore before ordinary application authentication is available.
 - [**.NET untrusted deserialization exposure review**](kits/class-untrusted-deserialization): Run `./check_exposure.sh --help` for usage. Run `./check_exposure.sh /path/to/project` to scan local files, or omit the directory to scan the current directory. The checker requires Bash, `find`, `grep`, and `strings`.
 
 ## 🔧 Tools it built

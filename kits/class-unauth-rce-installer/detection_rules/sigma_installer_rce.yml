@@ -1,0 +1,29 @@
+title: Unauthenticated RCE in Web Application Installer
+id: 12345678-1234-1234-1234-123456789012
+status: experimental
+description: Detects potential unauthenticated RCE in web application installers
+author: Cipher
+date: 2026/11/26
+logsource:
+    category: web_application
+    product: installer
+detection:
+    selection:
+        request_uri|endswith:
+            - '/install'
+            - '/setup'
+            - '/_install'
+            - '/admin/install'
+        user_agent|contains:
+            - 'curl'
+            - 'wget'
+            - 'sqlmap'
+            - 'nuclei'
+    condition: selection
+fields:
+    - client_ip
+    - request_uri
+    - user_agent
+falsepositives:
+    - Legitimate administrative tools
+level: high
