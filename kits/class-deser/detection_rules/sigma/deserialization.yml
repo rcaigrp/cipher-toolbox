@@ -1,0 +1,30 @@
+title: Shell Started by ASP.NET Worker
+id: 62858578-40d7-43b5-9369-aeb09384901e
+status: experimental
+description: Detects a shell or script interpreter launched by an IIS worker process. This is a post-exploitation signal for server-side code execution, including through unsafe deserialization.
+author: Cipher
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    worker:
+        ParentImage|endswith:
+            - '\w3wp.exe'
+            - '\aspnet_wp.exe'
+    interpreter:
+        Image|endswith:
+            - '\cmd.exe'
+            - '\powershell.exe'
+            - '\pwsh.exe'
+            - '\cscript.exe'
+            - '\wscript.exe'
+    condition: worker and interpreter
+fields:
+    - Computer
+    - ParentImage
+    - Image
+    - CommandLine
+    - User
+falsepositives:
+    - Applications that intentionally launch a command interpreter from a web worker
+level: high

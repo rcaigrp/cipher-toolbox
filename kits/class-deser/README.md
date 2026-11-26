@@ -1,19 +1,10 @@
-# Deserialization Vulnerability Class Kit
+# Deserialization Vulnerabilities in Web Applications
 
-This kit provides detection rules, exposure checking scripts, and analysis for deserialization vulnerabilities.
+This kit covers the class of vulnerabilities related to insecure deserialization, particularly in .NET applications.
 
 ## Files
 
-- `FORESIGHT.md`: Detailed analysis of the deserialization vulnerability pattern
-- `detect.yml`: Sigma rules for detecting deserialization attempts
-- `check_exposure.py`: Script to check code repositories for unsafe deserialization patterns
-
-## Usage
-
-1. **Detection**: Use the Sigma rules in your SIEM to detect deserialization attempts
-2. **Exposure Check**: Run the Python script against code repositories to find potential unsafe deserialization patterns
-3. **Analysis**: Review `FORESIGHT.md` for detailed threat intelligence and remediation guidance
-
-## Implementation Notes
-
-This kit focuses on defensive measures only, with no exploit code or scanning tools.
+- `FORESIGHT.md`: The pattern analysis and early warning indicators
+- `check_exposure.sh`: A read-only script to detect potential exposure
+- `detection_rules/`: Sigma, YARA, and Suricata rules for detection
+- `test_files/`: Sample test files for validation
