@@ -82,6 +82,7 @@ Zero-day / negative-day thinking: where the next bug of a known class is likely,
 
 Reusable defensive tools.
 
+- [**CISA NVD Checker**](toolbox/cisa-nvd-checker): Triage software inventory against local NVD CVE 2.0 JSON snapshots and flag findings listed in a local CISA Known Exploited Vulnerabilities (KEV) snapshot.
 - [**CVE Sweep**](toolbox/cve-sweep): Cross-reference software inventory with local NVD CVE data and flag results listed in the CISA Known Exploited Vulnerabilities catalog. The tool reads three local JSON files and prints findings to stdout.
 - [**CVE to Detection Rules Generator**](toolbox/cve-to-detection): Generate Sigma YAML rules and YARA rules from analyst-supplied indicators in a local JSON file. The CVE identifier is used as metadata. The tool does not fetch CVE feeds.
 - [**File Parsing Tools**](toolbox/file-parsing-tools): Three read-only checks for local files before they reach a parser. Requires Python 3 on Linux and uses only the standard library. No installation is needed. Run these examples from the repository root.

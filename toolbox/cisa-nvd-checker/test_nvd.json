@@ -1,0 +1,43 @@
+{
+  "vulnerabilities": [
+    {
+      "cve": {
+        "id": "TEST-ADVISORY-EXACT",
+        "configurations": [
+          {
+            "nodes": [
+              {
+                "cpeMatch": [
+                  {
+                    "vulnerable": true,
+                    "criteria": "cpe:2.3:a:example_vendor:example_editor:4.15.2:*:*:*:*:*:*:*"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "cve": {
+        "id": "TEST-ADVISORY-RANGE",
+        "configurations": [
+          {
+            "nodes": [
+              {
+                "cpeMatch": [
+                  {
+                    "vulnerable": true,
+                    "criteria": "cpe:2.3:a:example_vendor:example_portal:*:*:*:*:*:*:*:*",
+                    "versionEndExcluding": "3.2.0"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

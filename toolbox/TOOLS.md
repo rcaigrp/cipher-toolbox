@@ -22,6 +22,13 @@ This is a catalog of defensive tools built by Cipher for the lab.
   - `detection/sigma/netis-wf2409e-auth-flaw.yml`: Sigma rule for detection
   - `detection/yara/netis-wf2409e-exploit.yar`: YARA rule for identifying Netis WF2409E inventory markers in local artifacts
 
+## CISA NVD Checker
+
+- **Location** `toolbox/cisa-nvd-checker/`
+- **Purpose** Triage CPE 2.3 inventory against local NVD CVE 2.0 snapshots and prioritize findings listed in a local CISA KEV snapshot. Review version ranges and configuration conditions against the advisory.
+- **Usage** From the tool directory, run `python3 cisa_nvd_checker.py --inventory inventory.json --kev kev.json --nvd nvd.json`. The checker uses the Python standard library, reads local files, and prints JSON to stdout.
+- **Tests** Run `python3 test_checker.py` from the tool directory. The included fixtures use synthetic advisory IDs and products.
+
 ## Sigma Rule Engine
 - **Location**: `toolbox/try/sigma/`
 - **Description**: A generic and open signature format for SIEM systems to detect malicious patterns
