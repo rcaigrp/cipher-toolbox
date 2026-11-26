@@ -23,7 +23,7 @@ def valid_cpe(cpe):
     return (
         len(fields) == 13 and fields[:2] == ['cpe', '2.3']
         and fields[2] in {'a', 'o', 'h'}
-        and all(field and field not in {'*', '-'} for field in fields[3:6])
+        and all(field and field != '-' and '*' not in field for field in fields[3:6])
         and all('*' not in field or field == '*' for field in fields[6:])
     )
 

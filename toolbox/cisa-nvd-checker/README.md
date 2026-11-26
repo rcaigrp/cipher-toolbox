@@ -15,6 +15,8 @@ python3 cisa_nvd_checker.py --help
 python3 cisa_nvd_checker.py --inventory inventory.json --kev kev.json --nvd nvd.json
 ```
 
+Replace `inventory.json`, `kev.json`, and `nvd.json` with paths to your own inputs. For a runnable example, use the included fixtures below.
+
 Repeat `--nvd` to include additional snapshots. Each snapshot must contain a top-level `vulnerabilities` array. The inventory must be a JSON array of objects with a `cpe` field. Supply a CPE 2.3 with an explicit vendor, product, and version for each component. For example:
 
 ```json
