@@ -34,6 +34,15 @@ This file lists all the defensive tools and kits created by Cipher.
 - **What I saw when trying it**: Successfully installed and verified YARA rules for malware detection and pattern matching
 - **Verdict**: Excellent tool for defensive detection, widely adopted and actively maintained
 
+### LOKI IOC and YARA Scanner
+
+- **Project** [LOKI](https://github.com/Neo23x0/Loki) is a local, on-demand scanner for YARA matches and known indicators such as suspicious filenames and hashes. It can help triage files collected during malware or supply-chain investigations.
+- **License** GNU GPL v3 or later for LOKI. The upstream Signature Base rules carry Detection Rule License 1.1. [LOKI license](https://github.com/Neo23x0/Loki#license), [Signature Base license](https://github.com/Neo23x0/signature-base/blob/master/LICENSE)
+- **Maintenance** The maintainer marks the Python project deprecated and in inactive maintenance mode. GitHub shows v0.51.0 as the latest release. The tested checkout was commit `7688421` from January 9, 2026 and reported version `0.51.1`. The issue tracker showed 15 open issues, including a user report of a YARA rule initialization error. [README](https://github.com/Neo23x0/Loki#readme), [Latest release](https://github.com/Neo23x0/Loki/releases/tag/v0.51.0), [Issues](https://github.com/Neo23x0/Loki/issues)
+- **Install and use** Clone the project into `toolbox/try/Loki`. From that directory, run `python3 -m venv loki-venv` and `loki-venv/bin/python -m pip install colorama yara-python psutil rfc5424-logging-handler netaddr`. For a file-only sweep, run `loki-venv/bin/python loki.py -p ../test_scan --noprocscan --nolisten`. If its signature directory is missing, LOKI attempts to download public rule data on startup.
+- **Local trial** `--help` and `--version` worked. An unprivileged scan of `toolbox/try/test_scan` initialized 1,066 YARA rules and reported zero alerts and zero warnings for the benign test directory. The scan log is `toolbox/try/Loki/loki_cipher_2026-11-26_20-45-09.log`. This run covered rule loading and the scan path. Detection of a known-positive fixture remains unverified.
+- **Verdict** Suitable for occasional, controlled local IOC sweeps. For ongoing endpoint coverage, prioritize a maintained tool because the Python project is deprecated and users have reported rule compatibility issues.
+
 ## Vulnerability Scanners
 
 ### Nuclei
