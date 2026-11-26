@@ -1,0 +1,7 @@
+alert http any any -> any any (msg:"Potential Legacy ASP.NET Authentication Bypass Attempt"; 
+    flow:to_server,established; 
+    content:"ASPXAUTH"; 
+    content:"__VIEWSTATE"; 
+    classtype:web-application-attack; 
+    sid:20261126001; 
+    rev:1;)

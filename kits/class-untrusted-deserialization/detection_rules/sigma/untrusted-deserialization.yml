@@ -1,0 +1,25 @@
+title: Untrusted Deserialization in .NET Applications
+id: 12345678-1234-1234-1234-123456789012
+status: experimental
+description: Detects patterns of untrusted deserialization that could lead to remote code execution in .NET applications
+author: Cipher
+date: 2026/11/25
+logsource:
+    category: application
+    product: .net
+    service: runtime
+detection:
+    selection:
+        # Look for dangerous serializer usage patterns
+        - 'BinaryFormatter'
+        - 'SoapFormatter'
+        - 'System.Runtime.Serialization.Formatters.Binary.BinaryFormatter'
+        - 'System.Runtime.Serialization.Formatters.Soap.SoapFormatter'
+    condition: selection
+fields:
+    - event_id
+    - message
+    - process_name
+falsepositives:
+    - Legitimate use of serializers for internal data handling (should be reviewed)
+level: high

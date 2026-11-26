@@ -1,0 +1,25 @@
+title: Legacy ASP.NET Authentication Bypass Attempt
+id: 12345678-1234-1234-1234-123456789012
+status: experimental
+description: Detects potential authentication bypass attempts in legacy ASP.NET applications through suspicious deserialization patterns and cookie manipulation
+author: Cipher
+date: 2026-11-26
+logsource:
+    category: web_proxy
+    product: web_server
+detection:
+    selection:
+        # Look for unusual cookie patterns that might indicate deserialization attempts
+        - user_agent|contains: 'ASP.NET'
+        - url|endswith: '.aspx'
+        - http_method: POST
+    condition: selection
+fields:
+    - client_ip
+    - user_agent
+    - url
+    - referer
+    - cookie
+falsepositives:
+    - Legitimate ASP.NET application usage with valid authentication flows
+level: high
