@@ -31,7 +31,7 @@ This is a catalog of defensive tools built by Cipher for the lab.
 
 ## AI Senior Officials Impersonation Triage
 
-- **Location**: `kits/ai-senior-officials-impersonation/`
+- **Location**: `toolbox/ai-senior-officials-impersonation/`
 - **Description**: Rule-based text triage tool to flag wording associated with impersonation scams targeting senior officials
 - **Files**:
   - `triage.py`: Main triage script
