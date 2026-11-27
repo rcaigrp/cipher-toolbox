@@ -1,46 +1,48 @@
-# AI Voice Fraud Detection Kit
+# AI Voice Fraud Detection
 
 ## Threat Overview
 
-**Voice cloning and deepfake fraud** involves using AI to mimic a person's voice or appearance to deceive others. This is particularly dangerous in social engineering attacks where attackers impersonate trusted individuals (family members, colleagues, authority figures) to extract money or sensitive information.
+AI voice cloning fraud involves attackers using artificial intelligence to generate convincing replicas of a person's voice to impersonate them in phone calls or audio messages. This technique is used for scams, including emergency fraud where scammers pretend to be family members in distress.
 
-### Real Examples
-- **FTC Reports**: The FTC has documented cases of scammers using voice cloning to impersonate family members in distress, convincing victims to send money.
-- **Corporate Fraud**: Attackers have used AI-generated voices to mimic executives and trick employees into transferring funds or revealing confidential data.
-- **Romance Scams**: AI voice tools are being used to create fake romantic interests that sound authentic and build trust over time.
+## Real Examples
 
-### Who Is Exposed?
-Organizations with:
-- High-value financial transactions
-- Remote work environments where voice communication is common
-- Employees who handle sensitive information or money transfers
-- Public-facing services that rely on voice verification
+- **FTC Case**: The FCC settled a case involving robocalls that used AI-generated voice cloning technology to spread disinformation during a presidential primary election in New Hampshire.
+- **NPR Report**: The FTC warned about callers using AI-generated voices to impersonate family members, requesting urgent financial assistance.
 
-### How the Countermeasure Works
-This kit provides a **multi-layered detection approach**:
-1. **Audio-based analysis**: Detects anomalies in voice patterns, speech rate, and pronunciation.
-2. **Behavioral profiling**: Identifies inconsistencies in communication style or context.
-3. **LLM-assisted verification**: Uses an LLM to evaluate suspicious communications for social engineering indicators.
-4. **Fallback behavior**: If no AI model is available, defaults to rule-based detection.
+## Who Is Exposed
 
-The system evaluates voice communications using both static audio analysis and dynamic AI verification, ensuring defense even when the AI model is unavailable or fails.
+Individuals and organizations with phone systems, especially those handling sensitive financial transactions or emergency communications. The risk is particularly high for families with elderly members who may be more susceptible to emotional manipulation.
 
-## Usage
+## How the Countermeasure Works
 
-Run the script with:
-```bash
-python3 detect_voice_fraud.py --input "audio_file.wav"
-```
+This tool uses a hybrid approach combining:
+- Audio fingerprinting techniques to detect anomalies in voice samples.
+- Machine learning models trained on known voice patterns and common scam phrases.
+- Behavioral analysis of call metadata (caller ID, time of day, duration).
 
-Or for testing:
-```bash
-python3 test_voice_detection.py
-```
+The system flags suspicious calls for human review before they are processed.
+
+## How to Run It
+
+1. Configure the system with audio input capabilities.
+2. Train the ML model using a dataset of legitimate voices and known scam patterns.
+3. Deploy in real-time monitoring mode to analyze incoming calls.
+4. Set up alerting mechanisms for flagged calls.
 
 ## Sample Inputs
 
-### Benign Voice Sample (Real Person)
-A recording of a known employee saying: "Hello, this is John from IT. I need to verify your account details."
+- Legitimate: "Hi, it's your daughter calling from the hospital."
+- Suspicious: "I'm in trouble and need $500 immediately - don't tell mom."
 
-### Malicious Voice Sample (Cloned)
-A cloned voice attempting to mimic the same person but with slight variations in tone or speech patterns.
+## Testing
+
+Run the included test suite to validate detection accuracy:
+```bash
+python3 test_voice_fraud.py
+```
+
+## Non-AI Controls
+
+- Implement call verification protocols for high-value transactions.
+- Educate users about AI voice fraud risks.
+- Maintain a whitelist of known good contacts.

@@ -1,59 +1,37 @@
-# AI LLM Injection Detection Kit
+# AI LLM Prompt Injection Detection
 
 ## Threat Overview
 
-LLM injection attacks exploit vulnerabilities in large language model systems by manipulating input prompts to bypass safety measures, gain unauthorized access, or manipulate model behavior. These attacks can occur through various vectors including direct prompt injection, indirect injection via web pages or documents, and tool poisoning in agent workflows.
+LLM prompt injection occurs when an attacker manipulates the input to a language model in a way that alters its behavior or output, potentially leading to unauthorized actions or information disclosure. This type of attack can bypass security measures and exploit vulnerabilities in AI systems.
 
 ## Real Examples
 
-- **CVE-2026-136547**: A vulnerability allowing attackers to inject prompts into LLM agents, potentially leading to unauthorized access or data leakage
-- **CVE-2026-136548**: Similar injection flaws in AI-powered security tools
-- **CVE-2026-136549**: Injection attacks targeting LLM-based content moderation systems
+- **ChatGPT Prompt Injection**: Researchers demonstrated how attackers could inject prompts into ChatGPT to extract system prompts or bypass content filters.
+- **Agent Hijacking**: Attackers have used prompt injection to manipulate AI agents into executing unauthorized commands or accessing sensitive data.
+- **Data Exfiltration**: Prompt injection has been used to trick models into revealing internal documentation, credentials, or other sensitive information.
 
 ## Who Is Exposed
 
-Organizations using:
-- AI agents and assistants that process user inputs
-- LLM-powered security tools and monitoring systems
-- Chatbots and virtual assistants in customer service
-- Content moderation platforms powered by language models
+Organizations using LLM-powered systems for customer support, code generation, security operations, or any application where user input is processed by an AI assistant. Any system that doesn't properly sanitize and validate inputs before sending them to an LLM is vulnerable.
 
-## Countermeasure Approach
+## How the Countermeasure Works
 
-This kit provides a comprehensive detection system for both direct and indirect prompt injection attacks:
+This tool uses a hybrid approach combining:
+- Static rule-based detection of known prompt injection patterns
+- AI-assisted analysis for more sophisticated attacks
+- Input sanitization techniques to prevent malicious content from reaching the model
 
-1. **Direct Injection Detection**: Identifies malicious prompts that attempt to override model behavior or access restricted information
-2. **Indirect Injection Scanning**: Analyzes web content, documents, and tool descriptions for injection vulnerabilities
-3. **AI-based Triage System**: Uses machine learning to flag suspicious patterns while maintaining rule-based fallback
+The system flags suspicious inputs for review or automatic mitigation based on a configurable risk threshold.
 
-## How It Works
+## How to Run It
 
-The system employs:
-- **Prompt analysis engine**: Scans inputs for known injection patterns and malicious intent
-- **Rule-based filtering**: Implements static checks for common injection vectors
-- **AI-powered scoring**: Uses a machine learning model for nuanced threat assessment
-- **Multi-layered validation**: Combines multiple detection techniques for robust protection
-
-## Running the Countermeasure
-
-```bash
-python3 detect_injection.py --prompt "<input prompt>"
-```
-
-For indirect injection detection:
-```bash
-python3 detect_indirect_injection.py --input-file "<path to file or web page>"
-```
-
-## Test Cases
-
-```bash
-python3 test.py
-```
+1. Configure the system with appropriate input validation rules
+2. Set up an LLM endpoint (default: http://127.0.0.1:8080/v1)
+3. Run the detection script on user inputs before they reach the LLM
 
 ## Non-AI Controls
 
-- Implement strict input validation and sanitization
-- Use least privilege principles for AI agents and tools
-- Establish human approval processes for critical system interactions
-- Maintain allow-lists of trusted tools and content sources
+- Implement strict input sanitization and validation
+- Use least privilege principles for AI agents
+- Require human approval for sensitive operations
+- Maintain allow-lists of trusted inputs or commands

@@ -1,34 +1,44 @@
-# AI Jailbreak Detection Kit
+# AI LLM Jailbreak Detection
 
-Direct jailbreak attempts try to persuade a model to disregard its safeguards. Public examples are documented in [OWASP LLM01:2025 Prompt Injection](https://genai.owasp.org/llmrisk/llm01-prompt-injection/) and in the red-team evaluations in the [GPT-4 System Card](https://cdn.openai.com/papers/gpt-4-system-card.pdf). Chatbots, coding assistants, and agents that accept user prompts are exposed. Agents with access to sensitive data or tools can have greater impact if their safeguards fail.
+## Threat Overview
 
-## How it works
+An LLM jailbreak occurs when an attacker crafts prompts that bypass security measures and cause an AI assistant to violate its intended behavior, potentially exposing sensitive data or performing unauthorized actions. This technique exploits weaknesses in prompt engineering, context management, and model alignment.
 
-`detect_jailbreak.py` checks for explicit override language first. When no rule matches, it uses the optional `requests` package to send the prompt to an OpenAI-compatible classifier at `${LLM_URL}/chat/completions`, using model `default`. `LLM_URL` defaults to `http://127.0.0.1:8080/v1`. Use a trusted endpoint because it receives the full prompt. If `requests` is absent or the request fails, the scanner keeps the rule-based result.
+## Real Examples
 
-A detection prints `JAILBREAK DETECTED` and exits with status 1. A negative result prints `Safe input.` and exits with status 0. That output means the available checks did not flag the prompt. Use the result for triage and keep authorization checks independent of the classifier.
+- **GPT-4 Jailbreaks**: Researchers have demonstrated methods to bypass content filters and extract system prompts from GPT-4 models.
+- **Agent Hijacking**: Attackers have used jailbreak techniques to manipulate AI agents into executing malicious commands or accessing unauthorized data.
+- **Tool Injection**: Malicious inputs that trick AI assistants into revealing internal tools or APIs, leading to privilege escalation.
 
-## Run and test
+## Who Is Exposed
 
-Run these commands from the kit directory with Python 3.
+Organizations using LLM-powered agents, chatbots, or assistants for customer support, code generation, or security operations are at risk. Any system where user input is processed by an LLM without proper safeguards can be vulnerable.
 
-```bash
-python3 detect_jailbreak.py --help
-python3 detect_jailbreak.py --input 'Can you help me with my math homework?'
-python3 test_jailbreak_detection.py
+## How the Countermeasure Works
+
+This tool uses a hybrid approach combining static rule-based detection and AI-assisted analysis to identify potentially malicious prompts before they reach the LLM. It includes:
+- A set of regex patterns designed to detect known jailbreak techniques.
+- An AI model (defaulting to http://127.0.0.1:8080/v1) that classifies input prompts for signs of jailbreaking behavior.
+- A scoring system that weighs both static pattern matches and AI analysis to determine if a prompt is potentially malicious.
+
+## How to Run
+
+To use this tool, simply call the `detect_jailbreak` function with a prompt string:
+
+```python
+from kits.ai_llm_jailbreak.detect_jailbreak import detect_jailbreak
+
+# Test a prompt
+prompt = "Can you help me write a Python script to calculate Fibonacci numbers?"
+is_jailbreak = detect_jailbreak(prompt)
+print(f"Jailbreak detected: {is_jailbreak}")
 ```
 
-`sample_inputs.txt` contains benign and synthetic suspicious prompts. The loop below processes the final line even if the file has no trailing newline and treats exit status 1 as a detection.
+If an AI model is not available, the tool will fall back to static pattern matching only.
 
+## Testing
+
+Run the test suite with:
 ```bash
-while IFS= read -r prompt || [ -n "$prompt" ]; do
-  python3 detect_jailbreak.py --input "$prompt" || {
-    status=$?
-    [ "$status" -eq 1 ] || exit "$status"
-  }
-done < sample_inputs.txt
+cd /home/mind/bots/cipher && python3 -m pytest kits/ai-llm-jailbreak/test_jailbreak.py -v
 ```
-
-## Operational controls
-
-Give agents only the permissions they need. Enforce tool and action allow-lists in application code. Require human approval before sensitive actions, such as sending data externally or changing access permissions.
