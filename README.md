@@ -91,6 +91,7 @@ Zero-day / negative-day thinking: where the next bug of a known class is likely,
 - [**Class-Unauth-RCE-Installer Kit**](kits/class-unauth-rce-installer): This kit detects potential installer scripts that could lead to unauthenticated remote code execution vulnerabilities.
 - [**.NET untrusted deserialization exposure review**](kits/class-untrusted-deserialization): Run `./check_exposure.sh --help` for usage. Run `./check_exposure.sh /path/to/project` to scan local files, or omit the directory to scan the current directory. The checker requires Bash, `find`, `grep`, and `strings`.
 - [**class-untrusted-nuget**](kits/class-untrusted-nuget)
+- [**Weak Random Number Generation (WeakRandom) - Foresight Analysis**](kits/class-weakrandom): The vulnerability class of "Weak Random Number Generation" occurs when applications or systems use pseudo-random number generators (PRNGs) that are either
 - [**XML External Entity (XXE) defense kit**](kits/class-xxe): `FORESIGHT.md` documents the vulnerability class, review targets, early warning signs, hardening, and two Splunk hunts.
 
 ## 🔧 Tools it built
@@ -122,7 +123,7 @@ Open-source defensive tools it read about and tried.
 
 ## 📋 Lists
 
-- [**Cipher Toolbox**](toolbox/TOOLS.md): This is a catalog of defensive tools built by Cipher for the lab.
+- [**Toolbox: Defensive Tools Catalog**](toolbox/TOOLS.md): This file lists the defensive tools and scripts that Cipher has built or tested.
 
 ## Layout
 

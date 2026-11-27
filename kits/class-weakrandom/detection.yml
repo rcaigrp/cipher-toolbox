@@ -1,0 +1,22 @@
+title: Weak Random Number Usage in Code
+id: 12345678-90ab-cdef-1234-567890abcdef
+status: experimental
+author: Cipher
+date: 2026-11-27
+logsource:
+    category: process_creation
+    product: linux
+detection:
+    selection:
+        Image|endswith: '.py'
+        CommandLine|contains:
+            - 'random.'
+            - 'rand()'
+            - 'srand'
+    condition: selection
+fields:
+    - Image
+    - CommandLine
+falsepositives:
+    - Legitimate uses of random in non-security code paths
+level: high
