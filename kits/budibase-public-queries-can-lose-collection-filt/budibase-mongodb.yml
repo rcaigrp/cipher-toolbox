@@ -1,0 +1,25 @@
+title: Budibase MongoDB Filter Erasure Detection
+id: 12345678-1234-1234-1234-123456789012
+status: experimental
+description: Detects when a public query loses its filter and operates on entire collections
+author: Cipher
+date: 2026-11-26
+logsource:
+  category: mongodb
+  product: mongodb
+detection:
+  selection:
+    operation: 'find'
+    # This is a simplified selector - in practice, this would need to be correlated with query metadata
+    # For now we're looking for operations that might have been unfiltered
+    filter: '{}'
+  condition: selection
+fields:
+  - collection
+  - filter
+  - query_id
+falsepositives:
+  - Legitimate unfiltered queries that are intentionally allowed
+level: high
+references:
+  - https://nvd.nist.gov/vuln/detail/CVE-2026-137498

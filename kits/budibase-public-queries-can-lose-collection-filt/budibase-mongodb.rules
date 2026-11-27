@@ -1,0 +1,2 @@
+# Suricata rule for Budibase public query filter erasure
+alert tcp $EXTERNAL_NET any -> $HOME_NET 3000 (msg:"Budibase CVE-2026-137498: Public query filter loss"; flow:to_server,established; content:"/api/public/query"; nocase; content:"filter"; nocase; content:"{}"; nocase; sid:2026137498; rev:1;)

@@ -1,0 +1,1 @@
+{"publicQueries": [{"id": "test1", "callerControlledFilterFields": true, "filter": {}}, {"id": "test2", "callerControlledFilterFields": false, "filter": {}}]}
