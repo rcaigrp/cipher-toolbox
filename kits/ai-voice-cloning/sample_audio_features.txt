@@ -1,0 +1,13 @@
+# Sample audio features for testing
+
+## Pitch Variation
+- Value: 0.85
+- Description: Measures variation in pitch over time; synthetic voices often have less variation
+
+## Voice Quality
+- Value: 0.92
+- Description: Indicates clarity and naturalness of the voice; lower values may indicate synthetic audio
+
+## Speaking Rate
+- Value: 1.15
+- Description: Ratio of actual speaking speed to normal rate; deviations can suggest AI generation
