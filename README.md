@@ -44,11 +44,11 @@ Attacks that use AI or target AI systems, and AI-assisted countermeasures.
 - [**AI inference supply-chain exposure**](kits/ai-inference-supply-chain): Prompts sent through inference gateways can pass through providers and resellers that see the full request.
 - [**AI LLM Prompt Injection Detection**](kits/ai-llm-injection): LLM prompt injection occurs when an attacker manipulates the input to a language model in a way that alters its behavior or output, potentially leading to unauthorized actions or information disclosure.
 - [**AI Jailbreak Detection Kit**](kits/ai-llm-jailbreak): An **LLM jailbreak** occurs when an attacker manipulates a language model to bypass its safety constraints, causing it to generate harmful content or perform unauthorized actions.
-- [**AI LLM Jailbreak Triage**](kits/ai-llm-jailbreak-triage): A jailbreak is an attempt to make a model disregard its safeguards. Public chatbots, coding assistants, and agents that accept user-written prompts are exposed.
+- [**AI Jailbreak Triage Kit**](kits/ai-llm-jailbreak-triage): A direct jailbreak is a user prompt that attempts to override a model’s safety constraints. Public chatbots and internal assistants that accept free-form prompts are exposed.
 - [**Model artifact intake triage**](kits/ai-model-supply-chain): Treat third-party checkpoints as software. A loader that deserializes an untrusted checkpoint can execute code with the privileges of the loading process.
 - [**Assistant output leakage triage**](kits/ai-output-leakage): An assistant can disclose credentials, personal records, confidential documents, or memorized training data through its output.
 - [**ai-phishing-triage**](kits/ai-phishing-triage)
-- [**AI Prompt Injection Detection Kit**](kits/ai-prompt-injection): **Prompt injection** is a technique where an attacker manipulates the input to a language model in a way that alters its behavior or output. This can lead to unauthorized access, data leakage, or other harmful actions.
+- [**AI Prompt Injection Detection Kit**](kits/ai-prompt-injection): **Prompt injection** occurs when user inputs are crafted to manipulate an LLM's behavior, potentially bypassing safety constraints or causing unintended actions.
 - [**AI Senior Officials Impersonation Triage**](kits/ai-senior-officials-impersonation): This tool uses rule-based text analysis to identify wording patterns commonly associated with impersonation scams targeting senior officials. It helps triage messages for further human review.
 - [**AI Voice Cloning Fraud Detection Kit**](kits/ai-voice-cloning): **AI voice cloning fraud** is a growing concern where criminals use generative AI to create synthetic audio that mimics real people's voices.
 - [**AI Voice Cloning Triage**](kits/ai-voice-cloning-triage): **AI voice cloning scams** are a growing concern where cybercriminals use artificial intelligence to replicate the voices of trusted individuals (family members, colleagues, or public figures) to deceive victims into…
@@ -96,7 +96,6 @@ Zero-day / negative-day thinking: where the next bug of a known class is likely,
 
 Reusable defensive tools.
 
-- [**LLM Jailbreak Triage**](toolbox/ai-llm-jailbreak-triage): See the [companion kit README](../../kits/ai-llm-jailbreak-triage/README.md) for setup, usage, tests, and sample data.
 - [**AI Senior Officials Impersonation Triage**](toolbox/ai-senior-officials-impersonation): This tool uses rule-based text analysis to identify wording patterns commonly associated with impersonation scams targeting senior officials. It helps triage messages for further human review.
 - [**AI Voice Cloning Triage**](toolbox/ai-voice-cloning-triage): See the [companion kit README](../../kits/ai-voice-cloning-triage/README.md) for setup, usage, tests, and sample data.
 - [**CISA NVD Checker**](toolbox/cisa-nvd-checker): Triage software inventory against local NVD CVE 2.0 JSON snapshots and flag findings listed in a local CISA Known Exploited Vulnerabilities (KEV) snapshot.

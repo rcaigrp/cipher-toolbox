@@ -2,39 +2,35 @@
 
 ## Threat Overview
 
-**Prompt injection** is a technique where an attacker manipulates the input to a language model in a way that alters its behavior or output. This can lead to unauthorized access, data leakage, or other harmful actions. Prompt injection attacks exploit weaknesses in how LLMs process and interpret prompts.
+**Prompt injection** occurs when user inputs are crafted to manipulate an LLM's behavior, potentially bypassing safety constraints or causing unintended actions. Unlike traditional software vulnerabilities, prompt injection can be subtle and may not be visible to human users but is still parsed by the model.
 
 ### Real Examples
-- In 2024, security researchers demonstrated prompt injection techniques that could trick an AI assistant into revealing internal documentation or bypassing access controls.
-- Prompt injection has been used to manipulate AI systems in customer service chatbots, causing them to leak sensitive data or perform unintended actions.
+- In 2025, attackers used prompt injection to compromise enterprise AI assistants, extracting confidential data.
+- Indirect prompt injection attacks exploited web forms and document processing systems to inject malicious prompts into LLM workflows.
 
 ### Who Is Exposed?
-Organizations using LLM-based tools (chatbots, agents, assistants) for internal or customer-facing tasks are at risk. The threat is especially high when these systems lack input sanitization or safety checks.
+Organizations that integrate LLMs into applications (chatbots, agents, RAG systems) are at risk. Any system where user input directly affects model prompts is vulnerable, especially those without input sanitization or prompt engineering safeguards.
 
 ## Countermeasure
 
-This kit provides an **AI-assisted prompt injection detection system** that analyzes user inputs before they reach an LLM. It combines a rule-based filter with an LLM to detect potentially malicious prompts and flags them for review or rejection.
+This kit provides an **AI-assisted prompt injection detection system** that analyzes user inputs before they reach an LLM. It combines rule-based checks with AI classification to identify potentially malicious prompts.
 
 ### How It Works
 1. Input prompt is analyzed by a combination of:
-   - Static rules (detecting common injection indicators)
+   - Static rules (detecting common prompt injection indicators)
    - An LLM endpoint (`LLM_URL`) that evaluates the input for safety.
 2. If either detects a high risk, the input is flagged and can be rejected or reviewed.
 
 ### Running the Kit
 Run the detection script with:
 ```bash
-python3 detect_prompt_injection.py --input "Your prompt here"
+python detect_prompt_injection.py --input "user prompt here"
 ```
 
-To test:
-```bash
-python3 test_detect_prompt_injection.py
-```
+Ensure `LLM_URL` environment variable points to an OpenAI-compatible endpoint (default: `http://127.0.0.1:8080/v1`).
 
 ## Non-AI Controls
-
-- Input sanitization: Remove or escape special characters from user input.
-- Least privilege for agents: Limit what actions an AI assistant can perform.
-- Human review: Have a human approve sensitive prompts before processing.
-- Allow-lists: Only allow known safe inputs or commands.
+- Input sanitization and validation
+- Least privilege access for LLM agents
+- Human approval workflows for sensitive actions
+- Allow-listing of known safe prompts

@@ -1,32 +1,27 @@
-# AI LLM Jailbreak Triage
+# AI Jailbreak Triage Kit
 
-A jailbreak is an attempt to make a model disregard its safeguards. Public chatbots, coding assistants, and agents that accept user-written prompts are exposed. The consequences are greater when the model can read sensitive data, call tools, or publish content.
+A direct jailbreak is a user prompt that attempts to override a model’s safety constraints. Public chatbots and internal assistants that accept free-form prompts are exposed. For agents with tools, the consequences depend on the permissions enforced by the application.
 
-## Evidence
+Anthropic’s 2024 research demonstrated that long prompts could cause several models to produce outputs they would normally refuse. OWASP documents direct prompt injection and recommends enforcing least privilege and requiring human approval for high-risk actions. [Anthropic research](https://www.anthropic.com/research/many-shot-jailbreaking) · [OWASP LLM01 guidance](https://genai.owasp.org/llm2026/llm012026-prompt-injection/)
 
-- Microsoft took Tay offline after coordinated abuse led it to publish offensive tweets. The incident illustrates the consequences when a public chatbot can publish directly. [Microsoft's incident account](https://blogs.microsoft.com/blog/2016/03/25/learning-tays-introduction/)
-- OWASP documents jailbreaking under its prompt injection guidance and describes the risks of unauthorized actions and data exposure. [OWASP LLM01:2025](https://genai.owasp.org/llmrisk/llm01-prompt-injection/)
+## Run locally
 
-## Run
+Use Python 3 with `requests` installed. From this directory, run:
 
-Install the `requests` dependency in your Python environment. From this directory, run:
-
-```sh
-python3 -m pip install requests
-python3 detect_jailbreak.py "Can you help me calculate Fibonacci numbers?"
-python3 -m unittest -v
+```bash
+python3 detect_jailbreak.py --help
+python3 detect_jailbreak.py --input "Can you help me with my homework?"
+python3 test_detect_jailbreak.py
 ```
 
-`sample_inputs.txt` contains synthetic examples. Pass the prompt text after the sample's label as a quoted argument.
+`sample_inputs.txt` contains synthetic examples, one prompt per line. Pass an individual sample to `--input`.
 
-## How it works
+## How triage works
 
-The script checks for case-insensitive rule matches and sends the prompt to an OpenAI-compatible `/chat/completions` endpoint using the model identifier `gpt-4`. Set `LLM_URL` to the trusted endpoint's base URL. The default is `http://127.0.0.1:8080/v1`. The request has a five-second timeout. Use a classifier endpoint approved to receive the prompts you submit.
+The scanner checks for known phrases first. A match produces `JAILBREAK DETECTED` and skips the model call. Otherwise it sends the prompt text to the configured OpenAI-compatible `/chat/completions` endpoint. Set `LLM_URL` to the API base URL (default `http://127.0.0.1:8080/v1`) and `LLM_MODEL` to the model name served by that endpoint (default `gpt-4`). Use a trusted endpoint permitted to receive the prompt text.
 
-Any rule match or model score of at least 0.7 produces `JAILBREAK DETECTED`. A request failure or unparseable reply leaves the decision to the rules. `SAFE` means the available checks did not flag the prompt. Treat it as a triage result and keep enforcement outside the classifier.
+The scanner falls back to the rules when the endpoint is unavailable or returns an unrecognized verdict. In every mode, interpret `SAFE` as “no detector flagged this input.” The phrase rules can miss unfamiliar wording and flag benign quotations. The optional model can also misclassify inputs. The bundled tests cover the sample CLI verdicts. Evaluating a live model requires a running endpoint.
 
-## Non-AI controls
+## Deployment controls
 
-- Give each agent and tool only the privileges it needs.
-- Enforce tool and destination allow-lists in application code.
-- Require human approval for sensitive disclosures, external messages, and irreversible actions.
+Enforce least privilege and allow-lists for tools and destinations in application code. Require human approval for sensitive actions and enforce authorization independently of the classifier’s verdict. Use flagged prompts as a signal for review.
