@@ -1,0 +1,40 @@
+title: Security Token Issuance With Correlation Fields
+name: security_token_issuance
+status: experimental
+description: Selects application audit events carrying a keyed token fingerprint and a stable issuance identifier.
+logsource:
+  category: application
+  service: auth_token_audit
+detection:
+  selection:
+    Event: issued
+    Application|exists: true
+    TokenType|exists: true
+    TokenFingerprint|exists: true
+    IssuanceId|exists: true
+  empty_field:
+    - Application: [null, '']
+    - TokenType: [null, '']
+    - TokenFingerprint: [null, '']
+    - IssuanceId: [null, '']
+  condition: selection and not empty_field
+---
+title: Same Security Token Issued by Distinct Operations
+status: experimental
+description: Detects repeat issuance of the same keyed token fingerprint across distinct issuance IDs. Requires a Sigma backend that supports value-count correlations and the application audit fields documented in HUNTS.md.
+correlation:
+  type: value_count
+  rules:
+    - security_token_issuance
+  group-by:
+    - Application
+    - TokenType
+    - TokenFingerprint
+  timespan: 24h
+  condition:
+    field: IssuanceId
+    gte: 2
+falsepositives:
+  - Intentional reissuance under a new issuance ID
+  - Duplicate audit events that incorrectly assign a new issuance ID on retry
+level: medium

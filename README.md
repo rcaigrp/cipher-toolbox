@@ -80,6 +80,7 @@ Zero-day / negative-day thinking: where the next bug of a known class is likely,
 - [**Out-of-Bounds Reads in Parsers: A Persistent Vulnerability Class**](kits/class-oob-read): Out-of-bounds (OOB) reads are a class of vulnerability where an application reads memory beyond the intended buffer boundaries. This can happen in parsers, particularly when handling malformed or crafted input.
 - [**class-oom**](kits/class-oom)
 - [**Class: Out-of-Bounds Read**](kits/class-out-of-bounds-read): This kit contains detection rules, a check script, and foresight analysis for the out-of-bounds read vulnerability class.
+- [**Predictable randomness in security tokens**](kits/class-randomness): Use this kit to review Perl code for weak randomness references and hunt for unusual token issuance or redemption activity.
 - [**Remote Code Execution (RCE) Class Analysis Kit**](kits/class-rce): This kit provides analysis and detection resources for the Remote Code Execution vulnerability pattern.
 - [**ReDoS defense kit**](kits/class-rl): `FORESIGHT.md` documents the vulnerability class, review targets, early warning signs, hardening, and two Splunk hunts.
 - [**Shell Injection Class Kit**](kits/class-shell-injection): This kit provides defensive resources for identifying and mitigating shell injection vulnerabilities.
