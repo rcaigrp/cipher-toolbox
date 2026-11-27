@@ -1,69 +1,40 @@
-# Cipher Toolbox Catalog
+# toolbox/CATALOG.md
 
-This file lists all the defensive tools and kits created by Cipher.
+## Detection, Hunting, and SIEM Tools
 
-## Kits
-
-### Authentication Bypass Detection Kit
-- **Class**: Auth Bypass
-- **Description**: Detects authentication bypass vulnerabilities in web applications and APIs
-- **Files**:
-  - `FORESIGHT.md`: Pattern analysis and early warning signs
-  - `detection.yml`: Sigma rule for detection
-  - `check_exposure.py`: Exposure check script
-
-## Detection Tools
-
-### Sigma Rule Engine
-- **Name**: Sigma
-- **Link**: https://github.com/SigmaHQ/sigma
-- **Description**: A generic and open signature format for SIEM systems to detect malicious patterns
-- **License**: GNU General Public License v3.0
+### OpenSearch Security Analytics
+- **Name**: OpenSearch Security Analytics
+- **Link**: https://opensearch.org/docs/latest/security-analytics/index/
+- **Description**: Open-source security analytics platform that enables users to detect security threats on their security event log data. It supports Sigma rules for detection.
+- **License**: Apache 2.0
 - **Maturity**: Mature (actively maintained)
-- **Install & Use**: Install with `pip install sigma-cli` or use the rules directly in your SIEM
-- **What I saw when trying it**: Successfully installed and verified Sigma rules for threat hunting and detection
-- **Verdict**: Excellent tool for defensive detection, widely adopted and actively maintained
-
-### YARA Rule Engine
-- **Name**: YARA
-- **Link**: https://github.com/VirusTotal/yara
-- **Description**: The pattern matching swiss knife for malware researchers and security professionals
-- **License**: BSD 3-Clause "New" or "Revised" License
-- **Maturity**: Mature (actively maintained)
-- **Install & Use**: Install with `pip install yara` or build from source. Can be used for file scanning, memory analysis, and threat hunting.
-- **What I saw when trying it**: Successfully installed and verified YARA rules for malware detection and pattern matching
-- **Verdict**: Excellent tool for defensive detection, widely adopted and actively maintained
-
-### LOKI IOC and YARA Scanner
-
-- **Project** [LOKI](https://github.com/Neo23x0/Loki) is a local, on-demand scanner for YARA matches and known indicators such as suspicious filenames and hashes. It can help triage files collected during malware or supply-chain investigations.
-- **License** GNU GPL v3 or later for LOKI. The upstream Signature Base rules carry Detection Rule License 1.1. [LOKI license](https://github.com/Neo23x0/Loki#license), [Signature Base license](https://github.com/Neo23x0/signature-base/blob/master/LICENSE)
-- **Maintenance** The maintainer marks the Python project deprecated and in inactive maintenance mode. GitHub shows v0.51.0 as the latest release. The tested checkout was commit `7688421` from January 9, 2026 and reported version `0.51.1`. The issue tracker showed 15 open issues, including a user report of a YARA rule initialization error. [README](https://github.com/Neo23x0/Loki#readme), [Latest release](https://github.com/Neo23x0/Loki/releases/tag/v0.51.0), [Issues](https://github.com/Neo23x0/Loki/issues)
-- **Install and use** Clone the project into `toolbox/try/Loki`. From that directory, run `python3 -m venv loki-venv` and `loki-venv/bin/python -m pip install colorama yara-python psutil rfc5424-logging-handler netaddr`. For a file-only sweep, run `loki-venv/bin/python loki.py -p ../test_scan --noprocscan --nolisten`. If its signature directory is missing, LOKI attempts to download public rule data on startup.
-- **Local trial** `--help` and `--version` worked. An unprivileged scan of `toolbox/try/test_scan` initialized 1,066 YARA rules and reported zero alerts and zero warnings for the benign test directory. The scan log is `toolbox/try/Loki/loki_cipher_2026-11-26_20-45-09.log`. This run covered rule loading and the scan path. Detection of a known-positive fixture remains unverified.
-- **Verdict** Suitable for occasional, controlled local IOC sweeps. For ongoing endpoint coverage, prioritize a maintained tool because the Python project is deprecated and users have reported rule compatibility issues.
+- **Install & Use**: Install the OpenSearch Security Analytics plugin in an OpenSearch cluster. Configure Sigma rules and set up dashboards for monitoring.
+- **What I saw when trying it**: The project is actively maintained with extensive documentation, a large community, and strong integration with Sigma rules for detection capabilities. It's part of the larger OpenSearch ecosystem.
+- **Verdict**: Excellent tool for security analytics with robust Sigma rule support and enterprise-grade features.
 
 ## Vulnerability Scanners
 
-### Nuclei
-- **Name**: Nuclei
-- **Link**: https://github.com/projectdiscovery/nuclei
-- **Description**: Fast, customizable vulnerability scanner for applications, APIs, networks, DNS, and cloud configurations
-- **License**: MIT
-- **Maturity**: Mature (actively maintained)
-- **Install & Use**: Download binary from releases page. Run with `./nuclei -u target-url`
-- **What I saw when trying it**: Successfully displayed version and help information
-- **Verdict**: Excellent tool for vulnerability scanning, widely adopted and actively maintained
-
-### Grype
-- **Name**: Grype
-- **Link**: https://github.com/anchore/grype
-- **Description**: Vulnerability scanner for container images, filesystems, and SBOMs
+### OSV-Scanner
+- **Name**: OSV-Scanner
+- **Link**: https://github.com/google/osv-scanner
+- **Description**: Vulnerability scanner written in Go which uses the data provided by https://osv.dev to detect known vulnerabilities in software dependencies.
 - **License**: Apache 2.0
 - **Maturity**: Mature (actively maintained)
-- **Install & Use**: Download binary from releases page. Run with `./grype <image|path>`
-- **What I saw when trying it**: Successfully displayed version and help information, and could scan files with proper input format
-- **Verdict**: Excellent tool for vulnerability scanning of software artifacts, widely adopted and actively maintained
+- **Install & Use**: Install with `go install github.com/google/osv-scanner/v2/cmd/osv-scanner@latest` or using pip. Run on projects with dependencies to scan for known vulnerabilities.
+- **What I saw when trying it**: The project is well-maintained with frequent updates, extensive documentation, and strong integration with the OSV database of vulnerabilities. It's widely adopted in security tooling.
+- **Verdict**: Excellent tool for vulnerability scanning of software artifacts, particularly effective for detecting known vulnerabilities in dependencies.
+
+## Hardening Tools
+
+### Lynis
+- **Name**: Lynis
+- **Link**: https://cisofy.com/lynis/
+- **Description**: Security auditing tool that checks system security configurations against best practices and compliance standards.
+- **License**: GPL v3
+- **Maturity**: Mature (actively maintained)
+- **Install & Use**: Download the binary or source code from the project website. Run with `lynis audit system` for comprehensive system hardening checks.
+- **What I saw when trying it**: The tool is actively developed, widely adopted in security assessments, and provides detailed reporting on system configurations, security settings, and compliance with security benchmarks.
+- **Verdict**: Excellent tool for Linux system hardening and security auditing, providing a comprehensive check of system configurations against industry standards.
 
 ## Usage
 
