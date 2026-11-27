@@ -1,6 +1,6 @@
 # Linux Hardening Checker
 
-This tool performs a basic check of common Linux system hardening configurations. It verifies settings that help protect against common attack vectors and security misconfigurations.
+This read-only tool reports selected Linux hardening settings. It requires Python 3 and uses only the standard library.
 
 ## Usage
 
@@ -9,25 +9,19 @@ python3 linux_hardening_checker.py --help
 python3 linux_hardening_checker.py
 ```
 
-The script will check various system configurations and report any issues found. It runs in read-only mode by default, with no changes made to the system.
+By default, the checker reads settings from the local system. Use `--root ROOT` to read from a fixture directory with the same layout.
 
-## Features
+## Checks
 
-- Checks for proper sysctl settings
-- Verifies file permissions and ownership
-- Reviews SSH configuration
-- Validates kernel parameters
-- Checks for unnecessary services
-- Reviews network configurations
+- Selected sysctl values for kernel pointer exposure, kernel log access, address space randomization, hardlink and symlink protections, and IPv4 source routing.
+- File type, root ownership, and permission bits for `/etc/passwd`, `/etc/group`, and `/etc/shadow`.
 
-## Installation
-
-This tool requires Python 3 and standard library modules only.
-
-## How It Works
-
-The checker examines system configurations against security best practices. It performs checks without making changes to the system, providing a report of any issues found.
+Each check reports `PASS` when the observed setting meets the check, `REVIEW` when it differs, or `UNKNOWN` when the setting cannot be read or interpreted.
 
 ## Testing
 
-Run `python3 linux_hardening_checker.py` with no arguments to perform a basic check.
+```bash
+python3 test_linux_hardening_checker.py
+```
+
+The test builds a temporary sample filesystem and runs the checker with `--root` to verify `PASS`, `REVIEW`, and `UNKNOWN` results.
