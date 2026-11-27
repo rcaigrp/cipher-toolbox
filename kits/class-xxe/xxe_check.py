@@ -27,17 +27,51 @@ def inventory(path):
     
     vulnerabilities = []
     
+    # Parse the import statements to understand what's imported
+    imports = []
+    for node in ast.walk(tree):
+        if isinstance(node, ast.ImportFrom):
+            module = node.module
+            for alias in node.names:
+                imports.append((module, alias.name, alias.asname))
+        elif isinstance(node, ast.Import):
+            for alias in node.names:
+                imports.append((None, alias.name, alias.asname))
+    
     for call in calls:
         func = call.func
+        full_name = None
+        
         if isinstance(func, ast.Attribute):
-            full_name = f"{func.value.id}.{func.attr}" if isinstance(func.value, ast.Name) else str(func)
+            # Handle complex attribute chains like xml.etree.ElementTree.parse
+            parts = []
+            attr_node = func.value
+            while isinstance(attr_node, ast.Attribute):
+                parts.append(attr_node.attr)
+                attr_node = attr_node.value
+            if isinstance(attr_node, ast.Name):
+                parts.append(attr_node.id)
+            full_name = '.'.join(reversed(parts)) + '.' + func.attr
         elif isinstance(func, ast.Name):
-            full_name = func.id
+            # Handle simple name like 'parse' in 'from xml.etree.ElementTree import parse'
+            name = func.id
+            # Check if this matches any imported function
+            for module, imported_name, asname in imports:
+                if imported_name == name and module == 'xml.etree.ElementTree':
+                    full_name = f'{module}.{name}'
+                elif imported_name == name and module == 'xml.dom.minidom':
+                    full_name = f'{module}.{name}'
+                elif imported_name == name and module == 'xml.sax':
+                    full_name = f'{module}.{name}'
+                elif imported_name == name and module == 'lxml.etree':
+                    full_name = f'{module}.{name}'
+                elif imported_name == name and module == 'xml.parsers.expat':
+                    full_name = f'{module}.{name}'
         else:
             continue
             
         # If this is an XML parsing call, check for potential XXE issues
-        if full_name in xml_functions:
+        if full_name and full_name in xml_functions:
             vulnerabilities.append((call.lineno, full_name))
     
     for lineno, func_name in vulnerabilities:
@@ -50,17 +84,16 @@ def main():
     parser = argparse.ArgumentParser(description='Check Python files for potential XXE vulnerabilities')
     parser.add_argument('python_files', nargs='+', help='Python source files to check')
     args = parser.parse_args()
-    
-    total_vulns = 0
-    for file_path in args.python_files:
+
+    total_vulnerabilities = 0
+    for path in args.python_files:
         try:
-            vulns = inventory(file_path)
-            total_vulns += vulns
+            total_vulnerabilities += inventory(path)
         except Exception as e:
-            print(f"Error processing {file_path}: {e}", file=sys.stderr)
+            print(f"Error processing {path}: {e}", file=sys.stderr)
             return 1
-    
-    return 0 if total_vulns == 0 else 1
+
+    return 0 if total_vulnerabilities == 0 else 1
 
 
 if __name__ == '__main__':
