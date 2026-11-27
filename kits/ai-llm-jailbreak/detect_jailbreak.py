@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import argparse
 import sys
 import re
 import os
@@ -54,41 +55,25 @@ def analyze_with_ai(prompt):
         content = result['choices'][0]['message']['content']
         # Parse the JSON from the AI's response
         ai_result = json.loads(content)
-        return ai_result['score'], ai_result['reason']
+        score = ai_result['score']
+        if type(score) not in (int, float) or not 0 <= score <= 1:
+            raise ValueError("AI score must be a number between 0 and 1")
+        return score, ai_result['reason']
     except Exception as e:
         print(f"Error in AI analysis: {e}", file=sys.stderr)
         return 0.0, "AI analysis failed"
 
 def detect_jailbreak(prompt):
-    """
-    Detect if a prompt is attempting an LLM jailbreak.
-    
-    Args:
-        prompt (str): The user input to analyze
-        
-    Returns:
-        bool: True if the prompt is detected as a potential jailbreak attempt
-    """
-    # Check static patterns first
-    static_matches = check_static_patterns(prompt)
-    
-    # If we have strong static matches, consider it a jailbreak
-    if static_matches >= 2:
+    """Flag a static rule match or an AI score above the threshold."""
+    if check_static_patterns(prompt):
         return True
-    
-    # Use AI analysis for additional detection
-    ai_score, reason = analyze_with_ai(prompt)
-    
-    # Combine scores: if either static or AI indicates high risk, flag as jailbreak
-    combined_score = (static_matches * 0.3) + (ai_score * 0.7)
-    
-    return combined_score >= THRESHOLD
+
+    ai_score, _ = analyze_with_ai(prompt)
+    return ai_score > THRESHOLD
+
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print("Usage: python3 detect_jailbreak.py '<prompt>'")
-        sys.exit(1)
-    
-    prompt = sys.argv[1]
-    is_jailbreak = detect_jailbreak(prompt)
-    print(f"Jailbreak detected: {is_jailbreak}")
+    parser = argparse.ArgumentParser(description="Check a prompt for signs of an LLM jailbreak.")
+    parser.add_argument("prompt", help="prompt to analyze")
+    args = parser.parse_args()
+    print(f"Jailbreak detected: {detect_jailbreak(args.prompt)}")

@@ -16,29 +16,26 @@ Organizations using LLM-powered agents, chatbots, or assistants for customer sup
 
 ## How the Countermeasure Works
 
-This tool uses a hybrid approach combining static rule-based detection and AI-assisted analysis to identify potentially malicious prompts before they reach the LLM. It includes:
-- A set of regex patterns designed to detect known jailbreak techniques.
-- An AI model (defaulting to http://127.0.0.1:8080/v1) that classifies input prompts for signs of jailbreaking behavior.
-- A scoring system that weighs both static pattern matches and AI analysis to determine if a prompt is potentially malicious.
+A match against any static rule flags the prompt immediately. Otherwise, the detector sends the prompt to the configured AI endpoint and flags it if the model returns a score above 0.7. If AI analysis fails, the detector reports the error on stderr and returns the result from the static rules.
 
-## How to Run
+## Usage
 
-To use this tool, simply call the `detect_jailbreak` function with a prompt string:
+Install the Python dependency in your environment with `python3 -m pip install requests`.
 
-```python
-from kits.ai_llm_jailbreak.detect_jailbreak import detect_jailbreak
-
-# Test a prompt
-prompt = "Can you help me write a Python script to calculate Fibonacci numbers?"
-is_jailbreak = detect_jailbreak(prompt)
-print(f"Jailbreak detected: {is_jailbreak}")
+```bash
+python3 detect_jailbreak.py "Your prompt here"
+python3 detect_jailbreak.py --help
 ```
 
-If an AI model is not available, the tool will fall back to static pattern matching only.
+## Configuration
+
+Set `LLM_URL` to the base URL of the OpenAI-compatible endpoint. The default is `http://127.0.0.1:8080/v1`. The detector requests the `gpt-4` model and uses a fixed score threshold of 0.7.
 
 ## Testing
 
-Run the test suite with:
+The tool includes unit tests and sample inputs:
 ```bash
-cd /home/mind/bots/cipher && python3 -m pytest kits/ai-llm-jailbreak/test_jailbreak.py -v
+python3 test_jailbreak.py
 ```
+
+Sample prompts are in `sample_inputs.txt`.
