@@ -1,0 +1,8 @@
+{
+  "publicQueries": [
+    {
+      "id": "fixture-public-mongodb-query",
+      "callerControlledFilterFields": true
+    }
+  ]
+}

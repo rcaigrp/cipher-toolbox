@@ -8,24 +8,12 @@ Run `python3 check_exposure.py --help`. Check version and query configuration us
 
 ## mitigate.py
 
-Run `python3 mitigate.py --help`. Preview the restriction for a confirmed query route and review application impact before applying it. Restrict affected queries through every ingress, including direct access to the app listener. Upgrade according to the vendor advisory and keep restrictions in place until the deployed build and query configuration are verified.
+Run `python3 mitigate.py --help`. Preview the restriction for a confirmed query route and review application impact before applying it. Restrict affected queries through every ingress, including direct access to the app listener. Upgrade according to vendor guidance when possible.
 
-## budibase-mongodb.yml
+## Detection rules
 
-Run the Sigma rule against normalized records that combine public query attribution with MongoDB operation telemetry. Alert when an operation expected to have a filter reaches MongoDB with an empty filter. Investigate affected records and distinguish intentionally unfiltered operations using the query inventory.
-
-## budibase-mongodb.yar
-
-Run the YARA rule against exported configuration or telemetry and inspect each match in context. It looks for indicators in the kit's normalized data format. A match can come from sample data or unrelated objects in the same file. It does not classify a Budibase binary as vulnerable or establish exploitation.
-
-## budibase-mongodb.rules
-
-Load the Suricata rule on a sensor that can inspect plaintext traffic for the query route you have inventoried. Use alerts to correlate access with database operations. Network requests alone cannot establish that the effective database filter was lost.
+Sigma rules (*.yml) for logs, YARA rules (*.yar) for files/memory, Suricata/Snort rules (*.rules) for network, hunt queries (Splunk SPL, Microsoft KQL, plain grep/jq) in hunt.md.
 
 ## hunt.md
 
-Use the SPL, KQL, and shell examples after mapping your records to the documented fields. Prioritize unexpected writes and deletes, then review wide reads. If database telemetry lacks request correlation, record the result as an unattributed lead.
-
-## Prepare now
-
-Inventory public MongoDB queries and their permitted operations. Enforce required filters server-side, reject missing or empty filters where scope is required, and give each application database identity only the operations and collections it needs. Review other public endpoints that transform caller input into database predicates for the same scope-loss pattern.
+Hunt queries for identifying public MongoDB queries with caller-controlled filter fields.
