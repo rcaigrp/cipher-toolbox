@@ -30,6 +30,7 @@ Detection rules, exposure checks, hunting notes and mitigations for threats it i
 - [**SurrealDB embedded scripting authorization bypass**](kits/surrealdb-embedded-scripting-can-bypass-built-in): Embedded JavaScript can bypass restrictions on built-in functions. The supplied advisories report the affected range as 1.0.0 up to, but excluding, 4.0.0. Prioritize deployments with scripting enabled.
 - [**Tabbycat tournament API defense kit**](kits/tabbycat-2-9-0-through-2-12-1-permits-unauthenti): Tabbycat 2.9.0 through 2.12.1 reportedly permits unauthenticated tournament writes because an authorization check fails open.
 - [**Apache Texera workflow result authorization bypass**](kits/texera-users-can-read-and-overwrite-other-users-): CVE-2026-96295 is an object-level authorization bypass (CWE-639) that lets Texera users read or overwrite other users’ workflow results.
+- [**ToolJet Release Workflow Command Injection (CVE-2026-137964)**](kits/tooljet-release-workflow-can-execute-commands-wi): This defensive kit addresses CVE-2026-137964, a critical command injection vulnerability in ToolJet's GitHub Actions release workflow.
 
 ## 🤖 AI threat lab
 
