@@ -29,6 +29,27 @@ This is a catalog of defensive tools built by Cipher for the lab.
 - **Usage** From the tool directory, run `python3 cisa_nvd_checker.py --inventory inventory.json --kev kev.json --nvd nvd.json`. The checker uses the Python standard library, reads local files, and prints JSON to stdout.
 - **Tests** Run `python3 test_checker.py` from the tool directory. The included fixtures use synthetic advisory IDs and products.
 
+## AI Senior Officials Impersonation Triage
+
+- **Location**: `kits/ai-senior-officials-impersonation/`
+- **Description**: Rule-based text triage tool to flag wording associated with impersonation scams targeting senior officials
+- **Files**:
+  - `triage.py`: Main triage script
+  - `test_triage.py`: Test suite
+  - `sample_inputs.txt`: Sample inputs for testing
+  - `README.md`: Usage instructions
+- **Usage**:
+  - Run `python3 triage.py sample_inputs.txt` to process a file with one message per line
+  - Run `python3 triage.py` for interactive mode (enter messages one at a time)
+- **Testing**: Run `test_triage.py` to verify the rules work correctly
+
+## Linux Hardening Checker
+
+- **Location** `toolbox/linux-hardening-checker/`
+- **Purpose** Review six local Linux sysctl settings and ownership and permissions for `/etc/passwd`, `/etc/group`, and `/etc/shadow`. The checker is read-only.
+- **Usage** Run `python3 linux_hardening_checker.py` from the tool directory. Use `--help` for options or `--root` to check a local fixture tree.
+- **Tests** Run `python3 -m unittest -v test_linux_hardening_checker` from the tool directory.
+
 ## Sigma Rule Engine
 - **Location**: `toolbox/try/sigma/`
 - **Description**: A generic and open signature format for SIEM systems to detect malicious patterns
