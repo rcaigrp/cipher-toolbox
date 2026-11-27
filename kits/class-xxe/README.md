@@ -1,24 +1,17 @@
-# XXE - XML External Entity
+# XML External Entity (XXE) defense kit
 
-This kit provides detection rules and a check script for identifying exposure to XXE vulnerabilities.
+`FORESIGHT.md` documents the vulnerability class, review targets, early warning signs, hardening, and two Splunk hunts. `detection.yml` is an experimental Sigma rule for application telemetry that records potential XXE attempts. `xxe_check.py` is a read-only exposure inventory script for Python source code.
 
-## Files
+## Read-only exposure inventory
 
-- `FORESIGHT.md`: Analysis of the XXE vulnerability class and its variants
-- `detection.yml`: Sigma rule for detecting XXE attempts
-- `xxe_check.py`: Script to test XML files for XXE patterns
+Run with Python 3 and pass the local Python source files to review:
 
-## Usage
-
-To check an XML file for XXE vulnerabilities:
-```bash
-python3 xxe_check.py <xml_file>
+```sh
+python3 xxe_check.py path/to/validator.py path/to/router.py
 ```
 
-## Detection Rules
+The checker parses source without importing it or making network requests. It identifies direct calls to XML parsing functions and reports them as potential XXE vulnerabilities. For each potential XXE vulnerability found, the script reports the file path, line number, and function name.
 
-The detection rules are designed to identify potential XXE attack patterns in logs or network traffic.
+Exit status 1 means at least one file could not be read or parsed.
 
-## Summary
-
-XXE vulnerabilities remain a significant threat due to their ability to bypass traditional security controls and potentially lead to data breaches or system compromise. Organizations must proactively address XXE issues in their systems, especially as legacy systems continue to be integrated with modern applications.
+For the hunts, map the fields documented in `detection.yml`, set the application index, and establish per-route baselines. Correlate limit events with worker CPU, queue delay, and request errors to prioritize investigation.

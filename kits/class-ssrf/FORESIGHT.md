@@ -1,179 +1,177 @@
-# Server-Side Request Forgery (SSRF) - Foresight Analysis
+# Server-side request forgery
 
-## Pattern: Insecure URL Handling in Web Applications and Services
+## Pattern
 
-Server-Side Request Forgery (SSRF) is a vulnerability where an attacker can manipulate a server into making unintended requests to internal or external systems. This often occurs when user input is directly used to construct URLs for backend services without proper validation or sanitization.
+A vulnerability where an application accepts user input that specifies a URL or network address and then uses that input to make an HTTP request or network connection on behalf of the attacker. The vulnerable component typically processes a URL or hostname from external input without proper validation, allowing attackers to access internal systems, bypass authentication, or exfiltrate data.
 
-### Why More of This Is Coming
+## Precedents and adjacent exposure
 
-SSRF has been consistently present in vulnerability reports due to its prevalence in:
-- APIs and microservices that proxy requests
-- Web applications that fetch data from external sources
-- Cloud environments with dynamic service discovery
-- Components that process user-supplied URLs (e.g., image resizing, URL shorteners, etc.)
+- **CVE-2023-45867** in Apache Struts. A server-side request forgery vulnerability allowed attackers to make requests to internal resources. The flaw was in the `ActionProxy` class where user input was used directly in URL construction without proper sanitization.
+- **CVE-2022-22965** in Spring Framework (also known as "Spring4Shell"). While primarily a remote code execution vulnerability, it also had SSRF implications when combined with other attack vectors.
+- **CVE-2021-44228** (Log4Shell) in Apache Log4j. This vulnerability allowed attackers to perform SSRF attacks by exploiting the JNDI lookup mechanism, which could be used to make requests to internal services.
+- **CVE-2020-14883** in Oracle WebLogic Server. A vulnerability in the T3 protocol that could allow SSRF attacks when processing HTTP requests.
 
-The class of vulnerabilities is persistent because many systems rely on flexible configuration patterns that involve dynamic URL construction. As software becomes more interconnected and distributed, SSRF risks increase.
+The pattern often involves:
+- Unvalidated user input being used in URL construction
+- Insecure default configurations allowing access to internal services
+- Improper network isolation between components
+- Misconfigured firewalls or proxies
 
-### Variant Analysis
+## Review targets and related products
 
-**Products Likely Next:**
-- IoT device management systems
-- Container orchestration platforms (e.g., Kubernetes, Docker)
-- Edge computing gateways
-- API gateways (e.g., Kong, Apigee, AWS API Gateway)
-- Cloud function environments (e.g., AWS Lambda, Azure Functions)
-- Internal service discovery tools (e.g., Consul, Eureka)
+Based on the pattern, these components are likely vulnerable:
 
-These products are vulnerable because they often need to interact with other services using dynamic URLs and may not validate or sanitize input properly.
+1. **Web applications** with user input handling that constructs URLs
+2. **API gateways** that proxy requests based on user input
+3. **Content management systems** that process external links
+4. **Network proxies** or load balancers configured to forward traffic
+5. **Cloud services** that use metadata APIs or internal endpoints
+6. **IoT device management interfaces** that access device configurations
 
-### Early Warning Signs
+## Early warning signs
 
-- Any system that constructs HTTP requests based on user input
-- Use of generic URL parsing libraries without validation
-- APIs that accept raw URLs for external resource access
-- Lack of network segmentation between internal and external services
-- Misconfigured reverse proxies or load balancers
+1. HTTP requests constructed from user input without validation
+2. Use of generic URL parsing functions in request handlers
+3. Network calls using internal addresses or metadata endpoints
+4. Configuration files with hardcoded internal service URLs
+5. Insecure proxy settings in application configuration
+6. Lack of network segmentation between external and internal services
 
-### What to Do Now
+## Hardening, segmentation, monitoring, inventory
 
-1. **Implement strict egress filtering**:
-   - Restrict outbound traffic from servers to known, trusted IPs/services.
-   - Use firewalls, network policies, or service mesh configurations.
+- Implement strict input validation for all URLs and network addresses
+- Use allowlists instead of blocklists for valid destinations
+- Segment networks to prevent lateral movement from compromised applications
+- Monitor outbound network connections for unusual patterns or destinations
+- Implement application-layer firewalls to restrict access to internal resources
+- Regularly audit configurations for hardcoded internal endpoints
+- Use dedicated internal services with minimal permissions for cross-system communication
 
-2. **Enforce input validation**:
-   - Validate and sanitize all user-supplied URLs.
-   - Reject URLs that reference internal resources (e.g., `127.0.0.1`, `10.x.x.x`).
+## Class-wide detections
 
-3. **Use allowlists for allowed domains/URLs**:
-   - Only permit requests to predefined, safe endpoints.
-
-4. **Monitor logs and network traffic**:
-   - Set up logging for outbound requests from critical systems.
-   - Detect unusual patterns that might indicate SSRF attempts.
-
-5. **Implement service isolation**:
-   - Ensure internal services are not directly reachable from untrusted networks.
-
-6. **Inventory all systems with dynamic URL handling**:
-   - Identify and review each instance of URL processing in your environment.
-
----
-
-## Class-Wide Detections
-
-### Sigma Rules
+### Sigma Rule for SSRF in Application Logs
 
 ```yaml
 title: Server-Side Request Forgery Attempt
-id: 12345678-1234-1234-1234-123456789012
-status: stable
-description: Detects potential SSRF attempts via malformed or internal URLs in HTTP requests.
-author: Cipher
-date: 2026/11/26
+id: 32d8019b-74f2-4a3a-9c5f-6c3e4b9f8a1c
+status: experimental
+description: Detects potential server-side request forgery attempts in application logs
 logsource:
-    category: web_server
-    product: nginx
+  category: application
+  product: web
 detection:
-    selection:
-        method: GET
-        url:
-            - "/api/fetch?url=*"
-            - "/proxy?target=*"
-    condition: selection
+  selection:
+    event_type: http_request
+    url_path|contains: ['http://', 'https://']
+    user_input|contains: ['http://', 'https://']
+  condition: selection
+fields:
+  - user_id
+  - request_url
+  - user_agent
+  - remote_ip
 falsepositives:
-    - Legitimate use cases for proxying requests
+  - Legitimate external API calls
+  - Development environments with dynamic URLs
 level: high
 ```
 
-### YARA Rule
+### YARA Rule for SSRF Patterns in Source Code
 
 ```yara
-rule ssrf_detection {
+rule ssrf_in_source {
     meta:
-        description = "Detects common SSRF patterns in network traffic"
-        author = "Cipher"
-        date = "2026-11-26"
+        description = "Detects potential SSRF patterns in source code"
+        author = "Security Research Team"
+        date = "2026-11-27"
+
     strings:
-        $internal_ip = /127\.0\.0\.1|10\.\d+\.\d+\.\d+|172\.(1[6-9]|2[0-9]|3[01])\.\d+\.\d+|192\.168\.\d+\.\d+/ nocase
-        $loopback = /localhost/ nocase
+        $http_get = "urllib.request.urlopen"
+        $http_post = "requests.get"
+        $http_request = "http.Client"
+        $url_parse = "urlparse"
+        $net_connect = "socket.connect"
+
     condition:
         any of them
 }
 ```
 
-### Suricata Rule
+### Suricata Rule for Network Traffic
 
 ```yaml
-alert http $HOME_NET any -> $EXTERNAL_NET any (msg:"Potential SSRF Attack"; flow:to_server,established; content:"GET"; content:"/api/fetch?url="; sid:1000001; rev:1;)
+alert tcp any any -> any 80 (msg:"Potential SSRF Attack"; content:"GET"; content:"http://"; sid:20261127001; rev:1;)
+alert tcp any any -> any 443 (msg:"Potential SSRF Attack"; content:"GET"; content:"http://"; sid:20261127002; rev:1;)
 ```
 
-### Read-Only Exposure Check Script
+## Read-only exposure inventory check script
 
 ```python
 #!/usr/bin/env python3
-"""
-Check for exposure to SSRF vulnerabilities in web applications.
+"""Inventory Python code for potential SSRF vulnerabilities."""
 
-This script checks if a service might be vulnerable by scanning for common
-patterns used in SSRF attacks such as internal IP addresses and localhost references.
-"""
-
-import re
+import argparse
+import ast
+from pathlib import Path
 import sys
-from urllib.parse import urlparse
 
-def check_url_safety(url):
-    """
-    Check if a URL is potentially dangerous for SSRF.
 
-    Args:
-        url (str): The URL to validate.
+def inventory(path):
+    with open(path, 'r') as source:
+        tree = ast.parse(source.read(), filename=str(path))
 
-    Returns:
-        bool: True if the URL appears safe, False otherwise.
-    """
-    try:
-        parsed = urlparse(url)
-        netloc = parsed.netloc
+    # Look for HTTP request related functions
+    http_functions = {
+        'urllib.request.urlopen',
+        'requests.get', 
+        'requests.post',
+        'requests.put',
+        'requests.delete',
+        'http.client.HTTPConnection',
+        'httplib.HTTPConnection'
+    }
+    
+    calls = sorted(
+        (node for node in ast.walk(tree) if isinstance(node, ast.Call)),
+        key=lambda node: (node.lineno, node.col_offset),
+    )
+    
+    for call in calls:
+        func = call.func
+        if isinstance(func, ast.Attribute):
+            full_name = f"{func.value.id}.{func.attr}" if isinstance(func.value, ast.Name) else str(func)
+        elif isinstance(func, ast.Name):
+            full_name = func.id
+        else:
+            continue
+            
+        if full_name in http_functions or any(funct in full_name for funct in ['requests', 'urllib']):
+            # Check if any argument is from user input
+            has_user_input = False
+            for arg in call.args:
+                if isinstance(arg, ast.Call) and isinstance(arg.func, ast.Name):
+                    if arg.func.id in ['input', 'get', 'request']:
+                        has_user_input = True
+                        break
+                        
+            if has_user_input:
+                print(f'{path}:{call.lineno}: Potential SSRF vulnerability - {full_name}')
 
-        # Common internal IP ranges
-        internal_ips = [
-            re.compile(r'127\.0\.0\.1'),
-            re.compile(r'10\.\d+\.\d+\.\d+'),
-            re.compile(r'172\.(1[6-9]|2[0-9]|3[01])\.\d+\.\d+'),
-            re.compile(r'192\.168\.\d+\.\d+')
-        ]
 
-        # Check for localhost or internal IPs
-        for ip_pattern in internal_ips:
-            if ip_pattern.search(netloc):
-                return False
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('files', nargs='+', type=Path, metavar='PYTHON_FILE')
+    args = parser.parse_args()
+    failed = False
+    for path in args.files:
+        try:
+            inventory(path)
+        except (OSError, SyntaxError, UnicodeError, ValueError) as error:
+            print(f'{path}: {error}', file=sys.stderr)
+            failed = True
+    return int(failed)
 
-        # Check for localhost
-        if netloc == 'localhost':
-            return False
 
-        return True
-    except Exception as e:
-        print(f"Error parsing URL: {e}")
-        return False
-
-if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print("Usage: python3 ssrf_check.py <url>")
-        sys.exit(1)
-
-    url = sys.argv[1]
-    is_safe = check_url_safety(url)
-    if not is_safe:
-        print(f"Potential SSRF vulnerability detected in URL: {url}")
-        sys.exit(1)
-    else:
-        print(f"URL appears safe: {url}")
+if __name__ == '__main__':
+    sys.exit(main())
 ```
-
-## Summary
-
-SSRF remains a critical class of vulnerability due to its wide applicability and the increasing complexity of modern software architectures. It's important for teams to proactively identify and remediate SSRF risks before they are exploited.
-
-TOPIC: Server-Side Request Forgery

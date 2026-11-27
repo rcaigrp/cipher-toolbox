@@ -1,54 +1,67 @@
 #!/usr/bin/env python3
-"""
-Check for exposure to XXE vulnerabilities in XML processing.
+"""Inventory Python code for potential XXE vulnerabilities."""
 
-This script checks if a system might be vulnerable by scanning for common
-XXE patterns that can lead to insecure XML parsing.
-"""
-
-import re
+import argparse
+import ast
+from pathlib import Path
 import sys
 
-def check_xxe_safety(xml_content):
-    """
-    Check if XML content contains XXE patterns.
 
-    Args:
-        xml_content (str): The XML content to validate.
+def inventory(path):
+    with open(path, 'r') as source:
+        tree = ast.parse(source.read(), filename=str(path))
 
-    Returns:
-        bool: True if the XML appears safe, False otherwise.
-    """
-    # Check for common XXE patterns
-    xxe_patterns = [
-        re.compile(r'<!ENTITY.*SYSTEM', re.IGNORECASE),
-        re.compile(r'<!ENTITY.*PUBLIC', re.IGNORECASE),
-        re.compile(r'file://\/etc\/passwd', re.IGNORECASE),
-        re.compile(r'http:\/\/', re.IGNORECASE)
-    ]
-
-    for pattern in xxe_patterns:
-        if pattern.search(xml_content):
-            return False
-
-    return True
-
-if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print("Usage: python3 xxe_check.py <xml_file>")
-        sys.exit(1)
-
-    xml_file = sys.argv[1]
-    try:
-        with open(xml_file, 'r') as f:
-            content = f.read()
-        
-        is_safe = check_xxe_safety(content)
-        if not is_safe:
-            print(f"Potential XXE vulnerability detected in XML file: {xml_file}")
-            sys.exit(1)
+    # Look for XML parsing related functions
+    xml_functions = {
+        'xml.etree.ElementTree.parse',
+        'xml.dom.minidom.parse',
+        'xml.sax.parse',
+        'lxml.etree.parse',
+        'xml.parsers.expat.ParserCreate'
+    }
+    
+    calls = sorted(
+        (node for node in ast.walk(tree) if isinstance(node, ast.Call)),
+        key=lambda node: (node.lineno, node.col_offset),
+    )
+    
+    vulnerabilities = []
+    
+    for call in calls:
+        func = call.func
+        if isinstance(func, ast.Attribute):
+            full_name = f"{func.value.id}.{func.attr}" if isinstance(func.value, ast.Name) else str(func)
+        elif isinstance(func, ast.Name):
+            full_name = func.id
         else:
-            print(f"XML file appears safe: {xml_file}")
-    except Exception as e:
-        print(f"Error reading XML file: {e}")
-        sys.exit(1)
+            continue
+            
+        # If this is an XML parsing call, check for potential XXE issues
+        if full_name in xml_functions:
+            vulnerabilities.append((call.lineno, full_name))
+    
+    for lineno, func_name in vulnerabilities:
+        print(f"Potential XXE vulnerability: {func_name} call at line {lineno}")
+    
+    return len(vulnerabilities)
+
+
+def main():
+    parser = argparse.ArgumentParser(description='Check Python files for potential XXE vulnerabilities')
+    parser.add_argument('python_files', nargs='+', help='Python source files to check')
+    args = parser.parse_args()
+    
+    total_vulns = 0
+    for file_path in args.python_files:
+        try:
+            vulns = inventory(file_path)
+            total_vulns += vulns
+        except Exception as e:
+            print(f"Error processing {file_path}: {e}", file=sys.stderr)
+            return 1
+    
+    return 0 if total_vulns == 0 else 1
+
+
+if __name__ == '__main__':
+    sys.exit(main())

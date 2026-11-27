@@ -1,19 +1,29 @@
-title: XML External Entity (XXE) Attack Attempt
-id: 87654321-4321-4321-4321-876543210987
-status: stable
-description: Detects potential XXE attempts via XML data containing external entity references.
-author: Cipher
-date: 2026/11/26
+title: "XXE Detection Rule"
+id: "xxe-detection-rule"
+status: "experimental"
+description: |
+  Detects potential XXE vulnerabilities by looking for XML parsing patterns that might allow external entity resolution.
+tags:
+  - xml
+  - security
+  - vulnerability
+  - detection
 logsource:
-    category: web_server
-    product: nginx
+  category: application
+  product: xml_parser
 detection:
-    selection:
-        method: POST
-        url:
-            - "/api/xml"
-            - "/import/xml"
-    condition: selection
-falsepositives:
-    - Legitimate XML processing with external entities
-level: high
+  selection:
+    # Look for patterns that indicate XML parsing with potential XXE issues
+    - 'xml.*parse'
+    - 'SAXParser'
+    - 'DOMParser'
+    - 'XMLReader'
+    - 'external.*entity'
+  condition: selection
+fields:
+  - user
+  - process
+  - message
+false_positives:
+  - Legitimate XML processing that doesn't involve external entities
+level: medium

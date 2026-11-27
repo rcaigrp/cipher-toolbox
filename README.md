@@ -81,13 +81,13 @@ Zero-day / negative-day thinking: where the next bug of a known class is likely,
 - [**Remote Code Execution (RCE) Class Analysis Kit**](kits/class-rce): This kit provides analysis and detection resources for the Remote Code Execution vulnerability pattern.
 - [**ReDoS defense kit**](kits/class-rl): `FORESIGHT.md` documents the vulnerability class, review targets, early warning signs, hardening, and two Splunk hunts.
 - [**Shell Injection Class Kit**](kits/class-shell-injection): This kit provides defensive resources for identifying and mitigating shell injection vulnerabilities.
-- [**SSRF Defense Kit**](kits/class-ssrf): This kit provides tools and guidance to defend against Server-Side Request Forgery (SSRF) vulnerabilities.
+- [**Server-Side Request Forgery (SSRF) defense kit**](kits/class-ssrf): `FORESIGHT.md` documents the vulnerability class, review targets, early warning signs, hardening, and two Splunk hunts.
 - [**Stack Overflow Class: A Persistent Threat in Parsing and Processing**](kits/class-stack-overflow): The stack overflow vulnerability class has emerged as a significant threat, particularly in parsing libraries and data processing systems.
 - [**Template Injection Flaws in Web Applications**](kits/class-template-injection): Template injection vulnerabilities occur when user input is directly embedded into templates without proper sanitization or escaping.
 - [**Class-Unauth-RCE-Installer Kit**](kits/class-unauth-rce-installer): This kit detects potential installer scripts that could lead to unauthenticated remote code execution vulnerabilities.
 - [**.NET untrusted deserialization exposure review**](kits/class-untrusted-deserialization): Run `./check_exposure.sh --help` for usage. Run `./check_exposure.sh /path/to/project` to scan local files, or omit the directory to scan the current directory. The checker requires Bash, `find`, `grep`, and `strings`.
 - [**class-untrusted-nuget**](kits/class-untrusted-nuget)
-- [**XXE - XML External Entity**](kits/class-xxe): This kit provides detection rules and a check script for identifying exposure to XXE vulnerabilities.
+- [**XML External Entity (XXE) defense kit**](kits/class-xxe): `FORESIGHT.md` documents the vulnerability class, review targets, early warning signs, hardening, and two Splunk hunts.
 
 ## 🔧 Tools it built
 
