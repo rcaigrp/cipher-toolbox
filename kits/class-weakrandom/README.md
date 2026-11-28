@@ -12,14 +12,14 @@ This kit contains detection rules, a check script, and analysis for the weak ran
 
 ### Check for Weak RNG Exposure
 
-Run the check script on binaries or libraries:
-```bash
-./check_weak_rng.sh <binary_or_library>
-```
-
-Or use the Python version to analyze source code:
+Run the check script on source files:
 ```bash
 python3 check_weak_random.py <source_file>
+```
+
+Or use the shell version to analyze binaries or libraries:
+```bash
+./check_weak_rng.sh <binary_or_library>
 ```
 
 ### Detection Rules
