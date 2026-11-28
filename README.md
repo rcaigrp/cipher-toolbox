@@ -104,6 +104,7 @@ Reusable defensive tools.
 - [**CISA NVD Checker**](toolbox/cisa-nvd-checker): Triage software inventory against local NVD CVE 2.0 JSON snapshots and flag findings listed in a local CISA Known Exploited Vulnerabilities (KEV) snapshot.
 - [**CVE Sweep**](toolbox/cve-sweep): Cross-reference software inventory with local NVD CVE data and flag results listed in the CISA Known Exploited Vulnerabilities catalog. The tool reads three local JSON files and prints findings to stdout.
 - [**CVE to Detection Rules Generator**](toolbox/cve-to-detection): Generate Sigma YAML rules and YARA rules from analyst-supplied indicators in a local JSON file. The CVE identifier is used as metadata. The tool does not fetch CVE feeds.
+- [**CVE to Sigma Rule Generator**](toolbox/cve-to-sigma): This tool converts CVE information into Sigma rules for threat detection. It helps security teams quickly create detection rules based on known vulnerabilities.
 - [**File Parsing Tools**](toolbox/file-parsing-tools): Three read-only checks for local files before they reach a parser. Requires Python 3 on Linux and uses only the standard library. No installation is needed. Run these examples from the repository root.
 - [**IOC Hash Sweep**](toolbox/ioc-hash-sweep): This tool scans a local directory recursively for files whose SHA-256 hashes match a provided list of indicators of compromise (IOCs).
 - [**KEV-NVD Checker**](toolbox/kev-nvd-checker): Triage a local software inventory using the CISA Known Exploited Vulnerabilities (KEV) catalog and NVD 2.0 applicability data.
