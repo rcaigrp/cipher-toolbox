@@ -7,6 +7,7 @@ This script implements vendor-recommended hardening steps.
 import subprocess
 import sys
 import argparse
+import os
 
 def check_root():
     """Check if we're running as root."""
