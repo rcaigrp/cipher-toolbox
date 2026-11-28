@@ -44,37 +44,44 @@ def is_jailbreak_ai(prompt, llm_url=DEFAULT_LLM_URL):
                 "model": "detect-jailbreak",
                 "messages": [
                     {"role": "system", "content": "You are a helpful assistant that detects jailbreak attempts in prompts."},
-                    {"role": "user", "content": f"Is the following prompt a jailbreak attempt? Respond with only 'yes' or 'no'. Prompt: {prompt}"}
+                    {"role": "user", "content": f"Is the following prompt a jailbreak attempt? Respond with 'JAILBREAK' or 'SAFE'. Prompt: {prompt}"}
                 ],
-                "max_tokens": 5
+                "temperature": 0.0
             },
-            timeout=10
+            timeout=5
         )
-        if response.status_code == 200:
-            result = response.json()["choices"][0]["message"]["content"].strip().lower()
-            return result == "yes"
+        response.raise_for_status()
+        result = response.json()
+        # Extract the response text from the model
+        if 'choices' in result and len(result['choices']) > 0:
+            reply = result['choices'][0]['message']['content'].strip().upper()
+            return 'JAILBREAK' in reply
+        else:
+            return False
     except Exception as e:
-        print(f"Warning: AI detection failed due to error: {e}")
+        print(f"Warning: AI detection failed due to error: {e}", file=sys.stderr)
         return False
-    return False
 
-def detect_jailbreak(prompt, llm_url=DEFAULT_LLM_URL):
+def is_jailbreak(prompt, llm_url=DEFAULT_LLM_URL):
     """Main function to detect jailbreak attempts."""
-    # Rule-based check first
+    # First check rule-based patterns
     if is_jailbreak_rule_based(prompt):
         return True
     
-    # AI-based check as fallback
-    return is_jailbreak_ai(prompt, llm_url)
+    # Then try AI-based detection as fallback
+    if is_jailbreak_ai(prompt, llm_url):
+        return True
+    
+    return False
 
 def main():
     parser = argparse.ArgumentParser(description="Detect potential LLM jailbreak attempts.")
-    parser.add_argument("--prompt", type=str, required=True, help="Prompt to analyze")
-    parser.add_argument("--llm-url", type=str, default=DEFAULT_LLM_URL, help="LLM endpoint URL")
-
+    parser.add_argument("--prompt", required=True, help="Prompt to analyze")
+    parser.add_argument("--llm-url", default=DEFAULT_LLM_URL, help="LLM endpoint URL")
+    
     args = parser.parse_args()
-
-    if detect_jailbreak(args.prompt, args.llm_url):
+    
+    if is_jailbreak(args.prompt, args.llm_url):
         print("JAILBREAK DETECTED")
         sys.exit(1)
     else:
