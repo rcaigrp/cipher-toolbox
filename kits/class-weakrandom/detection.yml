@@ -1,28 +1,17 @@
-title: "Weak Random Number Generation Detection"
-id: "weak_rng_detection"
-status: "experimental"
-description: |
-  Detects patterns indicative of weak random number generation usage.
+title: Use of Insecure Random Number Generation
+id: 12345678-1234-1234-1234-123456789012
+status: experimental
+author: Cipher
+date: 2026/11/28
 logsource:
-  category: "application"
-  product: "generic"
+    category: application
+    product: python
 detection:
-  selection:
-    # Look for common insecure random function calls
-    - 'random.randint'
-    - 'random.random'
-    - 'random.randrange'
-    - 'random.choice'
-    - 'random.shuffle'
-    - 'rand()'
-    - 'srand()'
-    - 'randomize()'
-    - 'time()'
-  condition: selection
+    selection:
+        useragent|contains:
+            - 'random.randint'
+            - 'rand()'
+    condition: selection
 fields:
-  - user
-  - process_name
-  - message
-falsepositives:
-  - Legitimate use of random for non-security purposes
-level: "medium"
+    - useragent
+level: high

@@ -1,29 +1,21 @@
 {
   "query": {
     "bool": {
-      "should": [
+      "must": [
         {
           "match": {
-            "message": "random.randint"
+            "event.category": "application"
           }
         },
         {
-          "match": {
-            "message": "random.random"
-          }
-        },
-        {
-          "match": {
-            "message": "rand()"
-          }
-        },
-        {
-          "match": {
-            "message": "srand()"
+          "terms": {
+            "useragent": [
+              "random.randint",
+              "rand()"
+            ]
           }
         }
-      ],
-      "minimum_should_match": 1
+      ]
     }
   }
 }
