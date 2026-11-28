@@ -1,22 +1,22 @@
-title: Weak Random Number Usage in Code
-id: 12345678-90ab-cdef-1234-567890abcdef
+title: Weak Random Number Generation Usage
+id: 12345678-1234-1234-1234-123456789012
 status: experimental
 author: Cipher
-date: 2026-11-27
+date: 2026/11/27
 logsource:
-    category: process_creation
-    product: linux
+    category: application
+    product: any
 detection:
     selection:
-        Image|endswith: '.py'
-        CommandLine|contains:
-            - 'random.'
-            - 'rand()'
-            - 'srand'
+        # This is a placeholder - real detection would require specific patterns
+        # from system calls, library usage, or logs showing weak RNG usage
+        - 'rand('
+        - 'random()'
+        - 'srand('
     condition: selection
 fields:
-    - Image
-    - CommandLine
+    - process_name
+    - command_line
 falsepositives:
-    - Legitimate uses of random in non-security code paths
-level: high
+    - Legitimate use of non-cryptographic PRNG for simulation or testing
+level: medium

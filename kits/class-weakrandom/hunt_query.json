@@ -1,0 +1,22 @@
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "match": {
+            "event.category": "application"
+          }
+        },
+        {
+          "terms": {
+            "message": [
+              "rand(",
+              "random(",
+              "srand("
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

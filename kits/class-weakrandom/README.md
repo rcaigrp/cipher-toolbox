@@ -1,42 +1,33 @@
-# Weak Random Number Generation Checker
+# Weak Random Number Generation (Weak RNG) - Security Kit
 
-This tool checks Python source code for weak random number generation patterns that could lead to security vulnerabilities.
+This kit contains detection rules, a check script, and analysis for the weak random number generation vulnerability class.
+
+## Files
+
+- `FORESIGHT.md`: Detailed analysis of the pattern, why more of it is coming, and what to do now
+- `check_weak_rng.sh`: Read-only exposure check script for weak RNG usage
+- `check_weak_random.py`: Python-based check for weak random patterns in code
 
 ## Usage
 
+### Check for Weak RNG Exposure
+
+Run the check script on binaries or libraries:
 ```bash
-python3 check_weak_random.py [FILE]
+./check_weak_rng.sh <binary_or_library>
 ```
 
-Checks FILE for weak random number generation patterns.
-If no FILE is provided, checks stdin or shows this help.
-
-## Detection Patterns
-
-The tool looks for these insecure patterns:
-- `random.randint()`
-- `random.random()` 
-- `random.choice()`
-- `rand()`
-- `srand()`
-
-## Example
-
+Or use the Python version to analyze source code:
 ```bash
-# Check a file
-python3 check_weak_random.py my_script.py
-
-# Check from stdin
-cat my_script.py | python3 check_weak_random.py
+python3 check_weak_random.py <source_file>
 ```
 
-## Security Recommendation
+### Detection Rules
 
-Replace insecure random usage with the `secrets` module for cryptographically secure randomness:
+- Sigma rule: `weak_rng_usage.yml` - Detects insecure RNG function calls
+- YARA rule: `weak_rng_usage.yar` - Detects weak RNG usage in binaries
+- Hunt query: `hunt_query.json` - Elasticsearch query to find weak RNG patterns
 
-```python
-import secrets
+## Analysis
 
-# Instead of: import random; random.randint(1, 10)
-# Use:    import secrets; secrets.randbelow(10) + 1
-```
+This kit focuses on the vulnerability class of weak random number generation, where applications use predictable or insufficiently random number generators for security-sensitive operations. This pattern has been observed in various systems including web frameworks, mobile apps, and embedded systems.
