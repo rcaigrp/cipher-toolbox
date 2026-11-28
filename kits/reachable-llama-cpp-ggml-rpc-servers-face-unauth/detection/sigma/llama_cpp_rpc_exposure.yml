@@ -1,0 +1,25 @@
+title: llama.cpp RPC Server Exposure
+id: 12345678-1234-5678-1234-567812345678
+status: experimental
+description: Detects potential exposure of llama.cpp RPC servers on network interfaces
+author: Cipher
+date: 2026/11/27
+logsource:
+    category: network_connection
+    product: firewall
+detection:
+    selection:
+        destination_port: 50052
+        destination_ip: [ '0.0.0.0', '127.0.0.0/8' ]
+    condition: selection
+fields:
+    - destination_ip
+    - destination_port
+    - source_ip
+    - protocol
+tags:
+    - attack.t1190  # Proxy
+    - cve.2026.137567
+falsepositives:
+    - Legitimate internal RPC services
+level: high

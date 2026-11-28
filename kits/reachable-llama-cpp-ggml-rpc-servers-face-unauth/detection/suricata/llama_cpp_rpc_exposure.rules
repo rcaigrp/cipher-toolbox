@@ -1,0 +1,1 @@
+alert tcp any any -> any 50052 (msg:"Potential llama.cpp RPC Server Exposure"; sid:2026137567; rev:1; classtype:policy-violation;)
