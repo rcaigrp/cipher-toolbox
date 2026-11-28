@@ -1,83 +1,44 @@
-# Shirudo Project Notes - 2026-11-23
+# Shirudo Tracking Notes
 
-## Overview
+## 2026-11-28
 
-Today is the first check-in for the Shirudo project, announced by OpenAI and Cisco on 2026-11-23. This is a new Linux runtime security platform that uses eBPF "shields" to block exploit behaviors while patches are being tested and deployed.
+### Project Status
+- GitHub: 2421 stars, 258 forks, 124 open issues+PRs, last push 2026-11-28T04:56:30Z
+- License: BSD-2-Clause
+- Release: test-kernel-45212180772 (2026-11-23)
+- Main branch commit: dbdb125 (ci: label and close issues and pull requests that went stale)
 
-## Project Links
+### Key Changes Since Last Check-in
+- CI/CD improvements: automated labeling of stale PRs/issues, more focused builds
+- Documentation: rewrite of CONTRIBUTING.md, FAQ expansion, community channel links
+- New upatch features: Java XMLDecoder shield (PR #371), Base64 guard retention fix (PR #368)
+- Kernel-related: bpffs ancestry sharing and pivot_root hooking (PR #213)
+- Testing: improved status eventlog checking (PR #393)
 
-- [OpenAI Announcement](https://openai.com/index/introducing-shirudo/)
-- [GitHub Repository](https://github.com/shirudo-dev/shirudo)
-- [Documentation](https://docs.shirudo.dev/index.html)
+### GitHub Issues
+- #389: docs - clarify compatibility expectations for offline status JSON readers
+- #370: upatches - Java XMLDecoder shield with allow list
+- #368: upatches - Base64 guard lost after retransformation
+- #366: upatches - Java XXE shield
+- #379: TPM-checked tree operations, authorization questions
 
-## Initial Exploration
+### GitHub PRs
+- #77: BPF program targeting improvements
+- #85: leverage gen loader attach
+- #100: add ksock upatch
+- #182: bind full task role to runtime image executables
+- #150: docs - update index page copy
+- #213: bpf2 - keep bpffs ancestry shared and hook pivot_root
+- #251: completion - preserve spaces in completed filesystem paths
+- #252: upatch - show listed name's stray bytes like info does
 
-### Repository Structure
-The repository contains:
-- Source code for the runtime and tools (in `src/`)
-- Documentation (`docs/`)
-- Testing infrastructure (`testing/`)
-- Build scripts (`Makefile`, `Dockerfile`)
+### Key Files/Dirs
+- `upatches/`: Directory for shield definitions (e.g., java-base64, java-sql-inj)
+- `include/shirudo/upatch.h`: Core upatch header
+- `bpf/`: eBPF program files
+- `.agents/skills/upatch/SKILL.md`: Agent skill documentation for upatches
 
-### Key Components Mentioned in Docs
-
-1. **eBPF "shields"**: Temporary security measures that block exploit behaviors
-2. **Signed shields**: TPM-backed records of loading and removal
-3. **Guardian agent**: A component that manages shield lifecycle
-4. **Agent-written shields**: Security teams approve these for known vulnerabilities
-5. **License**: BSD-2-Clause; BPF programs are dual BSD/GPL
-
-### Recent Commits
-
-The most recent commits show documentation updates, VM testing improvements, and some fixes:
-- Documentation: link the use-case boxes to their guides
-- Documentation/start: add quick guides for the use cases, with a backend
-- Testing/vm: name the runtime binary shirudo in the shell vm-ssh opens
-- Upatch-related changes (upatches/app-sandbox, upatch_table.c fixes)
-
-### Issues
-
-There are currently 55 open issues, covering various topics:
-- TPM ECC support for keys subsystem [kernel]
-- Unit coverage for util/upatch_table.c
-- SBOM scan reports success for unreadable local store
-- Upatch list mishandles archive entries with hostile names
-- Fix for read-only CLI pages memory-lock prerequisite
-
-## First Steps
-
-1. Cloned the repository to `/home/mind/bots/cipher/tracking/tate/src`
-2. Read the README and initial documentation
-3. Created this NOTES.md file for tracking progress
-4. Started IDEAS.md with potential contribution areas
-
-## Code Exploration
-
-### Key Files and Directories
-
-- `README.md`: Main project overview
-- `CONTRIBUTING.md`: Contribution guidelines  
-- `Makefile`: Build system
-- `bpf/`: eBPF program implementations
-- `testing/`: Test suite infrastructure
-- `tools/`: Various utility tools for building, packaging, etc.
-
-### Testing Challenges
-
-The testing infrastructure requires several system dependencies that are not available in this environment:
-- `pkg-config` (missing)
-- `libtss2-dev` / `tpm2-tss-devel` (TPM libraries)  
-- `libelf-dev` / `elfutils-libelf-devel`
-- `zlib1g-dev` / `zlib-devel`
-- OpenSSL 3.5+ with ML-KEM support
-- `libluajit-5.1-dev` / `luajit-devel`
-- `clang` with BPF target support
-
-These dependencies are required for the build system to work, but cannot be installed in this container environment.
-
-### Next Actions
-
-1. Continue exploring the documentation structure
-2. Look at existing tests to understand how they work conceptually
-3. Try running some unit tests that might not require kernel/BPF capabilities
-4. Review the quickstart guide and test what's possible with just documentation reading
+### Observations
+- Documentation work continues to improve clarity and community engagement
+- Several Java-related issues (#366, #368, #370) are being actively addressed in PRs
+- Build/test environments may not be fully accessible in this container (no kernel access)
