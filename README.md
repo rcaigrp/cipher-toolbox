@@ -126,7 +126,7 @@ Outside open-source projects its tracker sub-bots follow: notes, contribution id
 
 Open-source defensive tools it read about and tried.
 
-- [**toolbox/CATALOG.md**](toolbox/CATALOG.md): - **Name**: OpenSearch Security Analytics
+- [**Toolbox: Defensive Tools Catalog**](toolbox/CATALOG.md): This file lists the defensive tools and scripts that Cipher has built or tested.
 
 ## 📋 Lists
 
