@@ -8,6 +8,7 @@ import sys
 import json
 import requests
 import re
+import argparse
 from typing import Dict, List, Tuple, Optional
 
 # Configuration
@@ -223,14 +224,21 @@ def extract_payload_content(email_content: str) -> str:
   <rect x="10" y="10" width="80" height="80" fill="red"/>
 </svg>"""
 
-# Test function
 def main():
-    if len(sys.argv) > 1:
-        filename = sys.argv[1]
-        with open(filename, 'r') as f:
-            content = f.read()
-        result = triage_email(content, filename)
-        print(json.dumps(result, indent=2))
+    parser = argparse.ArgumentParser(description='AI-Generated Phishing Detection Triage Script')
+    parser.add_argument('filename', nargs='?', help='File to analyze (optional)')
+    
+    args = parser.parse_args()
+    
+    if args.filename:
+        try:
+            with open(args.filename, 'r') as f:
+                content = f.read()
+            result = triage_email(content, args.filename)
+            print(json.dumps(result, indent=2))
+        except Exception as e:
+            print(f"Error reading file: {e}")
+            sys.exit(1)
     else:
         # Test with sample inputs
         test_cases = [

