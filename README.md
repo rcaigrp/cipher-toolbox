@@ -92,7 +92,7 @@ Zero-day / negative-day thinking: where the next bug of a known class is likely,
 - [**Class-Unauth-RCE-Installer Kit**](kits/class-unauth-rce-installer): This kit detects potential installer scripts that could lead to unauthenticated remote code execution vulnerabilities.
 - [**.NET untrusted deserialization exposure review**](kits/class-untrusted-deserialization): Run `./check_exposure.sh --help` for usage. Run `./check_exposure.sh /path/to/project` to scan local files, or omit the directory to scan the current directory. The checker requires Bash, `find`, `grep`, and `strings`.
 - [**class-untrusted-nuget**](kits/class-untrusted-nuget)
-- [**Weak Random Number Generation Detection Kit**](kits/class-weak-randomness): This kit provides tools and guidance for detecting weak random number generation vulnerabilities in systems.
+- [**Class Weak Randomness Detector**](kits/class-weak-randomness): This tool detects weak random number generation patterns in code, particularly focusing on insecure randomness functions that should be replaced with secure alternatives.
 - [**Weak Random Number Generation Checker**](kits/class-weakrandom): This tool checks Python source code for weak random number generation patterns that could lead to security vulnerabilities.
 - [**XML External Entity (XXE) defense kit**](kits/class-xxe): `FORESIGHT.md` documents the vulnerability class, review targets, early warning signs, hardening, and two Splunk hunts.
 
