@@ -1,53 +1,80 @@
 #!/usr/bin/env python3
+"""
+Check for weak random number generation in Python code.
+This script identifies potential uses of insecure random functions.
+"""
 
-import re
+import ast
 import sys
-import argparse
+import re
 
-def check_weak_random_usage(file_path):
-    """Check for weak random number usage in a file."""
-    # Patterns that detect weak random number generation functions
-    weak_patterns = [
-        r'\b(rand|random|srand|getrandom)\s*\(\s*\)',
-        r'\brandom\s*\.\s*(randint|random|uniform)\b',
-        r'\bMath\s*\.\s*(random)\b'
-    ]
+# List of insecure random functions that should be avoided
+INSECURE_RANDOM_FUNCTIONS = {
+    'random.random',
+    'random.randint',
+    'random.randrange',
+    'random.choice',
+    'random.shuffle',
+    'random.sample',
+    'random.uniform'
+}
 
+# List of secure alternatives
+SECURE_RANDOM_FUNCTIONS = {
+    'secrets.token_hex',
+    'secrets.token_urlsafe',
+    'secrets.randbelow',
+    'os.urandom'
+}
+
+class WeakRandomChecker(ast.NodeVisitor):
+    def __init__(self):
+        self.weak_random_calls = []
+        self.secure_random_calls = []
+        
+    def visit_Call(self, node):
+        if isinstance(node.func, ast.Attribute):
+            func_name = f"{node.func.value.id}.{node.func.attr}"
+            if func_name in INSECURE_RANDOM_FUNCTIONS:
+                self.weak_random_calls.append((func_name, node.lineno))
+            elif func_name in SECURE_RANDOM_FUNCTIONS:
+                self.secure_random_calls.append((func_name, node.lineno))
+        elif isinstance(node.func, ast.Name):
+            func_name = node.func.id
+            if func_name in INSECURE_RANDOM_FUNCTIONS:
+                self.weak_random_calls.append((func_name, node.lineno))
+            elif func_name in SECURE_RANDOM_FUNCTIONS:
+                self.secure_random_calls.append((func_name, node.lineno))
+        
+        self.generic_visit(node)
+
+def check_file(filename):
+    with open(filename, 'r') as f:
+        content = f.read()
+    
     try:
-        with open(file_path, 'r') as f:
-            content = f.read()
-    except FileNotFoundError:
-        print(f"Error: File '{file_path}' not found.")
-        sys.exit(1)
-    except Exception as e:
-        print(f"Error reading file '{file_path}': {e}")
-        sys.exit(1)
-
-    found_issues = []
-    for pattern in weak_patterns:
-        matches = re.finditer(pattern, content, re.IGNORECASE)
-        for match in matches:
-            line_num = content[:match.start()].count('\n') + 1
-            found_issues.append(f"Line {line_num}: Found potential weak random usage: {match.group()}")
-
-    return found_issues
-
-def main():
-    parser = argparse.ArgumentParser(
-        description="Check for weak random number generation usage in source code",
-        prog="check_weak_random.py"
-    )
-    parser.add_argument("file_path", help="Path to the source file to check")
+        tree = ast.parse(content)
+    except SyntaxError as e:
+        print(f"Syntax error in {filename}: {e}")
+        return
     
-    args = parser.parse_args()
+    checker = WeakRandomChecker()
+    checker.visit(tree)
     
-    issues = check_weak_random_usage(args.file_path)
-    if issues:
-        for issue in issues:
-            print(issue)
-        sys.exit(1)
-    else:
-        print("No weak random usage detected.")
+    if checker.weak_random_calls:
+        print(f"Weak random usage found in {filename}:")
+        for func_name, line_num in checker.weak_random_calls:
+            print(f"  Line {line_num}: {func_name}")
+    
+    if checker.secure_random_calls:
+        print(f"Secure random usage found in {filename}:")
+        for func_name, line_num in checker.secure_random_calls:
+            print(f"  Line {line_num}: {func_name}")
 
 if __name__ == "__main__":
-    main()
+    if len(sys.argv) != 2:
+        print("Usage: python3 check_weak_random.py <python_file>")
+        sys.exit(1)
+    
+    filename = sys.argv[1]
+    check_file(filename)

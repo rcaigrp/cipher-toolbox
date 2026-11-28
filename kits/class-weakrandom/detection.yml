@@ -1,22 +1,28 @@
-title: Weak Random Number Generation Usage
-id: 12345678-1234-1234-1234-123456789012
-status: experimental
-author: Cipher
-date: 2026/11/27
+title: "Weak Random Number Generation Detection"
+id: "weak_rng_detection"
+status: "experimental"
+description: |
+  Detects patterns indicative of weak random number generation usage.
 logsource:
-    category: application
-    product: any
+  category: "application"
+  product: "generic"
 detection:
-    selection:
-        # This is a placeholder - real detection would require specific patterns
-        # from system calls, library usage, or logs showing weak RNG usage
-        - 'rand('
-        - 'random()'
-        - 'srand('
-    condition: selection
+  selection:
+    # Look for common insecure random function calls
+    - 'random.randint'
+    - 'random.random'
+    - 'random.randrange'
+    - 'random.choice'
+    - 'random.shuffle'
+    - 'rand()'
+    - 'srand()'
+    - 'randomize()'
+    - 'time()'
+  condition: selection
 fields:
-    - process_name
-    - command_line
+  - user
+  - process_name
+  - message
 falsepositives:
-    - Legitimate use of non-cryptographic PRNG for simulation or testing
-level: medium
+  - Legitimate use of random for non-security purposes
+level: "medium"

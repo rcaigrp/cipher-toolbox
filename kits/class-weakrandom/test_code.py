@@ -1,11 +1,10 @@
 import random
+import secrets
 
-def test_function():
-    # This should be detected as weak random usage
-    x = random.random()
-    y = random.randint(1, 10)
-    
-    # This should also be detected
-    z = rand()
-    
-    return x, y, z
+# This should trigger a warning
+def insecure_random():
+    return random.randint(1, 100)
+
+# This should be fine
+def secure_random():
+    return secrets.token_hex(16)

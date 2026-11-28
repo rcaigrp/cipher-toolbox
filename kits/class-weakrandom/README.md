@@ -1,33 +1,30 @@
-# Weak Random Number Generation (Weak RNG) - Security Kit
+# Weak Random Number Generation (Weak RNG) Detection Kit
 
-This kit contains detection rules, a check script, and analysis for the weak random number generation vulnerability class.
+This kit provides detection and mitigation tools for weak random number generation vulnerabilities.
 
-## Files
+## Contents
 
-- `FORESIGHT.md`: Detailed analysis of the pattern, why more of it is coming, and what to do now
-- `check_weak_rng.sh`: Read-only exposure check script for weak RNG usage
-- `check_weak_random.py`: Python-based check for weak random patterns in code
+- `FORESIGHT.md`: Analysis of the pattern and early warning signs
+- `check_weak_random.py`: Python script to check for weak RNG usage in code
+- `check_weak_rng.sh`: Bash script to check for weak RNG usage in binaries/libraries
+- `detection.yml`: Sigma rule for detecting weak RNG patterns
+- `hunt_query.json`: Elasticsearch query for hunting weak RNG usage
+- `weak_rng_usage.yar`: YARA rule for detecting weak RNG usage
 
 ## Usage
 
-### Check for Weak RNG Exposure
+### Check Exposure
 
-Run the check script on source files:
-```bash
-python3 check_weak_random.py <source_file>
-```
+Run the check scripts to identify potential weak RNG usage in your systems:
 
-Or use the shell version to analyze binaries or libraries:
 ```bash
+# For binaries/libraries
 ./check_weak_rng.sh <binary_or_library>
+
+# For Python code
+python3 check_weak_random.py <source_file>
 ```
 
 ### Detection Rules
 
-- Sigma rule: `weak_rng_usage.yml` - Detects insecure RNG function calls
-- YARA rule: `weak_rng_usage.yar` - Detects weak RNG usage in binaries
-- Hunt query: `hunt_query.json` - Elasticsearch query to find weak RNG patterns
-
-## Analysis
-
-This kit focuses on the vulnerability class of weak random number generation, where applications use predictable or insufficiently random number generators for security-sensitive operations. This pattern has been observed in various systems including web frameworks, mobile apps, and embedded systems.
+Use the Sigma, YARA, and Elasticsearch rules for monitoring and alerting on weak RNG usage.

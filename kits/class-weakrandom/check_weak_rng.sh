@@ -1,36 +1,50 @@
 #!/bin/bash
 
-# This script checks for weak random number generation in binaries and libraries
-# It's designed to be run on your own computer (not a target system)
-# Usage: ./check_weak_rng.sh <binary_or_library>
+# Check for weak random number generation in binaries and libraries
+# This script uses readelf and strings to identify potential weak RNG usage
 
 if [ $# -eq 0 ]; then
     echo "Usage: $0 <binary_or_library>"
     exit 1
 fi
 
-TARGET="$1"
+BINARY="$1"
 
-echo "Checking for weak random number generation in: $TARGET"
-echo "========================================================"
-
-# Check for common insecure RNG function calls
-echo "1. Checking for insecure RNG calls:"
-strings "$TARGET" | grep -E "(rand|random|srand)" | sort -u
-
-# Check for usage of /dev/random instead of /dev/urandom (which is often problematic)
-echo -e "\n2. Checking for device random access:"
-if [ -e "$TARGET" ]; then
-    ldd "$TARGET" 2>/dev/null | grep -v "not a dynamic executable" | grep -E "(lib.*random|lib.*crypto)" || echo "No crypto libraries found"
+# Check if file exists
+if [ ! -f "$BINARY" ]; then
+    echo "Error: File '$BINARY' not found"
+    exit 1
 fi
 
-# Check for common weak RNG patterns in source code (if available)
-echo -e "\n3. Checking for common weak RNG usage patterns in source:"
-find "$TARGET" -name "*.c" -o -name "*.cpp" -o -name "*.h" 2>/dev/null | head -5 | while read file; do
-    if [ -f "$file" ]; then
-        echo "Source file: $file"
-        grep -n -E "(rand\(|srand\(|random\()" "$file" 2>/dev/null || echo "No insecure RNG found in this file"
+echo "Checking $BINARY for weak random number generation patterns..."
+
+# Look for common weak RNG function names in the binary
+WEAK_FUNCTIONS=("rand" "random" "srand" "randomize")
+
+FOUND_WEAK=false
+
+for func in "${WEAK_FUNCTIONS[@]}"; do
+    if strings "$BINARY" | grep -q -i "$func"; then
+        echo "Found potential weak RNG reference: $func"
+        FOUND_WEAK=true
     fi
 done
 
-echo -e "\nCheck complete. Review the results to identify potential weak RNG usage."
+# Check for specific libc functions that might be used insecurely
+if strings "$BINARY" | grep -q "libc.*rand\|libm.*random"; then
+    echo "Found references to standard library random functions"
+    FOUND_WEAK=true
+fi
+
+# Check for common entropy sources that are often weak
+ENTROPY_SOURCES=("time()" "getpid()" "clock()")
+for source in "${ENTROPY_SOURCES[@]}"; do
+    if strings "$BINARY" | grep -q "$source"; then
+        echo "Found potential weak entropy source: $source"
+        FOUND_WEAK=true
+    fi
+done
+
+if [ "$FOUND_WEAK" = false ]; then
+    echo "No obvious weak random patterns detected"
+fi
