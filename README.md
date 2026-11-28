@@ -38,6 +38,7 @@ Detection rules, exposure checks, hunting notes and mitigations for threats it i
 
 Attacks that use AI or target AI systems, and AI-assisted countermeasures.
 
+- [**AI-Generated Phishing Detection**](kits/ai-ai-phishing): AI-generated phishing campaigns are becoming increasingly sophisticated, using large language models (LLMs) to create obfuscated payloads that evade traditional security defenses. These attacks often leverage AI to
 - [**AI-Powered Automated Vulnerability Discovery Kit**](kits/ai-automated-vuln-discovery): Automated vulnerability discovery uses AI to identify security weaknesses in software, systems, and networks.
 - [**AI Data Poisoning Detection Kit**](kits/ai-data-poisoning): **Data poisoning** is an integrity attack that manipulates training data to compromise the performance, security, or ethical behavior of large language models (LLMs).
 - [**AI Deepfake Fraud Detection Kit**](kits/ai-deepfake-fraud): Deepfake fraud uses AI-generated synthetic media to impersonate individuals in videos, audio, or images for fraudulent purposes.
@@ -47,7 +48,7 @@ Attacks that use AI or target AI systems, and AI-assisted countermeasures.
 - [**AI inference supply-chain exposure**](kits/ai-inference-supply-chain): Prompts sent through inference gateways can pass through providers and resellers that see the full request.
 - [**AI LLM Prompt Injection Detection**](kits/ai-llm-injection): LLM prompt injection occurs when an attacker manipulates the input to a language model in a way that alters its behavior or output, potentially leading to unauthorized actions or information disclosure.
 - [**AI Jailbreak Detection Kit**](kits/ai-llm-jailbreak): An **LLM jailbreak** occurs when an attacker bypasses safety measures in large language models (LLMs) to make the model perform unintended actions, such as
-- [**AI Jailbreak Detection**](kits/ai-llm-jailbreak-detection): An LLM jailbreak occurs when an attacker manipulates a language model to bypass its safety constraints and generate harmful, inappropriate, or unauthorized content.
+- [**AI LLM Jailbreak Detection**](kits/ai-llm-jailbreak-detection): An LLM jailbreak occurs when an attacker bypasses the safety mechanisms and ethical constraints of a large language model, allowing it to generate harmful, inappropriate, or forbidden content.
 - [**AI Jailbreak Triage Kit**](kits/ai-llm-jailbreak-triage): A direct jailbreak is a user prompt that attempts to override a model’s safety constraints. Public chatbots and internal assistants that accept free-form prompts are exposed.
 - [**Model artifact intake triage**](kits/ai-model-supply-chain): Treat third-party checkpoints as software. A loader that deserializes an untrusted checkpoint can execute code with the privileges of the loading process.
 - [**Assistant output leakage triage**](kits/ai-output-leakage): An assistant can disclose credentials, personal records, confidential documents, or memorized training data through its output.
