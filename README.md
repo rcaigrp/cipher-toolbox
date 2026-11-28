@@ -55,6 +55,7 @@ Attacks that use AI or target AI systems, and AI-assisted countermeasures.
 - [**ai-phishing-triage**](kits/ai-phishing-triage)
 - [**AI Prompt Injection Detection Kit**](kits/ai-prompt-injection): **Prompt injection** occurs when user inputs are crafted to manipulate an LLM's behavior, potentially bypassing safety constraints or causing unintended actions.
 - [**AI Senior Officials Impersonation Triage**](kits/ai-senior-officials-impersonation): This tool uses rule-based text analysis to identify wording patterns commonly associated with impersonation scams targeting senior officials. It helps triage messages for further human review.
+- [**ai-social-engineering**](kits/ai-social-engineering)
 - [**AI Voice Cloning Fraud Detection Kit**](kits/ai-voice-cloning): **AI voice cloning fraud** is a growing concern where criminals use generative AI to create synthetic audio that mimics real people's voices.
 - [**AI Voice Cloning Triage**](kits/ai-voice-cloning-triage): **AI voice cloning scams** are a growing concern where cybercriminals use artificial intelligence to replicate the voices of trusted individuals (family members, colleagues, or public figures) to deceive victims into…
 - [**AI Voice Fraud Detection**](kits/ai-voice-fraud): AI voice cloning fraud involves attackers using artificial intelligence to generate convincing replicas of a person's voice to impersonate them in phone calls or audio messages.
