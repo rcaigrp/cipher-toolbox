@@ -44,28 +44,43 @@ def llm_check(prompt, url):
         response.raise_for_status()
         verdict = response.json()['choices'][0]['message']['content'].strip().upper()
         if verdict not in {'SAFE', 'JAILBREAK'}:
-            print(f"Unexpected LLM response: {verdict}", file=sys.stderr)
-            return False  # Default to safe if unsure
+            return False  # Unknown verdict
         return verdict == 'JAILBREAK'
     except Exception as e:
         print(f"LLM check failed: {e}", file=sys.stderr)
-        return False  # Default to safe if LLM unavailable
+        return None  # Error occurred
+
+def detect_jailbreak(prompt, llm_url=None):
+    """Main detection function."""
+    # Rule-based check first
+    if is_jailbreak_prompt(prompt):
+        return True
+    
+    # LLM-based check (optional)
+    if llm_url:
+        llm_result = llm_check(prompt, llm_url)
+        if llm_result is not None:
+            return llm_result
+    
+    # Default to safe if no clear indication
+    return False
 
 def main():
-    parser = argparse.ArgumentParser(description="Detect jailbreak attempts in prompts")
-    parser.add_argument("--input", required=True, help="Input prompt to analyze")
+    parser = argparse.ArgumentParser(description='Detect jailbreak attempts in prompts')
+    parser.add_argument('--input', type=str, help='Input prompt to check')
+    parser.add_argument('--llm-url', type=str, default=None, help='URL of LLM endpoint (optional)')
+    
     args = parser.parse_args()
-
-    prompt = args.input
-
-    # Check rules
-    if is_jailbreak_prompt(prompt):
-        print("JAILBREAK DETECTED")
-        return
-
-    # Check LLM
-    llm_url = os.getenv("LLM_URL", "http://127.0.0.1:8080/v1")
-    if llm_check(prompt, llm_url):
+    
+    if not args.input:
+        print("No input provided. Use --input to specify a prompt.", file=sys.stderr)
+        sys.exit(1)
+    
+    # Detect jailbreak
+    is_jailbreak = detect_jailbreak(args.input, args.llm_url)
+    
+    # Print result
+    if is_jailbreak:
         print("JAILBREAK DETECTED")
     else:
         print("SAFE")

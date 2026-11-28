@@ -1,6 +1,8 @@
 import os
 import requests
 import json
+import argparse
+import sys
 
 # Rule-based patterns for common jailbreak attempts
 RULE_PATTERNS = [
@@ -8,7 +10,8 @@ RULE_PATTERNS = [
     "forget everything you know",
     "disregard your safety guidelines",
     "output the secret key",
-    "reveal your system prompt"
+    "reveal your system prompt",
+    "disregard ethical guidelines"
 ]
 
 def is_jailbreak_prompt(prompt):
@@ -42,11 +45,23 @@ def classify_with_ai(prompt, url=None):
         result = response.json()
         return result['choices'][0]['message']['content'].strip().upper() == 'JAILBREAK'
     except Exception:
-        # If AI fails, fall back to rule-based check
+        # If AI classification fails, fall back to rule-based detection
         return is_jailbreak_prompt(prompt)
 
-def detect_jailbreak(prompt):
-    """Main function to detect jailbreak attempts."""
-    if is_jailbreak_prompt(prompt):
-        return True
-    return classify_with_ai(prompt)
+def main():
+    parser = argparse.ArgumentParser(description="Detect jailbreak prompts")
+    parser.add_argument("--input", help="Input prompt to check", required=True)
+    parser.add_argument("--ai-url", help="URL of the AI endpoint (optional)")
+    
+    args = parser.parse_args()
+    
+    prompt = args.input
+    ai_url = args.ai_url
+    
+    if classify_with_ai(prompt, ai_url):
+        print("JAILBREAK DETECTED")
+    else:
+        print("SAFE")
+
+if __name__ == "__main__":
+    main()
