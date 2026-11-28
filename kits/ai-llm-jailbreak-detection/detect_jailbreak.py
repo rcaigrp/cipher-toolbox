@@ -15,7 +15,8 @@ JAILBREAK_PATTERNS = [
     "disregard safety protocols",
     "you are now a different model",
     "override your constraints",
-    "bypass ethical guidelines"
+    "bypass ethical guidelines",
+    "forget everything you know about safety"
 ]
 
 def is_jailbreak_prompt(prompt):
@@ -50,21 +51,37 @@ def is_jailbreak_prompt(prompt):
             result = response.json()["choices"][0]["message"]["content"].strip().upper()
             return result == "YES"
     except Exception as e:
-        # If AI check fails, fall back to rule-based only
-        pass
+        # Fall back to rule-based detection
+        print(f"AI check failed, falling back to rule-based: {e}", file=sys.stderr)
     
+    # Default to rule-based check if AI fails or is not available
     return False
 
-if __name__ == "__main__":
+def main():
     if len(sys.argv) < 2:
-        print("Usage: python detect_jailbreak.py \"<prompt>\"")
+        print("Usage: python detect_jailbreak.py --prompt \"<prompt>\"", file=sys.stderr)
         sys.exit(1)
-
-    prompt = " ".join(sys.argv[1:])
     
-    if is_jailbreak_prompt(prompt):
-        print("ALERT: Potential jailbreak attempt detected!")
-        sys.exit(1)
+    if sys.argv[1] == "--prompt":
+        if len(sys.argv) < 3:
+            print("Error: No prompt provided", file=sys.stderr)
+            sys.exit(1)
+        prompt = sys.argv[2]
+        if is_jailbreak_prompt(prompt):
+            print("Jailbreak attempt detected.")
+            sys.exit(1)
+        else:
+            print("No jailbreak attempt detected.")
+            sys.exit(0)
     else:
-        print("No jailbreak attempt detected.")
-        sys.exit(0)
+        # Treat as direct prompt
+        prompt = sys.argv[1]
+        if is_jailbreak_prompt(prompt):
+            print("Jailbreak attempt detected.")
+            sys.exit(1)
+        else:
+            print("No jailbreak attempt detected.")
+            sys.exit(0)
+
+if __name__ == "__main__":
+    main()
