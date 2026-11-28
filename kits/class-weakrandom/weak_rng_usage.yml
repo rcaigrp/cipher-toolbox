@@ -1,0 +1,21 @@
+title: Use of Insecure Random Number Generation
+id: 12345678-1234-1234-1234-123456789013
+status: experimental
+author: Cipher
+date: 2026/11/28
+logsource:
+    category: application
+    product: python
+detection:
+    selection:
+        useragent|contains:
+            - 'random.randint'
+            - 'random.random'
+            - 'random.randrange'
+            - 'secrets.token_hex'
+            - 'secrets.randbelow'
+            - 'os.urandom'
+    condition: selection
+fields:
+    - useragent
+level: high

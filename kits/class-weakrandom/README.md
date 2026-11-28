@@ -10,6 +10,7 @@ This kit provides detection and mitigation tools for weak random number generati
 - `detection.yml`: Sigma rule for detecting weak RNG patterns
 - `hunt_query.json`: Elasticsearch query for hunting weak RNG usage
 - `weak_rng_usage.yar`: YARA rule for detecting weak RNG usage
+- `weak_rng_usage.yml`: Updated Sigma rule for weak RNG usage
 
 ## Usage
 
